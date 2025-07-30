@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GG.AI Labs - Documentação de Workflows N8N</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
   <style>
     * {
@@ -183,6 +184,16 @@
       font-size: 1.2rem;
       margin-left: auto;
       line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+    }
+    
+    .theme-toggle i {
+      font-size: 1.1rem;
+      transition: opacity 0.2s ease;
     }
 
     .results-info {
@@ -707,7 +718,10 @@
               Somente ativos
             </label>
           </div>
-          <button id="themeToggle" class="theme-toggle" aria-label="Alterar Tema">☀️</button>
+          <button id="themeToggle" class="theme-toggle" aria-label="Alterar Tema">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon" style="display: none;"></i>
+          </button>
         </div>
         <div class="results-info">
           <span id="resultsCount">Carregando...</span>
@@ -1010,7 +1024,16 @@
       }
 
       updateThemeToggle(theme) {
-        this.elements.themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+        const sunIcon = this.elements.themeToggle.querySelector('.fa-sun');
+        const moonIcon = this.elements.themeToggle.querySelector('.fa-moon');
+        
+        if (theme === 'dark') {
+          sunIcon.style.display = 'inline-block';
+          moonIcon.style.display = 'none';
+        } else {
+          sunIcon.style.display = 'none';
+          moonIcon.style.display = 'inline-block';
+        }
       }
 
       debounceSearch() {
