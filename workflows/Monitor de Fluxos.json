@@ -1,0 +1,477 @@
+{
+  "name": "Monitor de Fluxos",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        1904
+      ],
+      "id": "5f4fb308-d0a5-4028-9646-aa6935623274",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "97f26a1c-4773-42af-bfa4-15bcea8fd46d",
+              "name": "execution_url",
+              "value": "={{ $node[\"Error Trigger\"].json[\"execution\"][\"url\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "1cd6319c-5c77-419f-b1b1-8228211a5867",
+              "name": "timestamp",
+              "value": "={{ $node[\"Error Trigger\"].json[\"execution\"][\"error\"][\"timestamp\"].toDateTime('ms').format(\"dd/MM/yyyy - HH:mm:ss\") }}",
+              "type": "string"
+            },
+            {
+              "id": "da5af69c-4dc1-40e1-a4fa-e2597e8f6053",
+              "name": "error_description",
+              "value": "={{$node[\"Error Trigger\"].json[\"execution\"][\"error\"][\"description\"] || $node[\"Error Trigger\"].json[\"execution\"][\"error\"][\"message\"] || 'Erro não especificado'}}",
+              "type": "string"
+            },
+            {
+              "id": "8361edd6-9d82-4932-a984-42fb91c93dc3",
+              "name": "workflow_id",
+              "value": "={{ $node[\"Error Trigger\"].json[\"workflow\"][\"id\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "23c28193-66d6-4204-ad71-1ea6bf0ab470",
+              "name": "workflow_name",
+              "value": "={{ $node[\"Error Trigger\"].json[\"workflow\"][\"name\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "fbb63d64-c7e4-443f-8778-f7edd405dc0d",
+              "name": "node_name",
+              "value": "={{ $node[\"Error Trigger\"].json[\"execution\"][\"error\"][\"node\"][\"name\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "new-execution-id",
+              "name": "execution_id",
+              "value": "={{ $node[\"Error Trigger\"].json[\"execution\"][\"id\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "new-error-type",
+              "name": "error_type",
+              "value": "={{ $node[\"Error Trigger\"].json[\"execution\"][\"error\"][\"type\"] || 'unknown' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -240,
+        1904
+      ],
+      "id": "a0d28f8d-33bb-448b-85bb-56285a145422",
+      "name": "Extrair Dados"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Classificação inteligente de severidade\nconst errorDesc = ($json.error_description || '').toLowerCase();\nconst errorType = ($json.error_type || '').toLowerCase();\nconst nodeName = ($json.node_name || '').toLowerCase();\n\nlet severity = 'low';\nlet priority = 1;\n\n// Palavras-chave para alta severidade\nconst highSeverityKeywords = [\n  'fatal', 'critical', 'timeout', 'connection refused', \n  'database', 'authentication', 'authorization', 'payment',\n  'security', 'crash', 'memory', 'disk space'\n];\n\n// Palavras-chave para média severidade\nconst mediumSeverityKeywords = [\n  'retry', 'warning', 'deprecated', 'limit exceeded',\n  'rate limit', 'validation', 'temporary', 'network'\n];\n\n// Nós críticos que sempre geram alta severidade\nconst criticalNodes = [\n  'webhook', 'database', 'payment', 'auth', 'api gateway'\n];\n\n// Verificar severidade baseada em múltiplos fatores\nif (highSeverityKeywords.some(keyword => \n    errorDesc.includes(keyword) || errorType.includes(keyword)) ||\n    criticalNodes.some(node => nodeName.includes(node))) {\n  severity = 'high';\n  priority = 3;\n} else if (mediumSeverityKeywords.some(keyword => \n    errorDesc.includes(keyword) || errorType.includes(keyword))) {\n  severity = 'medium';\n  priority = 2;\n}\n\n// Adicionar contexto adicional\nconst errorContext = {\n  severity,\n  priority,\n  is_recurring: false, // Será definido pelo throttling\n  error_hash: require('crypto').createHash('md5')\n    .update(`${$json.workflow_id}-${$json.node_name}-${errorType}`)\n    .digest('hex').substring(0, 8)\n};\n\nreturn [{ json: { ...$json, ...errorContext } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        1904
+      ],
+      "id": "6c3cc776-92a4-4044-9a38-dbd71a3119b3",
+      "name": "Classificação Inteligente"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.severity }}",
+                    "rightValue": "low",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "383c0c3a-e43b-4f23-bc63-c8602ea44df1"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "LOW"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6dcd0d4c-e34f-453f-8d52-264c0647759f",
+                    "leftValue": "={{ $json.severity }}",
+                    "rightValue": "medium",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "MEDIUM"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3886a24c-f555-4222-9d85-5a1493a4cc81",
+                    "leftValue": "={{ $json.severity }}",
+                    "rightValue": "high",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "HIGH"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        192,
+        1888
+      ],
+      "id": "0de0fa01-aabc-46de-b443-00efc3d4e3d2",
+      "name": "Roteamento por Severidade"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Throttling inteligente para LOW severity\nconst staticData = $getWorkflowStaticData('node');\nconst now = Date.now();\nconst errorHash = $json.error_hash;\nconst throttleKey = `low_${errorHash}`;\n\n// Inicializar estrutura se não existir\nif (!staticData.throttle) {\n  staticData.throttle = {};\n}\n\nconst lastOccurrence = staticData.throttle[throttleKey] || 0;\nconst hourlyThreshold = 60 * 60 * 1000; // 1 hora\n\n// Se o mesmo erro ocorreu há menos de 1 hora, throttle\nif (now - lastOccurrence < hourlyThreshold) {\n  // Incrementar contador de ocorrências\n  const countKey = `count_${errorHash}`;\n  staticData.throttle[countKey] = (staticData.throttle[countKey] || 0) + 1;\n  return []; // Bloquear notificação\n}\n\n// Atualizar timestamp e resetar contador\nstaticData.throttle[throttleKey] = now;\nstaticData.throttle[`count_${errorHash}`] = 1;\n\n// Adicionar informação de recorrência\nconst updatedItem = {\n  ...items[0].json,\n  occurrence_count: staticData.throttle[`count_${errorHash}`]\n};\n\nreturn [{ json: updatedItem }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        1728
+      ],
+      "id": "d13bcfdb-2552-4cd3-9312-561f65667978",
+      "name": "Throttle Inteligente LOW"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Throttling inteligente para MEDIUM severity\nconst staticData = $getWorkflowStaticData('node');\nconst now = Date.now();\nconst errorHash = $json.error_hash;\nconst throttleKey = `medium_${errorHash}`;\n\n// Inicializar estrutura se não existir\nif (!staticData.throttle) {\n  staticData.throttle = {};\n}\n\nconst lastOccurrence = staticData.throttle[throttleKey] || 0;\nconst throttleThreshold = 15 * 60 * 1000; // 15 minutos\n\n// Se o mesmo erro ocorreu há menos de 15 minutos, throttle\nif (now - lastOccurrence < throttleThreshold) {\n  const countKey = `count_${errorHash}`;\n  staticData.throttle[countKey] = (staticData.throttle[countKey] || 0) + 1;\n  return [];\n}\n\n// Atualizar timestamp\nstaticData.throttle[throttleKey] = now;\nstaticData.throttle[`count_${errorHash}`] = 1;\n\nconst updatedItem = {\n  ...items[0].json,\n  occurrence_count: staticData.throttle[`count_${errorHash}`]\n};\n\nreturn [{ json: updatedItem }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        1888
+      ],
+      "id": "7ab66d8c-7c95-4061-b96e-cbc997029039",
+      "name": "Throttle Inteligente MEDIUM"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Throttling mínimo para HIGH severity (apenas para evitar spam)\nconst staticData = $getWorkflowStaticData('node');\nconst now = Date.now();\nconst errorHash = $json.error_hash;\nconst throttleKey = `high_${errorHash}`;\n\n// Inicializar estrutura se não existir\nif (!staticData.throttle) {\n  staticData.throttle = {};\n}\n\nconst lastOccurrence = staticData.throttle[throttleKey] || 0;\nconst throttleThreshold = 2 * 60 * 1000; // 2 minutos apenas para evitar spam\n\n// Throttle mínimo apenas para o mesmo erro exato\nif (now - lastOccurrence < throttleThreshold) {\n  const countKey = `count_${errorHash}`;\n  staticData.throttle[countKey] = (staticData.throttle[countKey] || 0) + 1;\n  // Para erros HIGH, ainda notifica mas marca como recorrente\n  const updatedItem = {\n    ...items[0].json,\n    is_recurring: true,\n    occurrence_count: staticData.throttle[`count_${errorHash}`]\n  };\n  return [{ json: updatedItem }];\n}\n\n// Atualizar timestamp\nstaticData.throttle[throttleKey] = now;\nstaticData.throttle[`count_${errorHash}`] = 1;\n\nconst updatedItem = {\n  ...items[0].json,\n  occurrence_count: staticData.throttle[`count_${errorHash}`]\n};\n\nreturn [{ json: updatedItem }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        2048
+      ],
+      "id": "fc9b9564-3d9e-485b-8694-a7583b05d4b8",
+      "name": "Throttle Mínimo HIGH"
+    },
+    {
+      "parameters": {
+        "chatId": "7811404515",
+        "text": "=🔵 **Erro de Baixa Severidade**\n\n**Workflow:** {{ $json.workflow_name }}\n**Nó:** {{ $json.node_name }}\n**Horário:** {{ $json.timestamp }}\n**ID Hash:** `{{ $json.error_hash }}`\n\n**Descrição:**\n```\n{{ $json.error_description }}\n```\n\n**Tipo:** {{ $json.error_type }}\n**Ocorrências:** {{ $json.occurrence_count || 1 }}\n\n🔗 [Ver execução]({{ $json.execution_url }})",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        656,
+        1728
+      ],
+      "id": "e8303231-3da7-4e13-8525-d8fb9e1881b8",
+      "name": "Notificação LOW",
+      "webhookId": "05d4721b-5862-434f-b2ed-792cd7fde23a",
+      "credentials": {
+        "telegramApi": {
+          "id": "UqFMpXIe6xGR0TRz",
+          "name": "Telegram MonitorIA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "7811404515",
+        "text": "=🟡 **Erro de Média Severidade**\n\n**Workflow:** {{ $json.workflow_name }}\n**Nó:** {{ $json.node_name }}\n**Horário:** {{ $json.timestamp }}\n**ID Hash:** `{{ $json.error_hash }}`\n\n**Descrição:**\n```\n{{ $json.error_description }}\n```\n\n**Tipo:** {{ $json.error_type }}\n**Ocorrências:** {{ $json.occurrence_count || 1 }}\n**Prioridade:** {{ $json.priority }}\n\n🔗 [Ver execução]({{ $json.execution_url }})\n\n_⚠️ Requer atenção moderada_",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        656,
+        1888
+      ],
+      "id": "fd6440f2-cbd3-4d9d-aff4-3d4dc8b4d07d",
+      "name": "Notificação MEDIUM",
+      "webhookId": "a15e6f0c-1b53-41c1-8ac2-e77f046ca2fa",
+      "credentials": {
+        "telegramApi": {
+          "id": "UqFMpXIe6xGR0TRz",
+          "name": "Telegram MonitorIA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "7811404515",
+        "text": "=🔴 **ERRO CRÍTICO {{ $json.is_recurring ? '(RECORRENTE)' : '' }}**\n\n**Workflow:** {{ $json.workflow_name }}\n**Nó:** {{ $json.node_name }}\n**Horário:** {{ $json.timestamp }}\n**ID Hash:** `{{ $json.error_hash }}`\n\n**Descrição:**\n```\n{{ $json.error_description }}\n```\n\n**Tipo:** {{ $json.error_type }}\n**Execução ID:** {{ $json.execution_id }}\n**Ocorrências:** {{ $json.occurrence_count || 1 }}\n**Prioridade:** {{ $json.priority }}\n\n🔗 [Ver execução]({{ $json.execution_url }})\n\n🚨 **AÇÃO IMEDIATA NECESSÁRIA**",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        656,
+        2048
+      ],
+      "id": "46df9dbe-7304-4670-85be-f50f67ae0b01",
+      "name": "Notificação HIGH",
+      "webhookId": "c0379310-84da-41cf-96b9-51ad96ddd6fb",
+      "credentials": {
+        "telegramApi": {
+          "id": "UqFMpXIe6xGR0TRz",
+          "name": "Telegram MonitorIA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log estruturado de erros para análise posterior\nconst logEntry = {\n  timestamp: new Date().toISOString(),\n  workflow_id: $json.workflow_id,\n  workflow_name: $json.workflow_name,\n  node_name: $json.node_name,\n  error_type: $json.error_type,\n  error_description: $json.error_description,\n  severity: $json.severity,\n  priority: $json.priority,\n  error_hash: $json.error_hash,\n  execution_id: $json.execution_id,\n  execution_url: $json.execution_url,\n  occurrence_count: $json.occurrence_count || 1,\n  is_recurring: $json.is_recurring || false\n};\n\nconsole.log('ERROR_MONITORING:', JSON.stringify(logEntry));\n\nreturn [{ json: logEntry }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        1888
+      ],
+      "id": "2dfa7773-ed54-4d57-9d73-4eaa9d171b5a",
+      "name": "Log Estruturado"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        1888
+      ],
+      "id": "561b14d9-31d2-4ce5-b6ba-b3814719549e",
+      "name": "FIM1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extrair Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrair Dados": {
+      "main": [
+        [
+          {
+            "node": "Classificação Inteligente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classificação Inteligente": {
+      "main": [
+        [
+          {
+            "node": "Roteamento por Severidade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Roteamento por Severidade": {
+      "main": [
+        [
+          {
+            "node": "Throttle Inteligente LOW",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Throttle Inteligente MEDIUM",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Throttle Mínimo HIGH",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Throttle Inteligente LOW": {
+      "main": [
+        [
+          {
+            "node": "Notificação LOW",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Throttle Inteligente MEDIUM": {
+      "main": [
+        [
+          {
+            "node": "Notificação MEDIUM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Throttle Mínimo HIGH": {
+      "main": [
+        [
+          {
+            "node": "Notificação HIGH",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificação LOW": {
+      "main": [
+        [
+          {
+            "node": "Log Estruturado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificação MEDIUM": {
+      "main": [
+        [
+          {
+            "node": "Log Estruturado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificação HIGH": {
+      "main": [
+        [
+          {
+            "node": "Log Estruturado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Estruturado": {
+      "main": [
+        [
+          {
+            "node": "FIM1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0957b893-cec3-4272-b9c1-560362a96b99",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1e266293c09eaa640b5508e0dc8e7d655a4d545465aad68dc6d696a87249a80b"
+  },
+  "id": "GtAVyvbUkeWWGWpC",
+  "tags": [
+    {
+      "createdAt": "2025-06-30T22:46:57.045Z",
+      "updatedAt": "2025-06-30T22:46:57.045Z",
+      "id": "mYaXaSwQpnDiHctr",
+      "name": "MonitorIA"
+    }
+  ]
+}

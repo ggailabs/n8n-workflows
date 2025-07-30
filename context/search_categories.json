@@ -8324,6 +8324,18 @@
     "category": "Automação de Processos de Negócio"
   },
   {
+    "filename": "Fluxo de atendimento AI com agendamento.json",
+    "category": "Agendamento & Rotinas"
+  },
+  {
+    "filename": "Monitor de Fluxos.json",
+    "category": "Automação de Processos de Negócio"
+  },
+  {
+    "filename": "PAUSAR_AGENTE_CHATWOOT.json",
+    "category": "Desenvolvimento de Agentes de IA"
+  },
+  {
     "filename": "PETSHOP.json",
     "category": "Automação para Petshop"
   },
