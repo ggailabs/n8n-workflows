@@ -82,7 +82,7 @@ def main():
             unique_categories.add(item['category'])
     
     # Always include 'Uncategorized' for workflows without categories
-    unique_categories.add('Uncategorized')
+    unique_categories.add('Não categorizado')
     
     # Sort categories alphabetically
     categories_list = sorted(list(unique_categories))
@@ -107,7 +107,7 @@ def main():
     # Count categories
     category_counts = {}
     for item in search_categories:
-        category = item['category'] if item['category'] else "Uncategorized"
+        category = item['category'] if item['category'] else "Não categorizado"
         category_counts[category] = category_counts.get(category, 0) + 1
     
     # Sort by count (descending)
@@ -123,11 +123,11 @@ def main():
 
     # Write tips on uncategorized workflows
     print("\n" + "="*50)
-    print("Tips on uncategorized workflows")
+    print("Dicas para categorizar workflows")
     print("="*50)
-    print("1. At the search, you'll be able to list all uncategorized workflows.")
-    print("2. If the workflow JSON filename has a clear service name (eg. Twilio), it could just be we are missing its category definition at context/def_categories.json.")
-    print("3. You can contribute to the category definitions and then make a pull request to help improve the search experience.")
+    print("1. No menu de workflows, você poderá listar todos os workflows sem categoria.")
+    print("2. Se o nome do arquivo JSON do workflow tiver um nome de serviço claro (eg. Twilio), pode ser que apenas estamos faltando sua definição de categoria no arquivo context/def_categories.json.")
+    print("3. Você pode contribuir para as definições de categoria e então fazer um pull request para ajudar a melhorar a experiência de busca.")
 
 
     # Done message
