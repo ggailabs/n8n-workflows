@@ -132,13 +132,13 @@ class WorkflowDatabase:
             elif part.lower() == 'webhook':
                 readable_parts.append('Webhook')
             elif part.lower() == 'automation':
-                readable_parts.append('Automation')
+                readable_parts.append('Automação')
             elif part.lower() == 'automate':
                 readable_parts.append('Automate')
             elif part.lower() == 'scheduled':
-                readable_parts.append('Scheduled')
+                readable_parts.append('Agendada')
             elif part.lower() == 'triggered':
-                readable_parts.append('Triggered')
+                readable_parts.append('Acionada')
             elif part.lower() == 'manual':
                 readable_parts.append('Manual')
             else:
@@ -388,44 +388,44 @@ class WorkflowDatabase:
         name = workflow['name']
         node_count = workflow['node_count']
         
-        # Start with trigger description
+        # Início da descrição baseado no tipo de trigger
         trigger_descriptions = {
-            'Webhook': "Webhook-triggered automation that",
-            'Scheduled': "Scheduled automation that", 
-            'Complex': "Complex multi-step automation that",
+            'Webhook': "Automação acionada por webhook que",
+            'Scheduled': "Automação agendada que", 
+            'Complex': "Automação complexa em múltiplas etapas que",
         }
-        desc = trigger_descriptions.get(trigger_type, "Manual workflow that")
+        desc = trigger_descriptions.get(trigger_type, "Fluxo manual que")
         
-        # Add functionality based on name and integrations
+        # Adiciona funcionalidade baseada nas integrações
         if integrations:
             main_services = list(integrations)[:3]
             if len(main_services) == 1:
-                desc += f" integrates with {main_services[0]}"
+                desc += f" se integra com {main_services[0]}"
             elif len(main_services) == 2:
-                desc += f" connects {main_services[0]} and {main_services[1]}"
+                desc += f" conecta {main_services[0]} e {main_services[1]}"
             else:
-                desc += f" orchestrates {', '.join(main_services[:-1])}, and {main_services[-1]}"
+                desc += f" orquestra {', '.join(main_services[:-1])} e {main_services[-1]}"
         
-        # Add workflow purpose hints from name
+        # Adiciona propósito baseado no nome do fluxo
         name_lower = name.lower()
-        if 'create' in name_lower:
-            desc += " to create new records"
-        elif 'update' in name_lower:
-            desc += " to update existing data"
-        elif 'sync' in name_lower:
-            desc += " to synchronize data"
-        elif 'notification' in name_lower or 'alert' in name_lower:
-            desc += " for notifications and alerts"
-        elif 'backup' in name_lower:
-            desc += " for data backup operations"
-        elif 'monitor' in name_lower:
-            desc += " for monitoring and reporting"
+        if 'create' in name_lower or 'criar' in name_lower or 'cadastrar' in name_lower:
+            desc += " para criar novos registros"
+        elif 'update' in name_lower or 'atualizar' in name_lower:
+            desc += " para atualizar dados existentes"
+        elif 'sync' in name_lower or 'sincronizar' in name_lower:
+            desc += " para sincronizar dados"
+        elif 'notification' in name_lower or 'alert' in name_lower or 'notificação' in name_lower or 'alerta' in name_lower:
+            desc += " para notificações e alertas"
+        elif 'backup' in name_lower or 'cópia de segurança' in name_lower:
+            desc += " para operações de backup de dados"
+        elif 'monitor' in name_lower or 'monitorar' in name_lower:
+            desc += " para monitoramento e relatórios"
         else:
-            desc += " for data processing"
+            desc += " para processamento de dados"
         
-        desc += f". Uses {node_count} nodes"
+        desc += f". Utiliza {node_count} nós"
         if len(integrations) > 3:
-            desc += f" and integrates with {len(integrations)} services"
+            desc += f" e se integra com {len(integrations)} serviços"
         
         return desc + "."
     
@@ -504,7 +504,7 @@ class WorkflowDatabase:
         conn.commit()
         conn.close()
         
-        print(f"✅ Indexing complete: {stats['processed']} processed, {stats['skipped']} skipped, {stats['errors']} errors")
+        print(f"✅ Indexação completa: {stats['processed']} processados, {stats['skipped']} ignorados, {stats['errors']} erros")
         return stats
     
     def search_workflows(self, query: str = "", trigger_filter: str = "all", 
@@ -716,10 +716,10 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description='N8N Workflow Database')
-    parser.add_argument('--index', action='store_true', help='Index all workflows')
-    parser.add_argument('--force', action='store_true', help='Force reindex all files')
-    parser.add_argument('--search', help='Search workflows')
-    parser.add_argument('--stats', action='store_true', help='Show database statistics')
+    parser.add_argument('--index', action='store_true', help='Indexar todos os workflows')
+    parser.add_argument('--force', action='store_true', help='Reindexar todos os arquivos')
+    parser.add_argument('--search', help='Procurar workflows')
+    parser.add_argument('--stats', action='store_true', help='Mostrar estatísticas do banco de dados')
     
     args = parser.parse_args()
     
@@ -737,12 +737,12 @@ def main():
     
     elif args.stats:
         stats = db.get_stats()
-        print(f"Database Statistics:")
+        print(f"Estatísticas do banco de dados:")
         print(f"  Total workflows: {stats['total']}")
-        print(f"  Active: {stats['active']}")
-        print(f"  Total nodes: {stats['total_nodes']}")
-        print(f"  Unique integrations: {stats['unique_integrations']}")
-        print(f"  Trigger types: {stats['triggers']}")
+        print(f"  Ativos: {stats['active']}")
+        print(f"  Total de nós: {stats['total_nodes']}")
+        print(f"  Integrações únicas: {stats['unique_integrations']}")
+        print(f"  Tipos de gatilhos: {stats['triggers']}")
     
     else:
         parser.print_help()
