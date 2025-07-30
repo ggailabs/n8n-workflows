@@ -332,7 +332,7 @@ class WorkflowDatabase:
             if 'webhook' in node_type.lower() or 'webhook' in node_name:
                 trigger_type = 'Webhook'
             elif 'cron' in node_type.lower() or 'schedule' in node_type.lower():
-                trigger_type = 'Scheduled'
+                trigger_type = 'Agendamento'
             elif 'trigger' in node_type.lower() and trigger_type == 'Manual':
                 if 'manual' not in node_type.lower():
                     trigger_type = 'Webhook'
@@ -366,6 +366,9 @@ class WorkflowDatabase:
                     elif 'whatsapp' in part:
                         service_name = 'WhatsApp'
                         break
+                    elif 'evolution' in part:
+                        service_name = 'EvolutionAPI'
+                        break
                     elif 'discord' in part:
                         service_name = 'Discord'
                         break
@@ -382,7 +385,7 @@ class WorkflowDatabase:
         
         # Determine if complex based on node variety and count
         if len(nodes) > 10 and len(integrations) > 3:
-            trigger_type = 'Complex'
+            trigger_type = 'Complexo'
         
         return trigger_type, integrations
     
@@ -394,8 +397,8 @@ class WorkflowDatabase:
         # Início da descrição baseado no tipo de trigger
         trigger_descriptions = {
             'Webhook': "Automação acionada por webhook que",
-            'Scheduled': "Automação agendada que", 
-            'Complex': "Automação complexa em múltiplas etapas que",
+            'Agendamento': "Automação agendada que", 
+            'Complexo': "Automação complexa em múltiplas etapas que",
         }
         desc = trigger_descriptions.get(trigger_type, "Fluxo manual que")
         
