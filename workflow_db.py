@@ -363,6 +363,9 @@ class WorkflowDatabase:
                     elif 'telegram' in part:
                         service_name = 'Telegram'
                         break
+                    elif 'whatsapp' in part:
+                        service_name = 'WhatsApp'
+                        break
                     elif 'discord' in part:
                         service_name = 'Discord'
                         break

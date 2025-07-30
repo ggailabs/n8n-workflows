@@ -314,10 +314,33 @@
 
     .trigger-badge {
       background: var(--primary);
-      color: var(--bg);
+      color: white;
       padding: 0.25rem 0.5rem;
       border-radius: 0.375rem;
       font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+    
+    /* Webhook - Azul */
+    .trigger-badge[data-trigger="Webhook"] {
+      background: #3b82f6; /* blue-500 */
+    }
+    
+    /* Scheduled - Amarelo/Âmbar */
+    .trigger-badge[data-trigger="Scheduled"] {
+      background: #f59e0b; /* amber-500 */
+    }
+    
+    /* Complex - Roxo */
+    .trigger-badge[data-trigger="Complex"] {
+      background: #8b5cf6; /* violet-500 */
+    }
+    
+    /* Manual - Cinza */
+    .trigger-badge[data-trigger="Manual"] {
+      background: #6b7280; /* gray-500 */
+    }
 
 .workflow-title {
   font-size: 1.25rem;
@@ -331,17 +354,8 @@
   color: var(--text-secondary);
   margin-bottom: 1rem;
   line-height: 1.5;
+  color: var(--text);
 }
-      margin-bottom: 0.5rem;
-      color: var(--text);
-      line-height: 1.4;
-    }
-
-    .workflow-description {
-      color: var(--text-secondary);
-      margin-bottom: 1rem;
-      line-height: 1.5;
-    }
 
     .workflow-integrations {
       margin-top: 1rem;
@@ -1258,7 +1272,7 @@
                         <span>${workflow.node_count} nós</span>
                         <span class="category-badge">${this.escapeHtml(category)}</span>
                     </div>
-                    <span class="trigger-badge">${this.escapeHtml(workflow.trigger_type)}</span>
+                    <span class="trigger-badge" data-trigger="${this.escapeHtml(workflow.trigger_type)}">${this.escapeHtml(workflow.trigger_type)}</span>
                 </div>
                 <h3 class="workflow-title">${this.escapeHtml(workflow.name)}</h3>
                 <p class="workflow-description">${this.escapeHtml(workflow.description)}</p>
