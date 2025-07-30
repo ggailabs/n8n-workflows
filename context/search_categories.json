@@ -3665,7 +3665,7 @@
   },
   {
     "filename": "0917_Filter_Whatsapp_Create_Triggered.json",
-    "category": ""
+    "category": "Comunicação & Mensageria"
   },
   {
     "filename": "0918_Code_Noop_Send_Triggered.json",
@@ -6081,7 +6081,7 @@
   },
   {
     "filename": "1521_Whatsapp_Stickynote_Automation_Webhook.json",
-    "category": ""
+    "category": "Comunicação & Mensageria"
   },
   {
     "filename": "1522_Telegram_Schedule_Send_Webhook.json",
@@ -8117,7 +8117,7 @@
   },
   {
     "filename": "2030_Whatsapp_Respondtowebhook_Automate_Webhook.json",
-    "category": ""
+    "category": "Comunicação & Mensageria"
   },
   {
     "filename": "2031_Googletasks_Gmail_Create_Triggered.json",

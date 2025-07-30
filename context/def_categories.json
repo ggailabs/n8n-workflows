@@ -167,6 +167,7 @@
   {"integration": "Vero", "category": "Automação de Marketing & Publicidade"},
   {"integration": "Vonage", "category": "Comunicação & Mensageria"},
   {"integration": "Webflow", "category": "Automação de Design Criativo"},
+  {"integration": "WhatsApp", "category": "Comunicação & Mensageria"},
   {"integration": "Wekan", "category": "Gestão de Projetos"},
   {"integration": "Wise", "category": "Financeiro & Contábil"},
   {"integration": "Wordpress", "category": "Automação de Conteúdo Criativo & Vídeo"},

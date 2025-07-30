@@ -190,63 +190,63 @@ Top services by usage frequency:
 
 ---
 
-## 🔍 Advanced Search Features
+## 🔍 Recursos Avançados de Busca
 
-### Smart Search Categories
-Our system automatically categorizes workflows into 12 service categories:
+### Categorias de Busca Inteligente
+Nosso sistema categoriza automaticamente os workflows em 12 categorias de serviço:
 
-#### Available Categories:
-- **messaging**: Telegram, Discord, Slack, WhatsApp, Teams
-- **ai_ml**: OpenAI, Anthropic, Hugging Face 
-- **database**: PostgreSQL, MySQL, MongoDB, Redis, Airtable
+#### Categorias Disponíveis:
+- **mensagens**: Telegram, Discord, Slack, WhatsApp, Teams
+- **ia_ml**: OpenAI, Anthropic, Hugging Face 
+- **banco_dados**: PostgreSQL, MySQL, MongoDB, Redis, Airtable
 - **email**: Gmail, Mailjet, Outlook, SMTP/IMAP
-- **cloud_storage**: Google Drive, Google Docs, Dropbox, OneDrive
-- **project_management**: Jira, GitHub, GitLab, Trello, Asana
-- **social_media**: LinkedIn, Twitter/X, Facebook, Instagram
+- **armazenamento_nuvem**: Google Drive, Google Docs, Dropbox, OneDrive
+- **gestao_projetos**: Jira, GitHub, GitLab, Trello, Asana
+- **midias_sociais**: LinkedIn, Twitter/X, Facebook, Instagram
 - **ecommerce**: Shopify, Stripe, PayPal
 - **analytics**: Google Analytics, Mixpanel
-- **calendar_tasks**: Google Calendar, Cal.com, Calendly
-- **forms**: Typeform, Google Forms, Form Triggers
-- **development**: Webhook, HTTP Request, GraphQL, SSE
+- **calendario_tarefas**: Google Agenda, Cal.com, Calendly
+- **formularios**: Typeform, Google Forms, Form Triggers
+- **desenvolvimento**: Webhook, HTTP Request, GraphQL, SSE
 
-### API Usage Examples
+### Exemplos de Uso da API
 ```bash
-# Search workflows by text
-curl "http://localhost:8000/api/workflows?q=telegram+automation"
+# Buscar workflows por texto
+curl "http://localhost:8000/api/workflows?q=telegram+automacao"
 
-# Filter by trigger type and complexity
-curl "http://localhost:8000/api/workflows?trigger=Webhook&complexity=high"
+# Filtrar por tipo de gatilho e complexidade
+curl "http://localhost:8000/api/workflows?trigger=Webhook&complexity=alta"
 
-# Find all messaging workflows
-curl "http://localhost:8000/api/workflows/category/messaging"
+# Encontrar todos os workflows de mensagens
+curl "http://localhost:8000/api/workflows/category/mensagens"
 
-# Get database statistics
+# Obter estatísticas do banco de dados
 curl "http://localhost:8000/api/stats"
 
-# Browse available categories
+# Navegar pelas categorias disponíveis
 curl "http://localhost:8000/api/categories"
 ```
 
 ---
 
-## 🏗 Technical Architecture
+## 🏗 Arquitetura Técnica
 
-### Modern Stack
-- **SQLite Database** - FTS5 full-text search with 365 indexed integrations
-- **FastAPI Backend** - RESTful API with automatic OpenAPI documentation
-- **Responsive Frontend** - Modern HTML5 with embedded CSS/JavaScript
-- **Smart Analysis** - Automatic workflow categorization and naming
+### Stack Moderna
+- **Banco de Dados SQLite** - Busca de texto completo FTS5 com 365 integrações indexadas
+- **Backend FastAPI** - API RESTful com documentação OpenAPI automática
+- **Frontend Responsivo** - HTML5 moderno com CSS/JavaScript incorporado
+- **Análise Inteligente** - Categorização e nomenclatura automática de workflows
 
-### Key Features
-- **Change Detection** - MD5 hashing for efficient re-indexing
-- **Background Processing** - Non-blocking workflow analysis
-- **Compressed Responses** - Gzip middleware for optimal speed
-- **Error Handling** - Graceful degradation and comprehensive logging
-- **Mobile Optimization** - Touch-friendly interface design
+### Principais Recursos
+- **Detecção de Mudanças** - Hash MD5 para reindexação eficiente
+- **Processamento em Segundo Plano** - Análise de workflows não-bloqueante
+- **Respostas Comprimidas** - Middleware Gzip para velocidade ideal
+- **Tratamento de Erros** - Degradação graciosa e registro abrangente
+- **Otimização para Dispositivos Móveis** - Interface amigável para toque
 
-### Database Performance
+### Desempenho do Banco de Dados
 ```sql
--- Optimized schema for lightning-fast queries
+-- Esquema otimizado para consultas ultrarrápidas
 CREATE TABLE workflows (
     id INTEGER PRIMARY KEY,
     filename TEXT UNIQUE,
@@ -255,13 +255,13 @@ CREATE TABLE workflows (
     trigger_type TEXT,
     complexity TEXT,
     node_count INTEGER,
-    integrations TEXT,  -- JSON array of 365 unique services
+    integrations TEXT,  -- Array JSON de 365 serviços únicos
     description TEXT,
-    file_hash TEXT,     -- MD5 for change detection
+    file_hash TEXT,     -- MD5 para detecção de alterações
     analyzed_at TIMESTAMP
 );
 
--- Full-text search with ranking
+-- Busca de texto completo com classificação
 CREATE VIRTUAL TABLE workflows_fts USING fts5(
     filename, name, description, integrations, tags,
     content='workflows', content_rowid='id'
@@ -270,44 +270,47 @@ CREATE VIRTUAL TABLE workflows_fts USING fts5(
 
 ---
 
-## 🔧 Setup & Requirements
+## 🔧 Configuração e Requisitos
 
-### System Requirements
-- **Python 3.7+** - For running the documentation system
-- **Modern Browser** - Chrome, Firefox, Safari, Edge
-- **50MB Storage** - For SQLite database and indexes
-- **n8n Instance** - For importing and running workflows
+### Requisitos do Sistema
+- **Python 3.7+** - Para executar o sistema de documentação
+- **Navegador Moderno** - Chrome, Firefox, Safari, Edge
+- **50MB de Armazenamento** - Para o banco de dados SQLite e índices
+- **Instância n8n** - Para importar e executar os workflows
 
-### Installation
+### Instalação
 ```bash
-# Clone repository
+# Clonar o repositório
 git clone <repo-url>
 cd n8n-workflows
 
-# Install dependencies
+# Instalar dependências
 pip install -r requirements.txt
 
-# Start documentation server
+# Iniciar o servidor de documentação
 python run.py
 
-# Access at http://localhost:8000
+# Acessar em http://localhost:8000
 ```
 
-### Development Setup
+### Configuração de Desenvolvimento
 ```bash
-# Create virtual environment
+# Criar ambiente virtual
 python3 -m venv .venv
 source .venv/bin/activate  # Linux/Mac
-# or .venv\Scripts\activate  # Windows
+.venv\Scripts\activate    # Windows
 
-# Install dependencies
-pip install -r requirements.txt
+# Instalar dependências de desenvolvimento
+pip install -r requirements-dev.txt
 
-# Run with auto-reload for development
-python api_server.py --reload
+# Executar testes
+pytest tests/
 
-# Force database reindexing
-python workflow_db.py --index --force
+# Verificar estilo de código
+flake8 src/
+
+# Formatar código
+black src/
 ```
 
 ---
@@ -374,21 +377,21 @@ Our system automatically converts technical filenames to user-friendly names:
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contribuindo
 
-### Adding New Workflows
-1. **Export workflow** as JSON from n8n
-2. **Name descriptively** following the established pattern
-3. **Add to workflows/** directory
-4. **Remove sensitive data** (credentials, personal URLs)
-5. **Run reindexing** to update the database
+### Adicionando Novos Workflows
+1. **Exporte o workflow** como JSON do n8n
+2. **Nomeie de forma descritiva** seguindo o padrão estabelecido
+3. **Adicione à pasta workflows/**
+4. **Remova dados sensíveis** (credenciais, URLs pessoais)
+5. **Execute a reindexação** para atualizar o banco de dados
 
-### Quality Standards
-- ✅ Workflow must be functional and tested
-- ✅ Remove all credentials and sensitive data
-- ✅ Follow naming convention for consistency
-- ✅ Verify compatibility with recent n8n versions
-- ✅ Include meaningful description or comments
+### Padrões de Qualidade
+- ✅ O workflow deve ser funcional e testado
+- ✅ Remova todas as credenciais e dados sensíveis
+- ✅ Siga a convenção de nomenclatura para consistência
+- ✅ Verifique a compatibilidade com versões recentes do n8n
+- ✅ Inclua uma descrição ou comentários significativos
 
 ---
 
