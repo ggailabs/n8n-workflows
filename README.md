@@ -1,184 +1,184 @@
-# ⚡ N8N Workflow Collection & Documentation
+# ⚡ Coleção de Workflows N8N & Documentação
 
-A professionally organized collection of **2,053 n8n workflows** with a lightning-fast documentation system that provides instant search, analysis, and browsing capabilities.
+Uma coleção profissionalmente organizada de **2.053 workflows n8n** com um sistema de documentação ultrarrápido que oferece recursos de busca, análise e navegação instantâneos.
 
-## 🚀 **NEW: High-Performance Documentation System**
+## 🚀 **NOVO: Sistema de Documentação de Alto Desempenho**
 
-**Experience 100x performance improvement over traditional documentation!**
+**Experimente uma melhoria de desempenho 100x em relação à documentação tradicional!**
 
-### Quick Start - Fast Documentation System
+### Início Rápido - Sistema de Documentação Rápida
 ```bash
-# Install dependencies
+# Instalar dependências
 pip install -r requirements.txt
 
-# Start the fast API server
+# Iniciar o servidor API rápido
 python run.py
 
-# Open in browser
+# Abrir no navegador
 http://localhost:8000
 ```
 
-**Features:**
-- ⚡ **Sub-100ms response times** with SQLite FTS5 search
-- 🔍 **Instant full-text search** with advanced filtering
-- 📱 **Responsive design** - works perfectly on mobile
-- 🌙 **Dark/light themes** with system preference detection
-- 📊 **Live statistics** - 365 unique integrations, 29,445 total nodes
-- 🎯 **Smart categorization** by trigger type and complexity
-- 🎯 **Use case categorization** by service name mapped to categories
-- 📄 **On-demand JSON viewing** and download
-- 🔗 **Mermaid diagram generation** for workflow visualization
-- 🔄 **Real-time workflow naming** with intelligent formatting
+**Recursos:**
+- ⚡ **Tempos de resposta abaixo de 100ms** com busca SQLite FTS5
+- 🔍 **Busca em texto completo instantânea** com filtragem avançada
+- 📱 **Design responsivo** - funciona perfeitamente em dispositivos móveis
+- 🌙 **Temas claro/escuro** com detecção de preferência do sistema
+- 📊 **Estatísticas em tempo real** - 365 integrações únicas, 29.445 nós no total
+- 🎯 **Categorização inteligente** por tipo de gatilho e complexidade
+- 🎯 **Categorização por caso de uso** com mapeamento de nomes de serviços para categorias
+- 📄 **Visualização e download de JSON** sob demanda
+- 🔗 **Geração de diagramas Mermaid** para visualização de fluxos de trabalho
+- 🔄 **Nomeação em tempo real de fluxos de trabalho** com formatação inteligente
 
-### Performance Comparison
+### Comparação de Desempenho
 
-| Metric | Old System | New System | Improvement |
-|--------|------------|------------|-------------|
-| **File Size** | 71MB HTML | <100KB | **700x smaller** |
-| **Load Time** | 10+ seconds | <1 second | **10x faster** |
-| **Search** | Client-side only | Full-text with FTS5 | **Instant** |
-| **Memory Usage** | ~2GB RAM | <50MB RAM | **40x less** |
-| **Mobile Support** | Poor | Excellent | **Fully responsive** |
+| Métrica | Sistema Antigo | Novo Sistema | Melhoria |
+|---------|----------------|--------------|-----------|
+| **Tamanho do Arquivo** | 71MB HTML | <100KB | **700x menor** |
+| **Tempo de Carregamento** | 10+ segundos | <1 segundo | **10x mais rápido** |
+| **Busca** | Apenas no cliente | Texto completo com FTS5 | **Instantâneo** |
+| **Uso de Memória** | ~2GB RAM | <50MB RAM | **40x menor** |
+| **Suporte Móvel** | Ruim | Excelente | **Totalmente responsivo** |
 
 ---
 
-## 📂 Repository Organization
+## 📂 Organização do Repositório
 
-### Workflow Collection
-- **2,053 workflows** with meaningful, searchable names
-- **365 unique integrations** across popular platforms
-- **29,445 total nodes** with professional categorization
-- **Quality assurance** - All workflows analyzed and categorized
+### Coleção de Workflows
+- **2.053 workflows** com nomes significativos e pesquisáveis
+- **365 integrações únicas** em várias plataformas populares
+- **29.445 nós no total** com categorização profissional
+- **Garantia de qualidade** - Todos os workflows foram analisados e categorizados
 
-### Advanced Naming System ✨
-Our intelligent naming system converts technical filenames into readable titles:
-- **Before**: `2051_Telegram_Webhook_Automation_Webhook.json`
-- **After**: `Telegram Webhook Automation`
-- **100% meaningful names** with smart capitalization
-- **Automatic integration detection** from node analysis
+### Sistema Avançado de Nomenclatura ✨
+Nosso sistema inteligente de nomenclatura converte nomes de arquivos técnicos em títulos legíveis:
+- **Antes**: `2051_Telegram_Webhook_Automation_Webhook.json`
+- **Depois**: `Automação de Webhook do Telegram`
+- **Nomes 100% significativos** com capitalização inteligente
+- **Detecção automática de integração** a partir da análise de nós
 
-### Use Case Category ✨
+### Categoria de Caso de Uso ✨
 
-The search interface includes a dropdown filter that lets you browse 2,000+ workflows by category.
+A interface de pesquisa inclui um filtro suspenso que permite navegar por mais de 2.000 workflows por categoria.
 
-The system includes an automated categorization feature that organizes workflows by service categories to make them easier to discover and filter.
+O sistema inclui um recurso de categorização automática que organiza os workflows por categorias de serviço para facilitar a descoberta e filtragem.
 
-### How Categorization Works
+### Como Funciona a Categorização
 
-1. **Run the categorization script**
+1. **Execute o script de categorização**
    ```
    python create_categories.py
    ```
 
-2. **Service Name Recognition**
-   The script analyzes each workflow JSON filename to identify recognized service names (e.g., "Twilio", "Slack", "Gmail", etc.)
+2. **Reconhecimento de Nomes de Serviço**
+   O script analisa cada nome de arquivo JSON do workflow para identificar nomes de serviços reconhecidos (por exemplo, "Twilio", "Slack", "Gmail", etc.)
 
-3. **Category Mapping**
-   Each recognized service name is matched to its corresponding category using the definitions in `context/def_categories.json`. For example:
-   - Twilio → Communication & Messaging
-   - Gmail → Communication & Messaging  
-   - Airtable → Data Processing & Analysis
-   - Salesforce → CRM & Sales
+3. **Mapeamento de Categorias**
+   Cada nome de serviço reconhecido é associado à sua categoria correspondente usando as definições em `context/def_categories.json`. Por exemplo:
+   - Twilio → Comunicação e Mensagens
+   - Gmail → Comunicação e Mensagens  
+   - Airtable → Processamento e Análise de Dados
+   - Salesforce → CRM e Vendas
 
-4. **Search Categories Generation**
-   The script produces a `search_categories.json` file that contains the categorized workflow data
+4. **Geração de Categorias de Busca**
+   O script gera um arquivo `search_categories.json` que contém os dados de workflow categorizados
 
-5. **Filter Interface**
-   Users can then filter workflows by category in the search interface, making it easier to find workflows for specific use cases
+5. **Interface de Filtro**
+   Os usuários podem filtrar os workflows por categoria na interface de pesquisa, facilitando a localização de workflows para casos de uso específicos
 
-### Available Categories
+### Categorias Disponíveis
 
-The categorization system includes the following main categories:
-- AI Agent Development
-- Business Process Automation
-- Cloud Storage & File Management
-- Communication & Messaging
-- Creative Content & Video Automation
-- Creative Design Automation
-- CRM & Sales
-- Data Processing & Analysis
-- E-commerce & Retail
-- Financial & Accounting
-- Marketing & Advertising Automation
-- Project Management
-- Social Media Management
-- Technical Infrastructure & DevOps
-- Web Scraping & Data Extraction
+O sistema de categorização inclui as seguintes categorias principais:
+- Desenvolvimento de Agentes de IA
+- Automação de Processos de Negócios
+- Armazenamento em Nuvem e Gerenciamento de Arquivos
+- Comunicação e Mensagens
+- Conteúdo Criativo e Automação de Vídeo
+- Automação de Design Criativo
+- CRM e Vendas
+- Processamento e Análise de Dados
+- Comércio Eletrônico e Varejo
+- Finanças e Contabilidade
+- Automação de Marketing e Publicidade
+- Gerenciamento de Projetos
+- Gerenciamento de Mídias Sociais
+- Infraestrutura Técnica e DevOps
+- Web Scraping e Extração de Dados
 
-### Contribute Categories
+### Contribua com Categorias
 
-You can help expand the categorization by adding more service-to-category mappings (e.g., Twilio → Communication & Messaging) in context/defs_categories.json.
+Você pode ajudar a expandir a categorização adicionando mais mapeamentos de serviço para categoria (por exemplo, Twilio → Comunicação e Mensagens) em context/defs_categories.json.
 
-Many workflow JSON files are conveniently named with the service name, often separated by underscores (_).
+Muitos arquivos JSON de workflow são convenientemente nomeados com o nome do serviço, geralmente separados por sublinhados (_).
 
 
 ---
 
-## 🛠 Usage Instructions
+## 🛠 Instruções de Uso
 
-### Option 1: Modern Fast System (Recommended)
+### Opção 1: Sistema Rápido Moderno (Recomendado)
 ```bash
-# Clone repository
+# Clonar o repositório
 git clone <repo-url>
 cd n8n-workflows
 
-# Install Python dependencies
+# Instalar dependências do Python
 pip install -r requirements.txt
 
-# Start the documentation server
+# Iniciar o servidor de documentação
 python run.py
 
-# Browse workflows at http://localhost:8000
-# - Instant search across 2,053 workflows
-# - Professional responsive interface
-# - Real-time workflow statistics
+# Navegar pelos workflows em http://localhost:8000
+# - Busca instantânea em 2.053 workflows
+# - Interface profissional responsiva
+# - Estatísticas de workflow em tempo real
 ```
 
-### Option 2: Development Mode
+### Opção 2: Modo de Desenvolvimento
 ```bash
-# Start with auto-reload for development
+# Iniciar com recarregamento automático para desenvolvimento
 python run.py --dev
 
-# Or specify custom host/port
+# Ou especificar host/porta personalizados
 python run.py --host 0.0.0.0 --port 3000
 
-# Force database reindexing
+# Forçar reindexação do banco de dados
 python run.py --reindex
 ```
 
-### Import Workflows into n8n
+### Importar Workflows para o n8n
 ```bash
-# Use the Python importer (recommended)
+# Usar o importador Python (recomendado)
 python import_workflows.py
 
-# Or manually import individual workflows:
-# 1. Open your n8n Editor UI
-# 2. Click menu (☰) → Import workflow
-# 3. Choose any .json file from the workflows/ folder
-# 4. Update credentials/webhook URLs before running
+# Ou importar manualmente workflows individuais:
+# 1. Abra a interface do Editor n8n
+# 2. Clique no menu (☰) → Importar workflow
+# 3. Escolha qualquer arquivo .json da pasta workflows/
+# 4. Atualize as credenciais/URLs de webhook antes de executar
 ```
 
 ---
 
-## 📊 Workflow Statistics
+## 📊 Estatísticas dos Workflows
 
-### Current Collection Stats
-- **Total Workflows**: 2,053 automation workflows
-- **Active Workflows**: 215 (10.5% active rate)
-- **Total Nodes**: 29,445 (avg 14.3 nodes per workflow)
-- **Unique Integrations**: 365 different services and APIs
-- **Database**: SQLite with FTS5 full-text search
+### Estatísticas Atuais da Coleção
+- **Total de Workflows**: 2.053 workflows de automação
+- **Workflows Ativos**: 215 (taxa de ativos de 10,5%)
+- **Total de Nós**: 29.445 (média de 14,3 nós por workflow)
+- **Integrações Únicas**: 365 serviços e APIs diferentes
+- **Banco de Dados**: SQLite com busca de texto completo FTS5
 
-### Trigger Distribution
-- **Complex**: 831 workflows (40.5%) - Multi-trigger systems
-- **Webhook**: 519 workflows (25.3%) - API-triggered automations  
-- **Manual**: 477 workflows (23.2%) - User-initiated workflows
-- **Scheduled**: 226 workflows (11.0%) - Time-based executions
+### Distribuição de Gatilhos
+- **Complexo**: 831 workflows (40,5%) - Sistemas com múltiplos gatilhos  
+- **Webhook**: 519 workflows (25,3%) - Automações acionadas por API  
+- **Manual**: 477 workflows (23,2%) - Workflows iniciados pelo usuário
+- **Agendado**: 226 workflows (11,0%) - Execuções baseadas em tempo
 
-### Complexity Analysis
-- **Low (≤5 nodes)**: ~35% - Simple automations
-- **Medium (6-15 nodes)**: ~45% - Standard workflows
-- **High (16+ nodes)**: ~20% - Complex enterprise systems
+### Análise de Complexidade
+- **Baixa (≤5 nós)**: ~35% - Automações simples
+- **Média (6-15 nós)**: ~45% - Workflows padrão
+- **Alta (16+ nós)**: ~20% - Sistemas empresariais complexos
 
 ### Popular Integrations
 Top services by usage frequency:
