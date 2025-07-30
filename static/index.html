@@ -110,8 +110,8 @@
     <header class="header">
       <div class="container">
         <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
-          <img src="ggailabs.svg" alt="GG.AI Labs" style="height: 50px; width: auto;">
-          <h1 class="title">Documentação de Workflows N8N</h1>
+          <img src="/static/ggailabs.png" alt="GG.AI Labs" style="height: 50px; width: auto;">
+          <h1 class="title">GG.AI Labs - Documentação de Workflows N8N</h1>
         </div>
         <p class="subtitle">
           Navegador ultra-rápido de workflows com busca instantânea
@@ -278,7 +278,7 @@
       </div>
       <div class="modal-body" style="text-align: center;">
         <p style="margin-bottom: 1.5rem;">Escaneie o QR Code ou utilize a chave PIX abaixo para fazer sua doação:</p>
-        <img src="qrcode.png" alt="QR Code PIX" style="max-width: 250px; margin: 0 auto 1.5rem; display: block; border-radius: 0.5rem; border: 1px solid var(--border);">
+        <img src="/static/qrcode.png" alt="QR Code PIX" style="max-width: 250px; margin: 0 auto 1.5rem; display: block; border-radius: 0.5rem; border: 1px solid var(--border);">
         <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
           <p style="margin: 0 0 0.5rem; font-weight: 600;">Chave PIX (e-mail):</p>
           <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
@@ -1034,6 +1034,41 @@
         button.innerHTML = '📋 Copy';
         button.classList.remove('copied');
       }
+    }
+
+    // Função para copiar texto para a área de transferência
+    function copyToClipboard(text, buttonId) {
+      navigator.clipboard.writeText(text).then(() => {
+        const button = document.getElementById(buttonId);
+        if (button) {
+          const originalText = button.innerHTML;
+          button.innerHTML = '✅ Copiado!';
+          setTimeout(() => {
+            button.innerHTML = originalText;
+          }, 2000);
+        }
+      }).catch(err => {
+        console.error('Erro ao copiar texto: ', err);
+        // Fallback para navegadores mais antigos
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          const button = document.getElementById(buttonId);
+          if (button) {
+            const originalText = button.innerHTML;
+            button.innerHTML = '✅ Copiado!';
+            setTimeout(() => {
+              button.innerHTML = originalText;
+            }, 2000);
+          }
+        } catch (err) {
+          console.error('Erro ao copiar texto (fallback): ', err);
+        }
+        document.body.removeChild(textArea);
+      });
     }
 
     // Função para controle do modal de doação
