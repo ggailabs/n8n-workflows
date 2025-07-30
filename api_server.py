@@ -110,7 +110,12 @@ async def root():
 @app.get("/health")
 async def health_check():
     """Endpoint de saúde."""
-    return {"status": "ok", "mensagem": "API de Workflows N8N rodando"}
+    return {"status": "ok", "version": "2.0.0", "mensagem": "API de Workflows N8N rodando"}
+
+@app.get("/api/version")
+async def get_version():
+    """Obtém a versão da API."""
+    return {"version": "2.0.0"}
 
 @app.get("/api/stats", response_model=StatsResponse)
 async def get_stats():
