@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-FastAPI Server for N8N Workflow Documentation
-High-performance API with sub-100ms response times.
+Servidor FastAPI para Documentação de Workflows N8N - GG.AI Labs
+API de alta performance com respostas abaixo de 100ms.
 """
 
 from fastapi import FastAPI, HTTPException, Query, BackgroundTasks
@@ -19,14 +19,12 @@ import uvicorn
 
 from workflow_db import WorkflowDatabase
 
-# Initialize FastAPI app
 app = FastAPI(
-    title="N8N Workflow Documentation API",
-    description="Fast API for browsing and searching workflow documentation",
+    title="GG.AI Labs - API de Documentação de Workflows N8N",
+    description="API rápida para navegação e busca de documentação de workflows",
     version="2.0.0"
 )
 
-# Add middleware for performance
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_middleware(
     CORSMiddleware,
@@ -36,24 +34,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize database
 db = WorkflowDatabase()
 
-# Startup function to verify database
 @app.on_event("startup")
 async def startup_event():
-    """Verify database connectivity on startup."""
+    """Verifica a conectividade com o banco de dados ao iniciar."""
     try:
         stats = db.get_stats()
         if stats['total'] == 0:
-            print("⚠️  Warning: No workflows found in database. Run indexing first.")
+            print("⚠️  Aviso: Nenhum workflow encontrado no banco. Execute o indexador primeiro.")
         else:
-            print(f"✅ Database connected: {stats['total']} workflows indexed")
+            print(f"✅ Banco de dados conectado: {stats['total']} workflows indexados")
     except Exception as e:
-        print(f"❌ Database connection failed: {e}")
+        print(f"❌ Falha ao conectar no banco de dados: {e}")
         raise
 
-# Response models
 class WorkflowSummary(BaseModel):
     id: Optional[int] = None
     filename: str
@@ -67,18 +62,16 @@ class WorkflowSummary(BaseModel):
     tags: List[str] = []
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
-    
+
     class Config:
-        # Allow conversion of int to bool for active field
         validate_assignment = True
-        
+
     @field_validator('active', mode='before')
     @classmethod
     def convert_active(cls, v):
         if isinstance(v, int):
             return bool(v)
         return v
-    
 
 class SearchResponse(BaseModel):
     workflows: List[WorkflowSummary]
@@ -101,46 +94,46 @@ class StatsResponse(BaseModel):
 
 @app.get("/")
 async def root():
-    """Serve the main documentation page."""
+    """Exibe a página principal de documentação."""
     static_dir = Path("static")
     index_file = static_dir / "index.html"
     if not index_file.exists():
         return HTMLResponse("""
         <html><body>
-        <h1>Setup Required</h1>
-        <p>Static files not found. Please ensure the static directory exists with index.html</p>
-        <p>Current directory: """ + str(Path.cwd()) + """</p>
+        <h1>Configuração necessária</h1>
+        <p>Arquivos estáticos não encontrados. Certifique-se de que a pasta static existe com index.html</p>
+        <p>Diretório atual: """ + str(Path.cwd()) + """</p>
         </body></html>
         """)
     return FileResponse(str(index_file))
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint."""
-    return {"status": "healthy", "message": "N8N Workflow API is running"}
+    """Endpoint de saúde."""
+    return {"status": "ok", "mensagem": "API de Workflows N8N rodando"}
 
 @app.get("/api/stats", response_model=StatsResponse)
 async def get_stats():
-    """Get workflow database statistics."""
+    """Obtém estatísticas do banco de dados de workflows."""
     try:
         stats = db.get_stats()
         return StatsResponse(**stats)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching stats: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar estatísticas: {str(e)}")
 
 @app.get("/api/workflows", response_model=SearchResponse)
 async def search_workflows(
-    q: str = Query("", description="Search query"),
-    trigger: str = Query("all", description="Filter by trigger type"),
-    complexity: str = Query("all", description="Filter by complexity"),
-    active_only: bool = Query(False, description="Show only active workflows"),
-    page: int = Query(1, ge=1, description="Page number"),
-    per_page: int = Query(20, ge=1, le=100, description="Items per page")
+    q: str = Query("", description="Consulta de busca"),
+    trigger: str = Query("all", description="Filtrar por tipo de disparo"),
+    complexity: str = Query("all", description="Filtrar por complexidade"),
+    active_only: bool = Query(False, description="Apenas workflows ativos"),
+    page: int = Query(1, ge=1, description="Página"),
+    per_page: int = Query(20, ge=1, le=100, description="Itens por página")
 ):
-    """Search and filter workflows with pagination."""
+    """Busca e filtra workflows com paginação."""
     try:
         offset = (page - 1) * per_page
-        
+
         workflows, total = db.search_workflows(
             query=q,
             trigger_filter=trigger,
@@ -149,12 +142,10 @@ async def search_workflows(
             limit=per_page,
             offset=offset
         )
-        
-        # Convert to Pydantic models with error handling
+
         workflow_summaries = []
         for workflow in workflows:
             try:
-                # Remove extra fields that aren't in the model
                 clean_workflow = {
                     'id': workflow.get('id'),
                     'filename': workflow.get('filename', ''),
@@ -171,12 +162,11 @@ async def search_workflows(
                 }
                 workflow_summaries.append(WorkflowSummary(**clean_workflow))
             except Exception as e:
-                print(f"Error converting workflow {workflow.get('filename', 'unknown')}: {e}")
-                # Continue with other workflows instead of failing completely
+                print(f"Erro ao converter workflow {workflow.get('filename', 'desconhecido')}: {e}")
                 continue
-        
-        pages = (total + per_page - 1) // per_page  # Ceiling division
-        
+
+        pages = (total + per_page - 1) // per_page
+
         return SearchResponse(
             workflows=workflow_summaries,
             total=total,
@@ -191,28 +181,22 @@ async def search_workflows(
             }
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error searching workflows: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar workflows: {str(e)}")
 
 @app.get("/api/workflows/{filename}")
 async def get_workflow_detail(filename: str):
-    """Get detailed workflow information including raw JSON."""
+    """Obtém detalhes completos do workflow, incluindo JSON bruto."""
     try:
-        # Get workflow metadata from database
         workflows, _ = db.search_workflows(f'filename:"{filename}"', limit=1)
         if not workflows:
-            raise HTTPException(status_code=404, detail="Workflow not found in database")
-        
+            raise HTTPException(status_code=404, detail="Workflow não encontrado no banco")
         workflow_meta = workflows[0]
-        
-        # Load raw JSON from file
         file_path = os.path.join("workflows", filename)
         if not os.path.exists(file_path):
-            print(f"Warning: File {file_path} not found on filesystem but exists in database")
-            raise HTTPException(status_code=404, detail=f"Workflow file '{filename}' not found on filesystem")
-        
+            print(f"Aviso: Arquivo {file_path} não encontrado no sistema, mas está no banco")
+            raise HTTPException(status_code=404, detail=f"Arquivo '{filename}' não encontrado")
         with open(file_path, 'r', encoding='utf-8') as f:
             raw_json = json.load(f)
-        
         return {
             "metadata": workflow_meta,
             "raw_json": raw_json
@@ -220,221 +204,179 @@ async def get_workflow_detail(filename: str):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error loading workflow: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Erro ao carregar workflow: {str(e)}")
 
 @app.get("/api/workflows/{filename}/download")
 async def download_workflow(filename: str):
-    """Download workflow JSON file."""
+    """Baixa o arquivo JSON do workflow."""
     try:
         file_path = os.path.join("workflows", filename)
         if not os.path.exists(file_path):
-            print(f"Warning: Download requested for missing file: {file_path}")
-            raise HTTPException(status_code=404, detail=f"Workflow file '{filename}' not found on filesystem")
-        
+            print(f"Aviso: Download solicitado para arquivo ausente: {file_path}")
+            raise HTTPException(status_code=404, detail=f"Arquivo '{filename}' não encontrado")
         return FileResponse(
             file_path,
             media_type="application/json",
             filename=filename
         )
     except FileNotFoundError:
-        raise HTTPException(status_code=404, detail=f"Workflow file '{filename}' not found")
+        raise HTTPException(status_code=404, detail=f"Arquivo '{filename}' não encontrado")
     except Exception as e:
-        print(f"Error downloading workflow {filename}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error downloading workflow: {str(e)}")
+        print(f"Erro ao baixar workflow {filename}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Erro ao baixar workflow: {str(e)}")
 
 @app.get("/api/workflows/{filename}/diagram")
 async def get_workflow_diagram(filename: str):
-    """Get Mermaid diagram code for workflow visualization."""
+    """Obtém o diagrama Mermaid para visualização do workflow."""
     try:
         file_path = os.path.join("workflows", filename)
         if not os.path.exists(file_path):
-            print(f"Warning: Diagram requested for missing file: {file_path}")
-            raise HTTPException(status_code=404, detail=f"Workflow file '{filename}' not found on filesystem")
-        
+            print(f"Aviso: Diagrama solicitado para arquivo ausente: {file_path}")
+            raise HTTPException(status_code=404, detail=f"Arquivo '{filename}' não encontrado")
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
-        
         nodes = data.get('nodes', [])
         connections = data.get('connections', {})
-        
-        # Generate Mermaid diagram
         diagram = generate_mermaid_diagram(nodes, connections)
-        
         return {"diagram": diagram}
     except HTTPException:
         raise
     except FileNotFoundError:
-        raise HTTPException(status_code=404, detail=f"Workflow file '{filename}' not found")
+        raise HTTPException(status_code=404, detail=f"Arquivo '{filename}' não encontrado")
     except json.JSONDecodeError as e:
-        print(f"Error parsing JSON in {filename}: {str(e)}")
-        raise HTTPException(status_code=400, detail=f"Invalid JSON in workflow file: {str(e)}")
+        print(f"Erro ao ler JSON em {filename}: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"JSON inválido no workflow: {str(e)}")
     except Exception as e:
-        print(f"Error generating diagram for {filename}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error generating diagram: {str(e)}")
+        print(f"Erro ao gerar diagrama para {filename}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Erro ao gerar diagrama: {str(e)}")
 
 def generate_mermaid_diagram(nodes: List[Dict], connections: Dict) -> str:
-    """Generate Mermaid.js flowchart code from workflow nodes and connections."""
+    """Gera código Mermaid.js a partir dos nós e conexões do workflow."""
     if not nodes:
-        return "graph TD\n  EmptyWorkflow[No nodes found in workflow]"
-    
-    # Create mapping for node names to ensure valid mermaid IDs
+        return "graph TD\n  EmptyWorkflow[Sem nós encontrados no workflow]"
     mermaid_ids = {}
     for i, node in enumerate(nodes):
         node_id = f"node{i}"
         node_name = node.get('name', f'Node {i}')
         mermaid_ids[node_name] = node_id
-    
-    # Start building the mermaid diagram
     mermaid_code = ["graph TD"]
-    
-    # Add nodes with styling
     for node in nodes:
-        node_name = node.get('name', 'Unnamed')
+        node_name = node.get('name', 'Sem nome')
         node_id = mermaid_ids[node_name]
         node_type = node.get('type', '').replace('n8n-nodes-base.', '')
-        
-        # Determine node style based on type
         style = ""
         if any(x in node_type.lower() for x in ['trigger', 'webhook', 'cron']):
-            style = "fill:#b3e0ff,stroke:#0066cc"  # Blue for triggers
+            style = "fill:#b3e0ff,stroke:#0066cc"
         elif any(x in node_type.lower() for x in ['if', 'switch']):
-            style = "fill:#ffffb3,stroke:#e6e600"  # Yellow for conditional nodes
+            style = "fill:#ffffb3,stroke:#e6e600"
         elif any(x in node_type.lower() for x in ['function', 'code']):
-            style = "fill:#d9b3ff,stroke:#6600cc"  # Purple for code nodes
+            style = "fill:#d9b3ff,stroke:#6600cc"
         elif 'error' in node_type.lower():
-            style = "fill:#ffb3b3,stroke:#cc0000"  # Red for error handlers
+            style = "fill:#ffb3b3,stroke:#cc0000"
         else:
-            style = "fill:#d9d9d9,stroke:#666666"  # Gray for other nodes
-        
-        # Add node with label (escaping special characters)
+            style = "fill:#d9d9d9,stroke:#666666"
         clean_name = node_name.replace('"', "'")
         clean_type = node_type.replace('"', "'")
         label = f"{clean_name}<br>({clean_type})"
         mermaid_code.append(f"  {node_id}[\"{label}\"]")
         mermaid_code.append(f"  style {node_id} {style}")
-    
-    # Add connections between nodes
     for source_name, source_connections in connections.items():
         if source_name not in mermaid_ids:
             continue
-        
         if isinstance(source_connections, dict) and 'main' in source_connections:
             main_connections = source_connections['main']
-            
             for i, output_connections in enumerate(main_connections):
                 if not isinstance(output_connections, list):
                     continue
-                    
                 for connection in output_connections:
                     if not isinstance(connection, dict) or 'node' not in connection:
                         continue
-                        
                     target_name = connection['node']
                     if target_name not in mermaid_ids:
                         continue
-                        
-                    # Add arrow with output index if multiple outputs
                     label = f" -->|{i}| " if len(main_connections) > 1 else " --> "
                     mermaid_code.append(f"  {mermaid_ids[source_name]}{label}{mermaid_ids[target_name]}")
-    
-    # Format the final mermaid diagram code
     return "\n".join(mermaid_code)
 
 @app.post("/api/reindex")
 async def reindex_workflows(background_tasks: BackgroundTasks, force: bool = False):
-    """Trigger workflow reindexing in the background."""
+    """Reindexa workflows em segundo plano."""
     def run_indexing():
         db.index_all_workflows(force_reindex=force)
-    
     background_tasks.add_task(run_indexing)
-    return {"message": "Reindexing started in background"}
+    return {"mensagem": "Reindexação iniciada em segundo plano"}
 
 @app.get("/api/integrations")
 async def get_integrations():
-    """Get list of all unique integrations."""
+    """Obtém lista de todas as integrações únicas."""
     try:
         stats = db.get_stats()
-        # For now, return basic info. Could be enhanced to return detailed integration stats
         return {"integrations": [], "count": stats['unique_integrations']}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error fetching integrations: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar integrações: {str(e)}")
 
 @app.get("/api/categories")
 async def get_categories():
-    """Get available workflow categories for filtering."""
+    """Obtém categorias disponíveis para filtragem."""
     try:
-        # Try to load from the generated unique categories file
         categories_file = Path("context/unique_categories.json")
         if categories_file.exists():
             with open(categories_file, 'r', encoding='utf-8') as f:
                 categories = json.load(f)
             return {"categories": categories}
         else:
-            # Fallback: extract categories from search_categories.json
             search_categories_file = Path("context/search_categories.json")
             if search_categories_file.exists():
                 with open(search_categories_file, 'r', encoding='utf-8') as f:
                     search_data = json.load(f)
-                
                 unique_categories = set()
                 for item in search_data:
                     if item.get('category'):
                         unique_categories.add(item['category'])
                     else:
-                        unique_categories.add('Uncategorized')
-                
+                        unique_categories.add('Sem categoria')
                 categories = sorted(list(unique_categories))
                 return {"categories": categories}
             else:
-                # Last resort: return basic categories
-                return {"categories": ["Uncategorized"]}
-                
+                return {"categories": ["Sem categoria"]}
     except Exception as e:
-        print(f"Error loading categories: {e}")
-        raise HTTPException(status_code=500, detail=f"Error fetching categories: {str(e)}")
+        print(f"Erro ao carregar categorias: {e}")
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar categorias: {str(e)}")
 
 @app.get("/api/category-mappings")
 async def get_category_mappings():
-    """Get filename to category mappings for client-side filtering."""
+    """Obtém mapeamento de arquivo para categoria."""
     try:
         search_categories_file = Path("context/search_categories.json")
         if not search_categories_file.exists():
             return {"mappings": {}}
-        
         with open(search_categories_file, 'r', encoding='utf-8') as f:
             search_data = json.load(f)
-        
-        # Convert to a simple filename -> category mapping
         mappings = {}
         for item in search_data:
             filename = item.get('filename')
-            category = item.get('category') or 'Uncategorized'
+            category = item.get('category') or 'Sem categoria'
             if filename:
                 mappings[filename] = category
-        
         return {"mappings": mappings}
-        
     except Exception as e:
-        print(f"Error loading category mappings: {e}")
-        raise HTTPException(status_code=500, detail=f"Error fetching category mappings: {str(e)}")
+        print(f"Erro ao carregar mapeamentos de categoria: {e}")
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar mapeamentos de categoria: {str(e)}")
 
 @app.get("/api/workflows/category/{category}", response_model=SearchResponse)
 async def search_workflows_by_category(
     category: str,
-    page: int = Query(1, ge=1, description="Page number"),
-    per_page: int = Query(20, ge=1, le=100, description="Items per page")
+    page: int = Query(1, ge=1, description="Página"),
+    per_page: int = Query(20, ge=1, le=100, description="Itens por página")
 ):
-    """Search workflows by service category (messaging, database, ai_ml, etc.)."""
+    """Busca workflows por categoria de serviço."""
     try:
         offset = (page - 1) * per_page
-        
         workflows, total = db.search_by_category(
             category=category,
             limit=per_page,
             offset=offset
         )
-        
-        # Convert to Pydantic models with error handling
         workflow_summaries = []
         for workflow in workflows:
             try:
@@ -454,11 +396,9 @@ async def search_workflows_by_category(
                 }
                 workflow_summaries.append(WorkflowSummary(**clean_workflow))
             except Exception as e:
-                print(f"Error converting workflow {workflow.get('filename', 'unknown')}: {e}")
+                print(f"Erro ao converter workflow {workflow.get('filename', 'desconhecido')}: {e}")
                 continue
-        
         pages = (total + per_page - 1) // per_page
-        
         return SearchResponse(
             workflows=workflow_summaries,
             total=total,
@@ -469,84 +409,73 @@ async def search_workflows_by_category(
             filters={"category": category}
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error searching by category: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Erro ao buscar por categoria: {str(e)}")
 
-# Custom exception handler for better error responses
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
     return JSONResponse(
         status_code=500,
-        content={"detail": f"Internal server error: {str(exc)}"}
+        content={"detail": f"Erro interno no servidor: {str(exc)}"}
     )
 
-# Mount static files AFTER all routes are defined
 static_dir = Path("static")
 if static_dir.exists():
     app.mount("/static", StaticFiles(directory="static"), name="static")
-    print(f"✅ Static files mounted from {static_dir.absolute()}")
+    print(f"✅ Arquivos estáticos carregados de {static_dir.absolute()}")
 else:
-    print(f"❌ Warning: Static directory not found at {static_dir.absolute()}")
+    print(f"❌ Atenção: Diretório static não encontrado em {static_dir.absolute()}")
 
 def create_static_directory():
-    """Create static directory if it doesn't exist."""
     static_dir = Path("static")
     static_dir.mkdir(exist_ok=True)
     return static_dir
 
 def run_server(host: str = "127.0.0.1", port: int = 8000, reload: bool = False):
-    """Run the FastAPI server."""
-    # Ensure static directory exists
     create_static_directory()
-    
-    # Debug: Check database connectivity
     try:
         stats = db.get_stats()
-        print(f"✅ Database connected: {stats['total']} workflows found")
+        print(f"✅ Banco de dados conectado: {stats['total']} workflows encontrados")
         if stats['total'] == 0:
-            print("🔄 Database is empty. Indexing workflows...")
+            print("🔄 Banco vazio. Indexando workflows...")
             db.index_all_workflows()
             stats = db.get_stats()
     except Exception as e:
-        print(f"❌ Database error: {e}")
-        print("🔄 Attempting to create and index database...")
+        print(f"❌ Erro no banco de dados: {e}")
+        print("🔄 Tentando criar e indexar banco de dados...")
         try:
             db.index_all_workflows()
             stats = db.get_stats()
-            print(f"✅ Database created: {stats['total']} workflows indexed")
+            print(f"✅ Banco criado: {stats['total']} workflows indexados")
         except Exception as e2:
-            print(f"❌ Failed to create database: {e2}")
+            print(f"❌ Falha ao criar banco: {e2}")
             stats = {'total': 0}
-    
-    # Debug: Check static files
     static_path = Path("static")
     if static_path.exists():
         files = list(static_path.glob("*"))
-        print(f"✅ Static files found: {[f.name for f in files]}")
+        print(f"✅ Arquivos estáticos encontrados: {[f.name for f in files]}")
     else:
-        print(f"❌ Static directory not found at: {static_path.absolute()}")
-    
-    print(f"🚀 Starting N8N Workflow Documentation API")
-    print(f"📊 Database contains {stats['total']} workflows")
-    print(f"🌐 Server will be available at: http://{host}:{port}")
-    print(f"📁 Static files at: http://{host}:{port}/static/")
-    
+        print(f"❌ Diretório static não encontrado: {static_path.absolute()}")
+    print(f"🚀 Iniciando GG.AI Labs - API de Documentação de Workflows N8N")
+    print(f"📊 Banco contém {stats['total']} workflows")
+    print(f"🌐 Servidor disponível em: http://{host}:{port}")
+    print(f"📁 Arquivos estáticos em: http://{host}:{port}/static/")
     uvicorn.run(
         "api_server:app",
         host=host,
         port=port,
         reload=reload,
-        access_log=True,  # Enable access logs for debugging
+        access_log=True,
         log_level="info"
     )
 
 if __name__ == "__main__":
     import argparse
-    
-    parser = argparse.ArgumentParser(description='N8N Workflow Documentation API Server')
-    parser.add_argument('--host', default='127.0.0.1', help='Host to bind to')
-    parser.add_argument('--port', type=int, default=8000, help='Port to bind to')
-    parser.add_argument('--reload', action='store_true', help='Enable auto-reload for development')
-    
+
+    parser = argparse.ArgumentParser(description='Servidor GG.AI Labs - API de Documentação de Workflows N8N')
+    parser.add_argument('--host', default='127.0.0.1', help='Host')
+    parser.add_argument('--port', type=int, default=8000, help='Porta')
+    parser.add_argument('--reload', action='store_true', help='Auto-reload para desenvolvimento')
+
     args = parser.parse_args()
-    
+
     run_server(host=args.host, port=args.port, reload=args.reload)

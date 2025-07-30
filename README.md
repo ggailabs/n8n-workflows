@@ -395,69 +395,69 @@ Our system automatically converts technical filenames to user-friendly names:
 
 ---
 
-## ⚠️ Important Notes
+## ⚠️ Notas Importantes
 
-### Security & Privacy
-- **Review before use** - All workflows shared as-is for educational purposes
-- **Update credentials** - Replace API keys, tokens, and webhooks
-- **Test safely** - Verify in development environment first
-- **Check permissions** - Ensure proper access rights for integrations
+### Segurança e Privacidade
+- **Revise antes de usar** - Todos os workflows são compartilhados como estão, para fins educacionais
+- **Atualize as credenciais** - Substitua chaves de API, tokens e webhooks
+- **Teste com segurança** - Verifique primeiro em um ambiente de desenvolvimento
+- **Verifique as permissões** - Garanta os direitos de acesso adequados para as integrações
 
-### Compatibility
-- **n8n Version** - Compatible with n8n 1.0+ (most workflows)
-- **Community Nodes** - Some workflows may require additional node installations
-- **API Changes** - External services may have updated their APIs since creation
-- **Dependencies** - Verify required integrations before importing
-
----
-
-## 📚 Resources & References
-
-### Workflow Sources
-This comprehensive collection includes workflows from:
-- **Official n8n.io** - Documentation and community examples
-- **GitHub repositories** - Open source community contributions  
-- **Blog posts & tutorials** - Real-world automation patterns
-- **User submissions** - Tested and verified workflows
-- **Enterprise use cases** - Business process automations
-
-### Learn More
-- [n8n Documentation](https://docs.n8n.io/) - Official documentation
-- [n8n Community](https://community.n8n.io/) - Community forum and support
-- [Workflow Templates](https://n8n.io/workflows/) - Official template library
-- [Integration Docs](https://docs.n8n.io/integrations/) - Service-specific guides
+### Compatibilidade
+- **Versão do n8n** - Compatível com n8n 1.0+ (a maioria dos workflows)
+- **Nós da Comunidade** - Alguns workflows podem exigir instalações adicionais de nós
+- **Mudanças na API** - Serviços externos podem ter atualizado suas APIs desde a criação
+- **Dependências** - Verifique as integrações necessárias antes de importar
 
 ---
 
-## 🏆 Project Achievements
+## 📚 Recursos e Referências
 
-### Repository Transformation
-- **2,053 workflows** professionally organized and named
-- **365 unique integrations** automatically detected and categorized
-- **100% meaningful names** (improved from basic filename patterns)
-- **Zero data loss** during intelligent renaming process
-- **Advanced search** with 12 service categories
+### Fontes dos Workflows
+Esta coleção abrangente inclui workflows de:
+- **n8n.io Oficial** - Documentação e exemplos da comunidade
+- **Repositórios do GitHub** - Contribuições da comunidade de código aberto  
+- **Posts de blog e tutoriais** - Padrões de automação do mundo real
+- **Submissões de usuários** - Workflows testados e verificados
+- **Casos de uso empresariais** - Automações de processos de negócios
 
-### Performance Revolution
-- **Sub-100ms search** with SQLite FTS5 full-text indexing
-- **Instant filtering** across 29,445 workflow nodes
-- **Mobile-optimized** responsive design for all devices
-- **Real-time statistics** with live database queries
-- **Professional interface** with modern UX principles
-
-### System Reliability
-- **Robust error handling** with graceful degradation
-- **Change detection** for efficient database updates
-- **Background processing** for non-blocking operations
-- **Comprehensive logging** for debugging and monitoring
-- **Production-ready** with proper middleware and security
+### Saiba Mais
+- [Documentação do n8n](https://docs.n8n.io/) - Documentação oficial
+- [Comunidade n8n](https://community.n8n.io/) - Fórum e suporte da comunidade
+- [Modelos de Workflow](https://n8n.io/workflows/) - Biblioteca oficial de modelos
+- [Documentação de Integrações](https://docs.n8n.io/integrations/) - Guias específicos por serviço
 
 ---
 
-*This repository represents the most comprehensive and well-organized collection of n8n workflows available, featuring cutting-edge search technology and professional documentation that makes workflow discovery and usage a delightful experience.*
+## 🏆 Conquistas do Projeto
 
-**🎯 Perfect for**: Developers, automation engineers, business analysts, and anyone looking to streamline their workflows with proven n8n automations.
+### Transformação do Repositório
+- **2.053 workflows** organizados e nomeados profissionalmente
+- **365 integrações únicas** detectadas e categorizadas automaticamente
+- **Nomes 100% significativos** (melhorados a partir de padrões básicos de nomeação de arquivos)
+- **Nenhuma perda de dados** durante o processo de renomeação inteligente
+- **Busca avançada** com 12 categorias de serviço
+
+### Revolução de Desempenho
+- **Busca em menos de 100ms** com indexação de texto completo SQLite FTS5
+- **Filtragem instantânea** em 29.445 nós de workflow
+- **Design responsivo** otimizado para dispositivos móveis
+- **Estatísticas em tempo real** com consultas ao banco de dados ao vivo
+- **Interface profissional** com princípios modernos de UX
+
+### Confiabilidade do Sistema
+- **Tratamento robusto de erros** com degradação graciosa
+- **Detecção de alterações** para atualizações eficientes do banco de dados
+- **Processamento em segundo plano** para operações não-bloqueantes
+- **Registro abrangente** para depuração e monitoramento
+- **Pronto para produção** com middleware e segurança adequados
 
 ---
 
-[中文](./README_ZH.md)
+*Este repositório representa a coleção mais abrangente e bem organizada de workflows n8n disponíveis, apresentando tecnologia de busca de ponta e documentação profissional que torna a descoberta e o uso de workflows uma experiência agradável.*
+
+**🎯 Perfeito para**: Desenvolvedores, engenheiros de automação, analistas de negócios e qualquer pessoa que deseje simplificar seus fluxos de trabalho com automações n8n comprovadas.
+
+---
+
+[中文](./README_ZH.md) | [Português](./README.md)

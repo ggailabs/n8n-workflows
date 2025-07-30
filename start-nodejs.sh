@@ -3,7 +3,7 @@
 # 🚀 N8N Workflow Documentation - Node.js Launcher
 # Quick setup and launch script
 
-echo "🚀 N8N Workflow Documentation - Node.js Implementation"
+echo "🚀 GG.AI Labs - N8N Workflow Documentation - Node.js Implementation"
 echo "======================================================"
 
 # Check if Node.js is available

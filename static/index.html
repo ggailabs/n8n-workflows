@@ -109,10 +109,12 @@
   <div id="app">
     <header class="header">
       <div class="container">
-        <h1 class="title">⚡ GG.AI Labs — Documentação de Workflows N8N</h1>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+          <img src="ggailabs.svg" alt="GG.AI Labs" style="height: 50px; width: auto;">
+          <h1 class="title">Documentação de Workflows N8N</h1>
+        </div>
         <p class="subtitle">
-          Navegador ultra-rápido de workflows com busca instantânea<br>
-          <span style="font-weight: 700; color: var(--primary); font-size: 1.1em;">by GG.AI Labs</span>
+          Navegador ultra-rápido de workflows com busca instantânea
         </p>
         <div class="stats">
           <div class="stat">
@@ -252,6 +254,45 @@
       </div>
     </div>
   </div>
+  
+  <!-- Rodapé com mensagem de contribuição -->
+  <footer style="background: var(--bg-secondary); border-top: 1px solid var(--border); padding: 1.5rem 0; margin-top: 2rem;">
+    <div class="container" style="text-align: center; color: var(--text-secondary);">
+      <p>
+        Este projeto é mantido pela GG.AI Labs. Se ele foi útil para você, considere fazer uma 
+        <a href="#" id="donateLink" style="color: var(--primary); text-decoration: none; font-weight: 600;">doação</a> 
+        para ajudar a mantê-lo ativo e em constante melhoria.
+      </p>
+      <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+        💙 Agradecemos seu apoio!
+      </p>
+    </div>
+  </footer>
+
+  <!-- Modal de Doação -->
+  <div id="donationModal" class="modal hidden">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2 class="modal-title">Apoie este projeto</h2>
+        <button class="modal-close" id="donationModalClose">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <p style="margin-bottom: 1.5rem;">Escaneie o QR Code ou utilize a chave PIX abaixo para fazer sua doação:</p>
+        <img src="qrcode.png" alt="QR Code PIX" style="max-width: 250px; margin: 0 auto 1.5rem; display: block; border-radius: 0.5rem; border: 1px solid var(--border);">
+        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+          <p style="margin: 0 0 0.5rem; font-weight: 600;">Chave PIX (e-mail):</p>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <code id="pixKey" style="background: var(--bg-tertiary); padding: 0.5rem 1rem; border-radius: 0.25rem; word-break: break-all;">pix@ggailabs.com</code>
+            <button class="copy-btn" onclick="copyToClipboard('pix@ggailabs.com', 'copyPixBtn')" id="copyPixBtn">
+              <span>Copiar</span>
+            </button>
+          </div>
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Obrigado por apoiar nosso trabalho! 💙</p>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Enhanced Workflow App with Full Functionality
     class WorkflowApp {
@@ -995,9 +1036,42 @@
       }
     }
 
+    // Função para controle do modal de doação
+    function setupDonationModal() {
+      const donateLink = document.getElementById('donateLink');
+      const donationModal = document.getElementById('donationModal');
+      const donationModalClose = document.getElementById('donationModalClose');
+      
+      if (donateLink && donationModal) {
+        // Abre o modal de doação
+        donateLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          donationModal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden'; // Impede rolagem da página
+        });
+        
+        // Fecha o modal ao clicar no botão de fechar
+        if (donationModalClose) {
+          donationModalClose.addEventListener('click', () => {
+            donationModal.classList.add('hidden');
+            document.body.style.overflow = ''; // Restaura rolagem da página
+          });
+        }
+        
+        // Fecha o modal ao clicar fora do conteúdo
+        donationModal.addEventListener('click', (e) => {
+          if (e.target === donationModal) {
+            donationModal.classList.add('hidden');
+            document.body.style.overflow = ''; // Restaura rolagem da página
+          }
+        });
+      }
+    }
+
     // Initialize the app
     document.addEventListener('DOMContentLoaded', () => {
       window.workflowApp = new WorkflowApp();
+      setupDonationModal();
     });
   </script>
 </body>
