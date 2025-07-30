@@ -476,21 +476,47 @@
       }
 
       setupTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        // Força o tema escuro como padrão independente da preferência do sistema
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
-        this.updateThemeToggle(savedTheme);
+        this.updateThemeIcon(savedTheme);
+        
+        // Adiciona classe de transição suave para o tema
+        document.documentElement.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+        setTimeout(() => {
+          document.documentElement.style.transition = '';
+        }, 300);
       }
 
       toggleTheme() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-        this.updateThemeToggle(newTheme);
+        this.updateThemeIcon(newTheme);
+        
+        // Adiciona animação suave na transição de tema
+        document.documentElement.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+        setTimeout(() => {
+          document.documentElement.style.transition = '';
+        }, 300);
       }
 
-      updateThemeToggle(theme) {
-        this.elements.themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+      updateThemeIcon(theme) {
+        const icon = document.getElementById('themeIcon');
+        const button = document.getElementById('themeToggle');
+        
+        if (theme === 'light') {
+          icon.className = 'fas fa-moon';
+          if (button) {
+            button.innerHTML = '<i class="fas fa-moon" id="themeIcon"></i><span>Alternar para escuro</span>';
+          }
+        } else {
+          icon.className = 'fas fa-sun';
+          if (button) {
+            button.innerHTML = '<i class="fas fa-sun" id="themeIcon"></i><span>Alternar para claro</span>';
+          }
+        }
       }
 
       debounceSearch() {
@@ -963,7 +989,7 @@
             this.elements.errorState.classList.remove('hidden');
             break;
           case 'no-results':
-            this.elements.noResultsState.classList.remove('hidden');
+            this.elements.noResultsState.classList.add('hidden');
             break;
           case 'content':
             this.elements.workflowGrid.classList.remove('hidden');
@@ -1109,8 +1135,26 @@
 
     // Initialize the app
     document.addEventListener('DOMContentLoaded', () => {
+      // Inicializa o app
       window.workflowApp = new WorkflowApp();
+      
+      // Configura o modal de doação
       setupDonationModal();
+      
+      // Configura o botão de alternar tema
+      const themeToggle = document.getElementById('themeToggle');
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          window.workflowApp.toggleTheme();
+        });
+      }
+      
+      // Força o tema escuro na inicialização se não houver preferência salva
+      if (!localStorage.getItem('theme')) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        window.workflowApp.updateThemeIcon('dark');
+      }
     });
   </script>
 </body>
