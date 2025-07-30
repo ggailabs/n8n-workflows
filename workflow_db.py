@@ -187,11 +187,11 @@ class WorkflowDatabase:
         
         # Determine complexity
         if node_count <= 5:
-            complexity = 'low'
+            complexity = 'baixa'
         elif node_count <= 15:
-            complexity = 'medium'
+            complexity = 'media'
         else:
-            complexity = 'high'
+            complexity = 'alta'
         workflow['complexity'] = complexity
         
         # Find trigger type and integrations
