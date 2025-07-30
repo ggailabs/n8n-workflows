@@ -1212,7 +1212,7 @@
                     <div class="workflow-meta">
                         <div class="status-dot ${statusClass}"></div>
                         <div class="complexity-dot ${complexityClass}"></div>
-                        <span>${workflow.node_count} nodes</span>
+                        <span>${workflow.node_count} nós</span>
                         <span class="category-badge">${this.escapeHtml(category)}</span>
                     </div>
                     <span class="trigger-badge">${this.escapeHtml(workflow.trigger_type)}</span>
@@ -1221,7 +1221,7 @@
                 <p class="workflow-description">${this.escapeHtml(workflow.description)}</p>
                 ${workflow.integrations.length > 0 ? `
                     <div class="workflow-integrations">
-                        <h4 class="integrations-title">Integrations (${workflow.integrations.length})</h4>
+                        <h4 class="integrations-title">Integrações (${workflow.integrations.length})</h4>
                         <div class="integrations-list">${integrations}${moreIntegrations}</div>
                     </div>` : ''}
             </div>`;
@@ -1234,18 +1234,18 @@
         const category = this.getWorkflowCategory(workflow.filename);
         this.elements.modalStats.innerHTML = `
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
-                <div><strong>Status:</strong> ${workflow.active ? 'Active' : 'Inactive'}</div>
-                <div><strong>Trigger:</strong> ${workflow.trigger_type}</div>
-                <div><strong>Complexity:</strong> ${workflow.complexity}</div>
-                <div><strong>Nodes:</strong> ${workflow.node_count}</div>
-                <div><strong>Category:</strong> ${this.escapeHtml(category)}</div>
+                <div><strong>Status:</strong> ${workflow.active ? 'Ativo' : 'Inativo'}</div>
+                <div><strong>Disparo:</strong> ${workflow.trigger_type}</div>
+                <div><strong>Complexidade:</strong> ${workflow.complexity}</div>
+                <div><strong>Nós:</strong> ${workflow.node_count}</div>
+                <div><strong>Categoria:</strong> ${this.escapeHtml(category)}</div>
             </div>`;
         if (workflow.integrations.length > 0) {
           this.elements.modalIntegrations.innerHTML = workflow.integrations
             .map(integration => `<span class="integration-tag">${this.escapeHtml(integration)}</span>`)
             .join(' ');
         } else {
-          this.elements.modalIntegrations.textContent = 'No integrations found';
+          this.elements.modalIntegrations.textContent = 'Nenhuma integração encontrada';
         }
         this.elements.downloadBtn.href = `/api/workflows/${workflow.filename}/download`;
         this.elements.downloadBtn.download = workflow.filename;
@@ -1259,8 +1259,8 @@
         this.currentWorkflow = null;
         this.currentJsonData = null;
         this.currentDiagramData = null;
-        this.elements.viewJsonBtn.textContent = '📄 View JSON';
-        this.elements.viewDiagramBtn.textContent = '📊 View Diagram';
+        this.elements.viewJsonBtn.textContent = '📄 Ver JSON';
+        this.elements.viewDiagramBtn.textContent = '📊 Ver Diagrama';
         this.resetCopyButton('copyJsonBtn');
         this.resetCopyButton('copyDiagramBtn');
       }
@@ -1279,18 +1279,18 @@
         const isVisible = !this.elements.jsonSection.classList.contains('hidden');
         if (isVisible) {
           this.elements.jsonSection.classList.add('hidden');
-          this.elements.viewJsonBtn.textContent = '📄 View JSON';
+          this.elements.viewJsonBtn.textContent = '📄 Ver JSON';
         } else {
           try {
             this.elements.jsonViewer.textContent = 'Loading...';
             this.elements.jsonSection.classList.remove('hidden');
-            this.elements.viewJsonBtn.textContent = '📄 Hide JSON';
+            this.elements.viewJsonBtn.textContent = '📄 Ocultar JSON';
             const data = await this.apiCall(`/workflows/${this.currentWorkflow.filename}`);
             const jsonString = JSON.stringify(data.raw_json, null, 2);
             this.currentJsonData = jsonString;
             this.elements.jsonViewer.textContent = jsonString;
           } catch (error) {
-            this.elements.jsonViewer.textContent = 'Error loading JSON: ' + error.message;
+            this.elements.jsonViewer.textContent = 'Erro ao carregar JSON: ' + error.message;
             this.currentJsonData = null;
           }
         }
@@ -1301,12 +1301,12 @@
         const isVisible = !this.elements.diagramSection.classList.contains('hidden');
         if (isVisible) {
           this.elements.diagramSection.classList.add('hidden');
-          this.elements.viewDiagramBtn.textContent = '📊 View Diagram';
+          this.elements.viewDiagramBtn.textContent = '📊 Ver Diagrama';
         } else {
           try {
-            this.elements.diagramViewer.textContent = 'Loading diagram...';
+            this.elements.diagramViewer.textContent = 'Carregando diagrama...';
             this.elements.diagramSection.classList.remove('hidden');
-            this.elements.viewDiagramBtn.textContent = '📊 Hide Diagram';
+            this.elements.viewDiagramBtn.textContent = '📊 Ocultar Diagrama';
             const data = await this.apiCall(`/workflows/${this.currentWorkflow.filename}/diagram`);
             this.currentDiagramData = data.diagram;
             this.elements.diagramViewer.innerHTML = `<pre class="mermaid">${data.diagram}</pre>`;
@@ -1314,7 +1314,7 @@
               mermaid.init(undefined, this.elements.diagramViewer.querySelector('.mermaid'));
             }
           } catch (error) {
-            this.elements.diagramViewer.textContent = 'Error loading diagram: ' + error.message;
+            this.elements.diagramViewer.textContent = 'Erro ao carregar diagrama: ' + error.message;
             this.currentDiagramData = null;
           }
         }
