@@ -1,0 +1,614 @@
+{
+  "name": "Resumo Grupo",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "981090d0-5b8b-4456-ba68-1ad19b0f83b3",
+              "name": "Mensagem.name_user",
+              "value": "={{ $json.pushName }}",
+              "type": "string"
+            },
+            {
+              "id": "3d479bb6-76d1-46c3-b9e4-ba4905759c8e",
+              "name": "Mensagem.text",
+              "value": "={{ $json.message?.conversation || $json.message?.imageMessage?.caption || $json.message?.videoMessage?.caption}}",
+              "type": "string"
+            },
+            {
+              "id": "ccf8d881-ed90-4e4c-bd84-580579e78542",
+              "name": "Mensagem.Data",
+              "value": "={{ $json.messageTimestamp.toDateTime('s').format('yyyy-MM-dd TT') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a3aab736-4868-48c8-ab1e-e285c8ad811a",
+      "name": "Map Dados",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1000,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "f03c36ca-d892-4715-bb88-cefb810762fa",
+      "name": "Agregar Todas Mensagens",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Pega o texto da variável de entrada\nlet inputText = $json[\"output\"];\n\n// Substitui todos os casos de **texto** para *texto*\nlet outputText = inputText.replace(/\\*\\*(.*?)\\*\\*/g, '*$1*');\n\n// Substitui todas as ocorrências de \\n para \\n\\n\noutputText = outputText.replace(/([^\\n]|^)\\n([^\\n]|$)/g, '$1\\n\\n$2');\n\n// Retorna o resultado\nreturn {\n  json: {\n    outputText: outputText\n  }\n};\n"
+      },
+      "id": "ecabc853-cad1-4100-8ddc-0b736499f42c",
+      "name": "Formatar Texto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "messages.records",
+        "options": {}
+      },
+      "id": "897eac95-0140-4492-b72b-46dbeb5fb872",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        560,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "39ddb48d-5356-4c1c-8c63-a3eb86f99247",
+              "leftValue": "={{ $json.message?.conversation || $json.message?.imageMessage?.caption || $json.message?.videoMessage?.caption}}",
+              "rightValue": "=conversation",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "b3c91f60-a5cf-4a87-9978-9af388f5b768",
+              "leftValue": "={{ $json.messageTimestamp }}",
+              "rightValue": "={{ Math.floor((Date.now() - 7 * 24 * 60 * 60 * 1000) / 1000) }}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "17012409-f399-49bd-bedb-ec104ada5d46",
+      "name": "Somente Texto",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        780,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "002700a8-0d29-4f8d-8215-cf490e36b11c",
+              "leftValue": "={{ $('Map Infos Iniciais').item.json['nome do grupo'] }}",
+              "rightValue": "={{ $json.subject }}",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "892719fc-6b32-4ada-9106-e485116913be",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        340,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Preencher Infos\n- url_evolution\n- nome_instancia_evolution\n- id_grupo (vem do fluxo acima)\n- nome do grupo\n- token_apikey",
+        "height": 353,
+        "width": 262
+      },
+      "id": "e2431ba1-aa30-41dd-a75d-6ece894374d9",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6bb13d8e-1084-41c0-bdcf-a0d15eb705aa",
+              "name": "url_evolution",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "f0da0569-3145-4c8a-812e-49079a7c3ccf",
+              "name": "nome_instancia_evolution",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "3c6d353d-7da8-4641-a522-0f4a4ece306f",
+              "name": "id_grupo",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "5af64764-6139-4140-9176-ad3a1f9e7e8c",
+              "name": "nome do grupo",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "3907640d-791f-438b-b420-a34020b97753",
+              "name": "=token_apikey",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "6abbec89-4a39-4502-b03f-96f6adbbface",
+              "name": "ontem",
+              "value": "={{(() => {\n  const now = new Date();\n  now.setDate(now.getDate() -1 ); // Dia de ontem no horário local\n  const yyyy = now.getFullYear();\n  const mm = String(now.getMonth() + 1).padStart(2, '0');\n  const dd = String(now.getDate()).padStart(2, '0');\n  return `${yyyy}-${mm}-${dd}`;\n})()}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1da8eec1-ea8c-497d-8423-a809439fa240",
+      "name": "Map Infos Iniciais",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Pegar ID Grupo\n- todos os dados ja vem do nó \"Map Infos Iniciais\"\n- Pegar Id no nó \"Filter\"",
+        "height": 333,
+        "width": 593,
+        "color": 6
+      },
+      "id": "5a5e2c19-fa59-4c0c-b903-da9316910334",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://{{ $('Map Infos Iniciais').item.json.url_evolution }}/group/fetchAllGroups/{{ $('Map Infos Iniciais').item.json.nome_instancia_evolution }}?getParticipants=false ",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('Map Infos Iniciais').item.json.token_apikey }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b62598dd-b5de-46a6-aaa4-014f6c9d6680",
+      "name": "Get Groups",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        120,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://{{ $json.url_evolution }}/chat/findMessages/{{ $json.nome_instancia_evolution }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $json.token_apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "where.key.remoteJid",
+              "value": "={{ $json.id_grupo }}"
+            }
+          ]
+        },
+        "options": {
+          "pagination": {
+            "pagination": {
+              "parameters": {
+                "parameters": [
+                  {
+                    "type": "body",
+                    "name": "page",
+                    "value": "={{ $response.body.messages.currentPage + 1 }}"
+                  }
+                ]
+              },
+              "limitPagesFetched": true,
+              "maxRequests": 50
+            }
+          }
+        }
+      },
+      "id": "577e64cd-3a07-4967-a230-c889ec034ae5",
+      "name": "Get Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        340,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "=Nome do Grupo ou Identificação: {{ $('Map Infos Iniciais').item.json['nome do grupo'] }}\nData/Hora Agora: {{ $now.format('yyyy-MM-dd TT') }}\n\nMensagens: {{ $json.data.toJsonString() }}",
+        "options": {
+          "systemMessage": "=Você é um assistente virtual que cria um resumo diário das conversas ocorridas em um grupo de WhatsApp voltado para profissionais da estética, com o objetivo de informar os membros sobre os principais temas discutidos no dia anterior.\n\nEsse resumo será enviado via WhatsApp no dia seguinte.\n\n🎯 Objetivo: entregar um resumo útil, direto e organizado com as informações mais relevantes compartilhadas no grupo, priorizando sempre as mensagens postadas pela admin que é a Karol Albuquerque.\n\n🔍 Orientações para análise das mensagens:\n\n📌 Priorize sempre as mensagens do administrador que é a Karol Albuquerque, destacando-as primeiro no resumo.\n\n✅ Inclua:\n\nConteúdos informativos e orientações do admin (ex: aulas novas, lives, regras, materiais, dicas técnicas)\n\nDúvidas importantes respondidas no grupo\n\nDicas, tutoriais, sugestões úteis sobre procedimentos, produtos ou atendimento\n\nMateriais úteis compartilhados (ex: ficha de avaliação, protocolo, roteiro de atendimento)\n\nTrocas construtivas entre membros com valor técnico ou prático\n\n❌ Ignore completamente:\n\nMensagens promocionais, links de vendas, cupons, ofertas (ex: “desconto”, “kiwify.com.br”)\n\nElogios, reações emocionais ou mensagens sem conteúdo (ex: “arrasou!”, “perfeita”, “bom dia”)\n\nMensagens repetidas, gifs, emojis soltos ou figurinhas\n\nResumos anteriores ou mensagens iniciadas com “📝 Resumo do Dia no Grupo”\n\n🗂️ Formatação do resumo:\n\nComece com uma saudação automática baseada na hora do envio\n\nDestaque as mensagens do admin primeiro\n\nAgrupe os conteúdos por tema usando emojis e títulos com *negrito*\n\nUse marcadores simples (- ou •) para listar informações\n\nUse espaçamento e quebras de linha para facilitar a leitura no WhatsApp\n\nSeja direto e claro, sem interpretar ou florear as mensagens\n\n📩 Mensagem de abertura padrão para o resumo:\n\n📩 {{ new Date().getHours() < 12 ? 'Bom dia' : (new Date().getHours() < 18 ? 'Boa tarde' : 'Boa noite') }}! Aqui vai um resumo do que rolou no grupo ontem:\n\n📘 Atualizações Karol Albuquerque:\n• Nova aula sobre protocolos corporais publicada\n• Live confirmada para sexta às 20h – tema: “Estratégias para fidelização”\n• Material complementar enviado: checklist de avaliação inicial\n\n🔧 Dúvidas Técnicas Respondidas:\n• Qual o intervalo ideal entre sessões de radiofrequência? — Profissionais X e Y explicaram\n• Produto Z pode ser usado em peles acneicas? — Discussão com base em estudos\n\n💬 Trocas entre Membros:\n• Comparação de marcas de dermapen\n• Ideias de pós-venda para clínicas de estética\n\n💡 Ideias em aberto:\n• Sugestão: criar um drive com modelos de fichas e termos\n• Envie sugestões de temas para a próxima live!\n\n✅ Fique à vontade para tirar dúvidas e continuar participando do grupo!"
+        }
+      },
+      "id": "dc9deb00-ad23-4448-8d78-e006522cdbf9",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1420,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        760
+      ],
+      "id": "10cc5801-a9f7-48af-b0b2-1c8c715e3300",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "AkQ7T577OSVTdDf6",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Retorna todas as mensagens do grupo",
+        "height": 280,
+        "width": 220,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        280,
+        420
+      ],
+      "id": "a471fe86-7f0f-4b15-84bc-7fb62c612665",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### Filtra mensagens \n- Apenas Texto\n- Apenas mensagens enviadas nas ultimas 24 horas",
+        "height": 280,
+        "width": 400,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        520,
+        420
+      ],
+      "id": "dcfe06d2-db25-4fee-9db3-c27872dcceae",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "### Agrega mensagens em um mesmo JSON",
+        "height": 240,
+        "width": 400,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        940,
+        460
+      ],
+      "id": "17ca020d-43c9-4835-a932-4c2bb7237568",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "### Agente de IA interpreta resumo",
+        "height": 240,
+        "width": 360,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        460
+      ],
+      "id": "f1bf8155-a7ad-4144-8ed9-a5846774f8d0",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "### Formata e envia resumo no grupo",
+        "height": 240,
+        "width": 360,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        460
+      ],
+      "id": "f9bc7393-86c7-4c6c-8c5d-5814fbb117aa",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://{{ $('Map Infos Iniciais').item.json.url_evolution }}/message/sendText/{{ $('Map Infos Iniciais').item.json.nome_instancia_evolution }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('Map Infos Iniciais').item.json.token_apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"number\": \"id do grupo ou telefone aqui\",\n  \"text\": \"{{ $json.outputText.replace(/\\n/g, '\\\\n').replace(/\\\"/g, '\\\\\"').trim() }}\",\n  \"linkPreview\": false\n}\n",
+        "options": {}
+      },
+      "id": "57b852b1-46ae-4d2a-b0ad-e84406f03478",
+      "name": "Enviar Resumo no Grupo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1920,
+        540
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "id": "fb1159d6-1b02-4b3c-a2e9-a0f2da256286",
+      "name": "Todo dia - 07:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -140,
+        540
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Map Dados": {
+      "main": [
+        [
+          {
+            "node": "Agregar Todas Mensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar Todas Mensagens": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar Texto": {
+      "main": [
+        [
+          {
+            "node": "Enviar Resumo no Grupo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Somente Texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Somente Texto": {
+      "main": [
+        [
+          {
+            "node": "Map Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Groups": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Message": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map Infos Iniciais": {
+      "main": [
+        [
+          {
+            "node": "Get Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Formatar Texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Todo dia - 07:00": {
+      "main": [
+        [
+          {
+            "node": "Map Infos Iniciais",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8be35ebe-1d5a-437a-9823-7ec13b92721c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0c5350487e594f80ab4d87173b9ea37e250a06de79ff015703009df316ea87e9"
+  },
+  "id": "DFyd309eubKifEVd",
+  "tags": []
+}

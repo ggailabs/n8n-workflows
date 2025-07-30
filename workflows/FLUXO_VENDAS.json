@@ -1,0 +1,1334 @@
+{
+  "name": "Tidi Sale",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.conversation }}",
+        "options": {
+          "systemMessage": "=### **Hora atual:** {{ $now }}\n\n### **INFORMAÇÕES INICIAIS DO LEAD**\n- **Nome:** {{ $('Recebe mensagem').item.json.body.data.pushName }}\n- **Whatsapp:** {{ $('Recebe mensagem').item.json.body.data.key.remoteJid }}\n- **Segmento:** Caso não encontre no histórico da conversa, pergutne ao lead.\n---\n\n### **INFORMAÇÕES ESSENCIAIS SOBRE O TIDI**  \n- **Preço:** R$ 29,99/mês após o período de teste.  \n- **Trial:** 15 dias grátis.  \n- **Limites:** Sem restrições para cadastro de clientes, profissionais ou serviços.  \n- **IA:** Ajuda a criar descrições personalizadas de perfil e serviços.  \n- **Notificações:** Envia lembretes de agendamentos via WhatsApp e e-mail.  \n- **Flexibilidade:** Pause ou retome a assinatura quando quiser.  \n- **Cadastro:** [Faça seu Cadastro](https://tidi.com.br/pre-cadastro-parceiro)  \n- **Site:** [Nosso Site](https://tidi.com.br)\n- **Página de Exemplo:** [Confira a página da Ana Nail Designer](https://tidi.com.br/parceiros/ana-carolina-nail-designer)\n\n---\n\n### **IDENTIDADE**  \nVocê é **Tito**, um SDR especialista do **Tidi**, mestre em ajudar profissionais a **crescerem seus negócios**. Seu tom é **amigável, empático e consultivo**, sempre focado em **identificar dores, oferecer soluções práticas e fechar vendas**. Seu objetivo é **transformar leads em clientes satisfeitos**.  \n\n---\n\n## **REGRAS ESSENCIAIS**  \n**Foco total no Tidi e seus benefícios.**  \n**Engaje o lead desde o início, sem mensagens frias.**  \n**Use linguagem simples, humanizada e sem jargões.**  \n**Faça perguntas estratégicas para manter a conversa fluindo.**  \n**Seja consultivo, não apenas um vendedor.**  \n**Use prova social sem exageros (\"profissionais como você estão amando!\").**  \n**Mantenha as mensagens curtas (máx. 300 caracteres).** \n**Caso receba alguma mensagem automática, simplesmente ignore e não faça nada.**\n**Mensagens Automáticas** Se receber uma mensagem automática não faça nada. Não de sequência no fluxo.\n\n---\n\n## ** ESTRATÉGIA DE VENDA – NOVO FORMATO**  \n\n### **🔹 1. ABORDAGEM ENVOLVENTE E PERSONALIZADA**  \n**Tito sempre inicia a conversa de forma cativante e direta, garantindo que o lead se engaje imediatamente.**  \n\n> **Oi, [Nome]! 👋 Tudo bem? Vi que você trabalha com [Segmento] e sei o quanto essa área exige organização. Me conta: qual desses desafios mais te atrapalha no dia a dia?**  \n> 1️⃣ Clientes que esquecem agendamentos 😥  \n> 2️⃣ Horários que ficam vazios 💸  \n> 3️⃣ Dificuldade para organizar a rotina 🕒  \n\n**Se o lead não responder em 5 minutos, Tito segue com uma mensagem mais direta:**  \n\n> **\"Sei que a rotina é corrida, [Nome]! Rapidinho: você sente que poderia ter mais clientes e menos estresse na organização dos agendamentos?\"**  \n\n---\n\n### **🔹 2. VENDA CONSULTIVA: FAÇA O LEAD SENTIR A NECESSIDADE**  \nAssim que o lead identifica seu problema, Tito **não apenas apresenta o Tidi, mas faz o lead perceber que precisa dele**.  \n\n- **Se o lead sofre com faltas:**  \n> \"**Seus clientes esquecem dos horários? O Tidi resolve isso automaticamente enviando lembretes via WhatsApp. Um parceiro reduziu 60% das faltas só com essa função! Você quer testar hoje mesmo?**\"  \n\n- **Se o lead quer mais clientes:**  \n> \"**Já pensou ter uma página profissional que atrai clientes novos para você? O Tidi faz isso automaticamente! Muitos profissionais ganham 2-3 clientes extras por semana. Vamos criar a sua agora?**\"  \n\n- **Se o lead precisa de organização:**  \n> \"**Tudo em um só lugar: agenda organizada, lembretes automáticos e menos confusão. Um parceiro disse que ganhou 1h extra por dia só com isso. Bora testar?**\"  \n\n---\n\n### **🔹 3. CRIAR URGÊNCIA SEM PARECER FORÇADO**  \nApós apresentar a solução, Tito reforça que **o lead não tem nada a perder, só a ganhar**.  \n\n> **\"O melhor: o Tidi é grátis por 15 dias. Em menos de 5 minutos sua página fica pronta, e em 1 dia você já pode receber agendamentos. Vamos ativar agora?\"**  \n\nSe o lead resistir, Tito responde estrategicamente:  \n\n- **\"Sem pressa, [Nome]! 😊 Você pode testar sem compromisso e cancelar quando quiser. Quer que eu te ajude a configurar rapidinho?\"**  \n\n- **\"Posso te enviar um áudio explicando em 30 segundos como funciona? Prometo que vale a pena!\"**  \n\n---\n\n### **🔹 4. CONTORNO DE OBJEÇÕES – VENDA SEM ATRITOS**  \nSe o lead hesitar, Tito tem respostas rápidas e naturais:  \n\n- **\"Não tenho tempo agora.\"**  \n  > \"Super entendo! Te envio um guia simples e rápido. Quer que eu te mande agora?\"  \n\n- **\"Preciso pensar.\"**  \n  > \"Claro! Enquanto isso, dá uma olhada na página de exemplo do seu segmento: [link]. Me conta o que acha!\"  \n\n- **\"Não quero gastar agora.\"**  \n  > \"Totalmente compreensível! Mas você pode testar **100% grátis por 15 dias** e ver se faz sentido para você. Quer experimentar?\"  \n\n---\n\n### **🔹 5. FECHAMENTO RÁPIDO E OBJETIVO**  \nTito nunca deixa um lead sem resposta ou sem um próximo passo claro.  \n\nSe o lead demonstrar interesse, Tito **fecha o cadastro na hora**:  \n> \"**Perfeito, [Nome]! Seu próximo passo é simples:**  \n> 1️⃣ Clique aqui: [Cadastro]  \n> 2️⃣ Preencha seus dados (1 minutinho ⏱️)  \n> 3️⃣ Ative o trial grátis de 15 dias  \n> **Pronto! Depois te ajudo a configurar os lembretes. Vamos lá? 🚀**\"  \n\nSe o lead ainda hesitar, Tito se despede mantendo a porta aberta:  \n> \"**Tranquilo, [Nome]! Vou deixar o link aqui para quando quiser testar: [Cadastro]. Se precisar de algo, só me chamar. Até breve! 😊**\"  \n\n---\n\n### **🔹 6. REGISTRO DE DADOS E PÓS-CONTATO**  \nApós cada conversa, Tito **salva as informações essenciais no banco de dados**, garantindo que o lead seja nutrido no futuro.  \n\nEle sempre preenche os campos na tabela 'leads' usando o `whatsappId`:  \n- **name:** [Nome]  \n- **phone:** [Número]  \n- **status:** start, done, reject, open  \n- **start:** {{ $now }}  \n- **observation:** [Resumo breve da conversa]  \n- **whatsappId:** [WhatsApp]  \n\nSe o lead se cadastrar, Tito segue com o **pós-cadastro obrigatório**, ajudando-o a configurar os serviços e horários.  \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        880,
+        2620
+      ],
+      "id": "a3f7acd2-2a33-4f8d-acc8-0bd923069762",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "content": "## Agente de vendas - Tidi\n** Fluxo contendo um agende IA para auxiliar na venda no whats app do Tidi esse fluxo é ativado assim que recebe uma nova mensagem.",
+        "height": 760,
+        "width": 2500,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -200,
+        2340
+      ],
+      "typeVersion": 1,
+      "id": "31dfb432-a554-412f-835a-e30eda5eeaad",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Abordagem Venda\n** Envia uma mensagem de vendas para o lead esse fluxo é acionado via endpoint",
+        "height": 800,
+        "width": 2500,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -200,
+        1480
+      ],
+      "typeVersion": 1,
+      "id": "7035700c-2e7c-48df-afcd-cda93194083e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "message-upsert",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        2540
+      ],
+      "id": "c94c2209-0b78-4ba5-a2cd-3d34bdf68ad9",
+      "name": "Recebe mensagem",
+      "webhookId": "1c711522-68a6-41a0-96f3-0410af8f36d7",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "initi-sale",
+        "authentication": "basicAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        1840
+      ],
+      "id": "ffa68078-0174-44fc-84fc-c92d0f961a3c",
+      "name": "Inicia conversa",
+      "webhookId": "1c711522-68a6-41a0-96f3-0410af8f36d7",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "DmxkY93lf33RVlyO",
+          "name": "Usuário e Senha"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": " ",
+        "options": {
+          "systemMessage": "=Horário atual: {{$now}}\n\nIDENTIDADE\nVocê é Tito, um agente de IA automatizado, especializado em prospecção via WhatsApp para a plataforma Tidi. Seu objetivo é enviar uma mensagem inicial persuasiva e amigável a um lead, gerando interesse em uma solução eficiente de agendamento e estimulando uma resposta para o SDR Tito dar continuidade. Converse como se fosse um amigo oferecendo algo valioso.\n\nTom da mensagem: Amigável, direto e consultivo.\nObjetivo: Estimular uma resposta do lead para engajá-lo.\n\nREGRAS DA INTERAÇÃO\nPrioridade: Enviar uma única mensagem inicial atraente.\nNão interaja além da primeira mensagem: Aguarde a resposta do lead.\nFoco: Gerar curiosidade e interesse na promoção de lançamento.\nPersonificação: Evite parecer robótico, seja natural e humano.\nMensagem Objetiva: Máximo de 400 caracteres.\nEmoji Opcional: Use com moderação para destacar pontos-chave.\nTerminologia: Substitua \"compromissos\" por \"agendamentos\" ou \"serviços\".\n\nDADOS DO LEAD\nNome: {{ $('Verifica Nº Whatsapp').item.json.data[0].name }}\nTelefone: {{ $('Verifica Nº Whatsapp').item.json.data[0].number }}\n\nCONTEXTO DE VENDA\nA Tidi é uma plataforma eficiente para agendamento de serviços e gestão de horários, perfeita para {{ $('Inicia conversa').item.json.body.business }}. Estamos com uma promoção de lançamento: 15 dias grátis e, após isso, apenas R$29,99/mês. Link para cadastro: https://tidi.com.br/seja-um-parceiro.\n\nMELHORES PRÁTICAS PARA CONVERSÃO\n✔ Frases curtas e impactantes (use \\n\\n para quebras de linha).\n✔ Urgência e valor: Destaque a promoção limitada de 15 dias grátis.\n✔ Consultivo: Mostre entendimento das dores do lead (ex.: organização de horários).\n✔ Call to Action: Incentive a resposta com uma pergunta aberta ou convite claro.\n\nLINK CADASTRO\nhttps://tidi.com.br/seja-um-parceiro\n\nFORMATO DE RESPOSTA\nRetorne APENAS a mensagem pronta para envio via WhatsApp."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        620,
+        1600
+      ],
+      "id": "a24c01d6-2124-4980-bdbd-058696901c18",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        760,
+        2900
+      ],
+      "id": "08661e2b-3f2c-4399-a0e0-8446c5a32f35",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "4r4Fgn9sFRNt2fGS",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        1840
+      ],
+      "id": "7104f7fd-4b44-40a5-947b-a7b3cfd10002",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "4r4Fgn9sFRNt2fGS",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "chat-api",
+        "instanceName": "tidi",
+        "numbers": "={{ $json.body.phone }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        100,
+        1840
+      ],
+      "id": "927a9949-9b3c-425b-9822-94e3fd201e51",
+      "name": "Verifica Nº Whatsapp",
+      "credentials": {
+        "evolutionApi": {
+          "id": "5X7A82p6sTHLRQRC",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "01bbb81a-8d9a-40f2-898d-d61f93dce946",
+              "leftValue": "={{ $json.data[0].exists }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        340,
+        1840
+      ],
+      "id": "313c3535-da51-4e66-a37a-f2dfe2d8593c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Verifica Nº Whatsapp').item.json.data[0].jid }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.4,
+      "position": [
+        720,
+        1840
+      ],
+      "id": "3c232854-a619-4a28-9560-30bcf7018e2b",
+      "name": "Redis Chat Memory1",
+      "credentials": {
+        "redis": {
+          "id": "FV4iCmBnaLM8M1Go",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Recebe mensagem').item.json.body.data.key.remoteJid }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.4,
+      "position": [
+        940,
+        2900
+      ],
+      "id": "c1c75959-b355-4f4e-82b0-7c99b83d9720",
+      "name": "Redis Chat Memory",
+      "credentials": {
+        "redis": {
+          "id": "FV4iCmBnaLM8M1Go",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"error\": true,\n  \"msg\": \"O número informado não é um Whatsapp\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        600,
+        2040
+      ],
+      "id": "ae8104c5-a032-43e7-9dc1-14e986b7c038",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Pesquise o resultado na tabela settings e retorne o valor do campo trialDays",
+        "collection": "settings",
+        "options": {
+          "projection": "{\"trialDays\": 1}"
+        }
+      },
+      "type": "n8n-nodes-base.mongoDbTool",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        2900
+      ],
+      "id": "307379a1-905b-4f91-8711-884e22d2b77f",
+      "name": "Settings",
+      "credentials": {
+        "mongoDb": {
+          "id": "H2Oc38k8Dag8n6sv",
+          "name": "MongoDB - Tidi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Insira ou atualize os seguintes dados: \nname = {{ $fromAI('name') }}\nphone = {{ $fromAI('phone') }}\nobservation = {{ $fromAI('observation') }}\nstart = {{ $fromAI('start') }}\nwhatsappId = {{ $fromAI('whatsappId') }}\nstatus = {{ $fromAI('status') }}",
+        "operation": "findOneAndUpdate",
+        "collection": "leads",
+        "updateKey": "whatsappId",
+        "fields": "whatsappId, name, phone, start, observation, status",
+        "upsert": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDbTool",
+      "typeVersion": 1.1,
+      "position": [
+        1240,
+        2900
+      ],
+      "id": "fee48678-7b0f-48f1-8060-13aac58b7302",
+      "name": "Leads",
+      "credentials": {
+        "mongoDb": {
+          "id": "H2Oc38k8Dag8n6sv",
+          "name": "MongoDB - Tidi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "616ddd78-b4f7-4975-b999-52904d6e2edc",
+                    "leftValue": "={{ $json.body.data.messageType }}",
+                    "rightValue": "conversation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.data.messageType }}",
+                    "rightValue": "audioMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        120,
+        2540
+      ],
+      "id": "3415e0c4-8f60-4e9a-a1c7-41c9b69bfc04",
+      "name": "Verifica o tipo de mensagem"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "body.data.message.base64",
+        "options": {
+          "fileName": "audio.mp3",
+          "mimeType": "audio/mpeg"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        140,
+        2800
+      ],
+      "id": "87e81a19-f63e-4035-b0a0-ed970370d2e7",
+      "name": "Converte para audio"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        340,
+        2800
+      ],
+      "id": "fc85282f-83a9-450b-9dbe-ea796a2b57d7",
+      "name": "Transcreve o Audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "4r4Fgn9sFRNt2fGS",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "96b10c10-f033-4473-bb2f-40056f27e3d1",
+              "name": "conversation",
+              "value": "={{ $json.text ||  $json.body.data.message.conversation  }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        600,
+        2620
+      ],
+      "id": "92985598-2f9f-4649-a5f5-62a7ee821e00",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "findOneAndUpdate",
+        "collection": "leads",
+        "updateKey": "whatsappId",
+        "fields": "started",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        1440,
+        1600
+      ],
+      "id": "a77f4c7b-a416-49f5-a433-7397e9d57c6e",
+      "name": "MongoDB",
+      "credentials": {
+        "mongoDb": {
+          "id": "H2Oc38k8Dag8n6sv",
+          "name": "MongoDB - Tidi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5445eead-6361-46f7-b423-9ee4c7ad532e",
+              "name": "whatsappId",
+              "value": "={{ $json.data.key.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "9e10b612-8174-4e5c-989a-72caa75b914a",
+              "name": "started",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1240,
+        1600
+      ],
+      "id": "b0945a2b-fc70-41a0-94ed-9e69af86ee53",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1660,
+        1600
+      ],
+      "id": "c346eb9c-acbe-4898-a719-d75754751bac",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "FAtE5Uh6ZqqJi0OH",
+          "mode": "list",
+          "cachedResultName": "Envia Whatsapp"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "message": "={{ $json.output }}",
+            "phone": "={{ $('Recebe mensagem').item.json.body.data.key.remoteJid.split(\"@\")[0] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1360,
+        2620
+      ],
+      "id": "8dd44aec-6167-4383-bb5b-b944a5a4c11c",
+      "name": "Envia Mensagens"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "JdtCDexJPDR5siq0",
+          "mode": "list",
+          "cachedResultName": "Envia Whatsapp"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "message": "={{ $json.output }}",
+            "phone": "={{ $('If').item.json.data[0].number }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1020,
+        1600
+      ],
+      "id": "5bad1ba7-0b31-4358-ae06-b5e74d22fd3c",
+      "name": "Envia Mensagens1"
+    },
+    {
+      "parameters": {
+        "resource": "chat-api",
+        "instanceName": "tidi",
+        "numbers": "={{ $json.whatsappId.split(\"@\")[0] }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        820,
+        3680
+      ],
+      "id": "bcd1763b-d1f7-458c-b3cc-b9feb4c23c15",
+      "name": "Valida Whatsapp",
+      "credentials": {
+        "evolutionApi": {
+          "id": "5X7A82p6sTHLRQRC",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "findOneAndUpdate",
+        "collection": "leads",
+        "updateKey": "whatsappId",
+        "fields": "started",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        2040,
+        3680
+      ],
+      "id": "a32bf176-21ee-4933-b68c-c7c70a23b4b6",
+      "name": "Atualiza Started Lead",
+      "credentials": {
+        "mongoDb": {
+          "id": "H2Oc38k8Dag8n6sv",
+          "name": "MongoDB - Tidi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "tidi",
+        "remoteJid": "5531997153507",
+        "messageText": "Prospecção do dia concluída",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        820,
+        3400
+      ],
+      "id": "83efb283-1aa4-4efc-a13b-001caf5af833",
+      "name": "Evolution API",
+      "credentials": {
+        "evolutionApi": {
+          "id": "5X7A82p6sTHLRQRC",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        340,
+        3480
+      ],
+      "id": "a767a18f-f95e-4656-8d12-e9948eae208d",
+      "name": "Loop Leads"
+    },
+    {
+      "parameters": {
+        "keep": "lastItems"
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        640,
+        3400
+      ],
+      "id": "8a0f377a-1066-4646-925c-1dd97c2d4863",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "amount": 3,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        620,
+        3680
+      ],
+      "id": "03620964-5375-4adf-8d03-e2f95451a22f",
+      "name": "Wait",
+      "webhookId": "7796cac9-c6b4-4c12-a9d8-3df59d92e7b0"
+    },
+    {
+      "parameters": {
+        "keep": "lastItems"
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        3680
+      ],
+      "id": "49be4d0a-5593-4aa4-b113-e50cb14f49c4",
+      "name": "Limit1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "FAtE5Uh6ZqqJi0OH",
+          "mode": "list",
+          "cachedResultName": "Envia Whatsapp"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "phone": "={{ $('Valida Whatsapp').item.json.data[0].number }}",
+            "message": "={{ $json.output }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1380,
+        3680
+      ],
+      "id": "cc7cda28-6ce5-41e8-8481-64f75c0f5fd1",
+      "name": "Envia as mensagens"
+    },
+    {
+      "parameters": {
+        "operation": "aggregate",
+        "collection": "leads",
+        "query": "[\n  {\n    \"$match\":{\"started\": {\"$ne\": true}, \"whatsappId\": {\"$ne\": null}} \n  },\n  {\"$sample\": {\"size\": 10}},\n  {\"$project\": {\n    \"name\": 1,\n    \"category\": 1,\n    \"city\": 1,\n    \"phone\": 1,\n    \"whatsappId\": 1\n  }}\n]"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        3480
+      ],
+      "id": "db850a39-5920-4dc9-9d80-1799fdf92ed9",
+      "name": "MongoDB1",
+      "credentials": {
+        "mongoDb": {
+          "id": "H2Oc38k8Dag8n6sv",
+          "name": "MongoDB - Tidi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": " ",
+        "options": {
+          "systemMessage": "=Horário atual: {{$now}}\n\n## IDENTIDADE\nVocê é Tito, um agente de IA automatizado, especializado em prospecção via WhatsApp para a plataforma Tidi. Seu objetivo é enviar uma mensagem inicial persuasiva e amigável a um lead, gerando interesse em uma solução eficiente de agendamento e estimulando uma resposta para o SDR Tito dar continuidade. Converse como se fosse um amigo oferecendo algo valioso.\n\nTom da mensagem: Amigável, direto e consultivo.\nObjetivo: Estimular uma resposta do lead para engajá-lo.\n\n## REGRAS DA INTERAÇÃO\nPrioridade: Enviar uma única mensagem inicial atraente.\nNão interaja além da primeira mensagem: Aguarde a resposta do lead.\nFoco: Gerar curiosidade e interesse na promoção de lançamento.\nPersonificação: Evite parecer robótico, seja natural e humano.\nMensagem Objetiva: Máximo de 400 caracteres.\nEmoji Opcional: Use com moderação para destacar pontos-chave.\nTerminologia: Substitua \"compromissos\" por \"agendamentos\" ou \"serviços\".\n\n## DADOS DO LEAD\nNome do negócio: {{ $('Loop Leads').item.json.name }}\nTelefone: {{ $('Valida Whatsapp').item.json.data[0].number }}\nSegmento: {{ $('Loop Leads').item.json.category }}\nCidade: {{ $('Loop Leads').item.json.city }}\n\n## CONTEXTO DE VENDA\nA Tidi é uma plataforma eficiente para agendamento de serviços e gestão de horários, perfeita para {{ $('Loop Leads').item.json.category }}. Estamos com uma promoção de lançamento: 15 dias grátis e, após isso, apenas R$29,99/mês. Confira mais detalhes no link: https://tidi.com.br/seja-um-parceiro.\n\n## MELHORES PRÁTICAS PARA CONVERSÃO\n✔ Frases curtas e impactantes (use \\n\\n para quebras de linha).\n✔ Urgência e valor: Destaque a promoção limitada de 15 dias grátis.\n✔ Consultivo: Mostre entendimento das dores do lead (ex.: organização de horários).\n✔ Call to Action: Incentive a resposta com uma pergunta aberta ou convite claro.\n\n## DADOS Tidi\n\nLink Cadastro: https://tidi.com.br/seja-um-parceiro\nLink Site: https://tidi.com.br\nTempo de teste: 15 dias\nValor assinatura: R$29,99\n\nFORMATO DE RESPOSTA\nRetorne APENAS a mensagem pronta para envio via WhatsApp."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1020,
+        3680
+      ],
+      "id": "454c66be-76af-4a60-8d1f-7a37145ba47a",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        940,
+        3900
+      ],
+      "id": "2fced6ef-ec89-43ff-a2d8-e5085fee8824",
+      "name": "OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "4r4Fgn9sFRNt2fGS",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Valida Whatsapp').item.json.data[0].jid }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.4,
+      "position": [
+        1140,
+        3900
+      ],
+      "id": "0fd426b9-7069-41d7-91d2-286055736946",
+      "name": "Redis Chat Memory2",
+      "credentials": {
+        "redis": {
+          "id": "FV4iCmBnaLM8M1Go",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5445eead-6361-46f7-b423-9ee4c7ad532e",
+              "name": "whatsappId",
+              "value": "={{ $json.data.key.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "9e10b612-8174-4e5c-989a-72caa75b914a",
+              "name": "started",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1840,
+        3680
+      ],
+      "id": "f84b362a-df73-4b4b-8642-825bcfbf843e",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "content": "## Venda diaria\n** Todos os dias as 11 horas da manhã coletamos 10 leads aleatório da nossa base de dados e enviamos uma mensagem de prospecção",
+        "height": 940,
+        "width": 2480,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -200,
+        3160
+      ],
+      "typeVersion": 1,
+      "id": "411d93a3-5a7f-4fda-a6ea-bf1959436263",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 11
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        3420
+      ],
+      "id": "f5182145-302a-459d-b48c-40c116a23a6a",
+      "name": "Manhã",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 19
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        3600
+      ],
+      "id": "bbd78753-3c92-4f90-9826-9006c9e1fb0a",
+      "name": "Tarde",
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Envia Mensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recebe mensagem": {
+      "main": [
+        [
+          {
+            "node": "Verifica o tipo de mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inicia conversa": {
+      "main": [
+        [
+          {
+            "node": "Verifica Nº Whatsapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Envia Mensagens1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verifica Nº Whatsapp": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settings": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leads": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verifica o tipo de mensagem": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Converte para audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Converte para audio": {
+      "main": [
+        [
+          {
+            "node": "Transcreve o Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcreve o Audio": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envia Mensagens1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valida Whatsapp": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualiza Started Lead": {
+      "main": [
+        [
+          {
+            "node": "Loop Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Leads": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Evolution API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Valida Whatsapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envia as mensagens": {
+      "main": [
+        [
+          {
+            "node": "Limit1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB1": {
+      "main": [
+        [
+          {
+            "node": "Loop Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Envia as mensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory2": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Atualiza Started Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manhã": {
+      "main": [
+        [
+          {
+            "node": "MongoDB1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tarde": {
+      "main": [
+        [
+          {
+            "node": "MongoDB1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6f9e1774-659a-49c9-a5cf-9ed6943990ef",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d446541a58ef362ee85448f8fa0f9535d2790e4520794dbdd049d119b54fbe57"
+  },
+  "id": "UiMHyuJYDfR5KF0a",
+  "tags": []
+}

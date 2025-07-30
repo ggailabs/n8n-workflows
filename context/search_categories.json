@@ -8216,6 +8216,130 @@
     "category": "Comunicação & Mensageria"
   },
   {
+    "filename": "AGENTE_DE_FOLLOW_UP.json",
+    "category": "Desenvolvimento de Agentes de IA"
+  },
+  {
+    "filename": "AGENTE_DE_IMAGENS.json",
+    "category": "Desenvolvimento de Agentes de IA"
+  },
+  {
+    "filename": "AGENTE_DE_INSTAGRAM.json",
+    "category": "Desenvolvimento de Agentes de IA"
+  },
+  {
+    "filename": "AGENTE_DE_RESUMO.json",
+    "category": "Desenvolvimento de Agentes de IA"
+  },
+  {
+    "filename": "AGENTE_FLUXO_FINANCEIRO.json",
+    "category": "Desenvolvimento de Agentes de IA"
+  },
+  {
+    "filename": "AGENTE_FLUXO_FINANCEIRO_POSTGRES.json",
+    "category": "Processamento & Análise de Dados"
+  },
+  {
+    "filename": "AGENTE_MCP.json",
+    "category": "Desenvolvimento de Agentes de IA"
+  },
+  {
+    "filename": "AGENTE_PETSHOT_MCP.json",
+    "category": "Desenvolvimento de Agentes de IA"
+  },
+  {
+    "filename": "AGENTE_RAG_1.json",
+    "category": "Desenvolvimento de Agentes de IA"
+  },
+  {
+    "filename": "AGENTE_RAG_2.json",
+    "category": "Desenvolvimento de Agentes de IA"
+  },
+  {
+    "filename": "AGENTE_SDR.json",
+    "category": "Desenvolvimento de Agentes de IA"
+  },
+  {
+    "filename": "BACKUP.json",
+    "category": ""
+  },
+  {
+    "filename": "COMENTARIO_INSTAGRAM.json",
+    "category": ""
+  },
+  {
+    "filename": "ENVIO_DE_ARQUIVOS.json",
+    "category": "Automação de Processos de Negócio"
+  },
+  {
+    "filename": "FILTRO_DE_MENSAGENS.json",
+    "category": "Automação de Processos de Negócio"
+  },
+  {
+    "filename": "FLUXO_ANALISTA_ERROS.json",
+    "category": ""
+  },
+  {
+    "filename": "FLUXO_ARENA_BEACHTENIS.json",
+    "category": ""
+  },
+  {
+    "filename": "FLUXO_BACKUP_AUTOMATICO.json",
+    "category": ""
+  },
+  {
+    "filename": "FLUXO_ENVIA_MENSAGEM_WHATSAPP.json",
+    "category": "Comunicação & Mensageria"
+  },
+  {
+    "filename": "FLUXO_FOLLOW_UP.json",
+    "category": "Gestão de Projetos"
+  },
+  {
+    "filename": "FLUXO_GERADOR_PDF.json",
+    "category": ""
+  },
+  {
+    "filename": "FLUXO_GERADOR_PDF_ENVIO_WHATSAPP.json",
+    "category": "Comunicação & Mensageria"
+  },
+  {
+    "filename": "FLUXO_GERAR_QRCODE_WHATSAPP.json",
+    "category": "Comunicação & Mensageria"
+  },
+  {
+    "filename": "FLUXO_INTERVENCAO_HUMANA.json",
+    "category": ""
+  },
+  {
+    "filename": "FLUXO_MENSAGEM_BUFFER.json",
+    "category": ""
+  },
+  {
+    "filename": "FLUXO_TRANSCREVER_AUDIO.json",
+    "category": ""
+  },
+  {
+    "filename": "FLUXO_VENDAS.json",
+    "category": ""
+  },
+  {
+    "filename": "PETSHOP.json",
+    "category": ""
+  },
+  {
+    "filename": "TOOL_FOLLOWUP_DOMINANDO_AUTOMACOES.json",
+    "category": ""
+  },
+  {
+    "filename": "TREINADOR_RAG.json",
+    "category": ""
+  },
+  {
+    "filename": "WEBSCRAPING.json",
+    "category": ""
+  },
+  {
     "filename": "generate-collaborative-handbooks-with-gpt4o-multi-agent-orchestration-human-review.json",
     "category": "Desenvolvimento de Agentes de IA"
   }

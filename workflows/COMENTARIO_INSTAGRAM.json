@@ -1,0 +1,714 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.code }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.3,
+      "position": [
+        -900,
+        560
+      ],
+      "id": "c9e701be-2800-43ea-ba47-7e50b3ea0ea8",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "content": "## Ativação\nSó é usado apenas uma vez para fazer a verificação do webhook dentro do meta ads\nhttps://developers.facebook.com/",
+        "height": 400,
+        "width": 740,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1400,
+        340
+      ],
+      "typeVersion": 1,
+      "id": "1cb8729b-0028-4479-85f5-6148a933b3be",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Fluxo de Produção\nDepois que a configuração é feita é esse fluxo que recebe os dados",
+        "height": 380,
+        "width": 1560,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1400,
+        780
+      ],
+      "typeVersion": 1,
+      "id": "3d3195f9-ccb5-426f-9e9b-10101cc9aa47",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "42d82ed1-fe91-4643-9c68-32f129aecce0",
+              "name": "meu_id",
+              "value": "={{ $json.body.entry[0].id }}",
+              "type": "string"
+            },
+            {
+              "id": "69895f6a-b105-4cf1-ad85-15d4fe13be69",
+              "name": "from_id",
+              "value": "={{ $json.body.entry[0].changes[0].value.from.id }}",
+              "type": "string"
+            },
+            {
+              "id": "dcbd2af7-ff5b-479e-b256-6cddafc55e61",
+              "name": "from_username",
+              "value": "={{ $json.body.entry[0].changes[0].value.from.username }}",
+              "type": "string"
+            },
+            {
+              "id": "f0d982c3-573b-479f-96f1-9afe8af37ac9",
+              "name": "media_id",
+              "value": "={{ $json.body.entry[0].changes[0].value.media.id }}",
+              "type": "string"
+            },
+            {
+              "id": "c7a7aeaa-36ef-4727-8aff-d60bbd270aef",
+              "name": "comment_id",
+              "value": "={{ $json.body.entry[0].changes[0].value.id }}",
+              "type": "string"
+            },
+            {
+              "id": "8662b074-6074-4848-90d6-5ca0df6b2f27",
+              "name": "comment",
+              "value": "={{ $json.body.entry[0].changes[0].value.text }}",
+              "type": "string"
+            },
+            {
+              "id": "a4f96bd0-b8ce-4732-ab12-b7d891634329",
+              "name": "field",
+              "value": "={{ $json.body.entry[0].changes[0].field }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1140,
+        1000
+      ],
+      "id": "ecb26975-f10d-40fb-8fab-800075393b07",
+      "name": "Set"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v23.0/{{ $json.comment_id }}/replies",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer IGAAMpbqSCii9BZAE8xemhkUC1OMVZAzS1FXbXZAnVU1maDlEYmVaeTE5OVpNYUpBbmNYYmdBMWREbHgwTHBTMlF4QjRab1hLM3pMWDF5QmdZAUXltQk1aUnpWWC1Ba1BmX3NOaUpwNGp4ZAVpPNUs2UFNENnE3cnByb3QxeWFYcGFaZAwZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "=Obrigado pelo comentário"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        1000
+      ],
+      "id": "20a3daab-9737-4cc6-b340-61e32e2d081f",
+      "name": "Reply Comments"
+    },
+    {
+      "parameters": {
+        "content": "Esse webhook deve ter a mesma url que webhook de ativação porém o método é POST e a configuração de resposta é imediatamente",
+        "height": 280,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1400,
+        860
+      ],
+      "typeVersion": 1,
+      "id": "c26fe300-65c4-487f-a666-0dce60512b8e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Webhook de ativação o método é GET e a configuração de resposta é USING NODE RESPOND TO WEBHOOK",
+        "height": 280,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1380,
+        440
+      ],
+      "typeVersion": 1,
+      "id": "2d7e213b-2b13-4363-b3be-162f30f7c30e",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "18a93cb1-8a5a-4323-b977-1409da4e4288",
+              "name": "code",
+              "value": "={{ $json.query['hub.challenge'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1120,
+        560
+      ],
+      "id": "60da2f88-72e8-4d0b-9fef-1ef36906a384",
+      "name": "Key"
+    },
+    {
+      "parameters": {
+        "content": "Separamos o código de verificação que devemos devolver",
+        "height": 280,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1160,
+        440
+      ],
+      "typeVersion": 1,
+      "id": "93037fd8-c1ab-4221-8187-38c03f67a101",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Devolver o código de verificação",
+        "height": 280,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -940,
+        440
+      ],
+      "typeVersion": 1,
+      "id": "78bc1112-81ec-46a6-b941-fb1714b30620",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "path": "ig-pedrolucasalmeida",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1360,
+        560
+      ],
+      "id": "9d6cac08-d993-46ad-a9ef-a12e3da697d2",
+      "name": "Webhook Get",
+      "webhookId": "bb332ad3-127d-4f0b-9c04-e89bf5f74156"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ig-pedrolucasalmeida",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1360,
+        1000
+      ],
+      "id": "7d179a30-973f-4a3a-8627-5f7cbf22cec2",
+      "name": "Webhook Post",
+      "webhookId": "bb332ad3-127d-4f0b-9c04-e89bf5f74156"
+    },
+    {
+      "parameters": {
+        "content": "Separamos as variaveis que vamos usar no fluxo",
+        "height": 280,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1180,
+        860
+      ],
+      "typeVersion": 1,
+      "id": "31fd944b-34d0-4cc9-97d6-c5e04c484228",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Vericiamos que tipo de ação estamos recebendo (comentários, mensagens, comentários de live ...)",
+        "height": 280,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -960,
+        860
+      ],
+      "typeVersion": 1,
+      "id": "4c81ee5c-bec7-40ee-8326-68966bde1c5e",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Filtramos as respostas que nós enviamos para evitar um loop de resposta",
+        "height": 280,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -740,
+        860
+      ],
+      "typeVersion": 1,
+      "id": "623ac95e-f129-46c5-a7cb-ca60f569b6f0",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Coloco o id dos posts que vão ter a automação",
+        "height": 280,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -520,
+        860
+      ],
+      "typeVersion": 1,
+      "id": "aec6eed3-932c-474e-bd5e-ca23c3105bf9",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Responde o comentário",
+        "height": 280,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -300,
+        860
+      ],
+      "typeVersion": 1,
+      "id": "acf7deb5-0e48-4ca4-a5a9-6cbca18e39c0",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Envia mensagem no direct",
+        "height": 280,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -80,
+        860
+      ],
+      "typeVersion": 1,
+      "id": "4b8c7280-b89c-4f49-95f5-37421e3aaeb3",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.media_id }}",
+                    "rightValue": "18061310087089310",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c6079428-80db-44c7-9465-a15bc35f50d5"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Reels 1"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9680e3f6-bd80-4bff-be03-9148d9742ce7",
+                    "leftValue": "={{ $json.media_id }}",
+                    "rightValue": "=1145575754",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Carrossel Tal"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -480,
+        1000
+      ],
+      "id": "4fe97bee-87bb-4928-a1dd-9befb151cc3b",
+      "name": "Post"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.field }}",
+                    "rightValue": "comments",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b32589eb-9c98-46c2-82a6-563f04d28d0b"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "comments"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -920,
+        1000
+      ],
+      "id": "9c184941-3f89-4376-aa20-a10869c693dd",
+      "name": "Action"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e0887e87-7124-41ac-b107-00dc1ec76cb0",
+              "leftValue": "={{ $json.from_id }}",
+              "rightValue": "={{ $json.meu_id }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -700,
+        1000
+      ],
+      "id": "d8a8c79b-03b7-4a44-adae-90c081327072",
+      "name": "Echo"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v23.0/me/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer IGAAMpbqSCii9BZAE8xemhkUC1OMVZAzS1FXbXZAnVU1maDlEYmVaeTE5OVpNYUpBbmNYYmdBMWREbHgwTHBTMlF4QjRab1hLM3pMWDF5QmdZAUXltQk1aUnpWWC1Ba1BmX3NOaUpwNGp4ZAVpPNUs2UFNENnE3cnByb3QxeWFYcGFaZAwZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "recipient.comment_id",
+              "value": "={{ $('Set').item.json.comment_id }}"
+            },
+            {
+              "name": "message.text",
+              "value": "Texto no privado da pessoa"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -20,
+        1000
+      ],
+      "id": "4d8b5844-0318-40b9-8976-8ea730a77358",
+      "name": "Send Direct Text"
+    }
+  ],
+  "connections": {
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply Comments": {
+      "main": [
+        [
+          {
+            "node": "Send Direct Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Key": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Get": {
+      "main": [
+        [
+          {
+            "node": "Key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Post": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post": {
+      "main": [
+        [
+          {
+            "node": "Reply Comments",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reply Comments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Action": {
+      "main": [
+        [
+          {
+            "node": "Echo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Echo": {
+      "main": [
+        [
+          {
+            "node": "Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "Webhook Get": [
+      {
+        "headers": {
+          "host": "webhook.plasdigital.com.br",
+          "user-agent": "facebookplatform/1.0 (+http://developers.facebook.com)",
+          "accept": "*/*",
+          "accept-encoding": "deflate, gzip",
+          "x-forwarded-for": "69.171.234.4",
+          "x-forwarded-host": "webhook.plasdigital.com.br",
+          "x-forwarded-port": "443",
+          "x-forwarded-proto": "https",
+          "x-forwarded-server": "3485f1cb337d",
+          "x-real-ip": "69.171.234.4"
+        },
+        "params": {},
+        "query": {
+          "hub.mode": "subscribe",
+          "hub.challenge": "903842089",
+          "hub.verify_token": "asas"
+        },
+        "body": {},
+        "webhookUrl": "https://webhook.plasdigital.com.br/webhook/ig-pedrolucasalmeida",
+        "executionMode": "production"
+      }
+    ],
+    "Webhook Post": [
+      {
+        "headers": {
+          "host": "webhook.plasdigital.com.br",
+          "user-agent": "Webhooks/1.0 (https://fb.me/webhooks)",
+          "content-length": "340",
+          "accept": "*/*",
+          "content-type": "application/json",
+          "x-forwarded-for": "173.252.95.22",
+          "x-forwarded-host": "webhook.plasdigital.com.br",
+          "x-forwarded-port": "443",
+          "x-forwarded-proto": "https",
+          "x-forwarded-server": "3485f1cb337d",
+          "x-hub-signature": "sha1=6166aeea262d93d84bb9d95c41295fb30709af18",
+          "x-hub-signature-256": "sha256=f1a8a557de77cced5567667837e692236d0f94c25ac3e9b2336b649cf1c9e4f8",
+          "x-real-ip": "173.252.95.22",
+          "accept-encoding": "gzip"
+        },
+        "params": {},
+        "query": {},
+        "body": {
+          "entry": [
+            {
+              "id": "17841436253003304",
+              "time": 1749581765,
+              "changes": [
+                {
+                  "value": {
+                    "from": {
+                      "id": "9329646870438645",
+                      "username": "pedroalmeida.ia"
+                    },
+                    "media": {
+                      "id": "18061310087089310",
+                      "media_product_type": "FEED"
+                    },
+                    "id": "18068720735295888",
+                    "text": "❤️❤️❤️"
+                  },
+                  "field": "comments"
+                }
+              ]
+            }
+          ],
+          "object": "instagram"
+        },
+        "webhookUrl": "https://webhook.plasdigital.com.br/webhook/ig-pedrolucasalmeida",
+        "executionMode": "production"
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8b9a6787aadb4f7cbcf18ae94c37a42d27b462966da96e6b01bc26d42530dd80"
+  }
+}
+

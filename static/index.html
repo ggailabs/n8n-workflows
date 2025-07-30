@@ -6,31 +6,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>⚡ GG.AI Labs - Documentação de Workflows N8N</title>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #3b82f6; --primary-dark: #2563eb; --success: #10b981; --warning: #f59e0b;
+      --primary: #2D1B69; --primary-dark: #1f1247; --success: #10b981; --warning: #f59e0b;
       --error: #ef4444; --bg: #ffffff; --bg-secondary: #f8fafc; --bg-tertiary: #f1f5f9;
       --text: #1e293b; --text-secondary: #64748b; --text-muted: #94a3b8;
       --border: #e2e8f0; --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
       --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     }
     [data-theme="dark"] {
-      --bg: #0f172a; --bg-secondary: #1e293b; --bg-tertiary: #334155;
-      --text: #f8fafc; --text-secondary: #cbd5e1; --text-muted: #64748b; --border: #475569;
+      --primary: #4f46e5; --primary-dark: #4338ca; --bg: #0f172a; 
+      --bg-secondary: #1e1b4b; --bg-tertiary: #2e2a6e;
+      --text: #f8fafc; --text-secondary: #e2e8f0; --text-muted: #94a3b8; 
+      --border: #475569;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg); color: var(--text); line-height: 1.6; transition: all 0.2s ease;
     }
     .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
-    .header { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 2rem 0; text-align: center; }
-    .title { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--primary); }
-    .subtitle { font-size: 1.125rem; color: var(--text-secondary); margin-bottom: 2rem; }
+    .header { background: var(--primary); border-bottom: 1px solid var(--primary-dark); padding: 2rem 0; text-align: center; color: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+    .title { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; color: white; letter-spacing: -0.5px; }
+    .subtitle { font-size: 1.125rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 1.5rem; line-height: 1.6; }
     .stats { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; }
     .stat { text-align: center; min-width: 100px; }
-    .stat-number { display: block; font-size: 1.875rem; font-weight: 700; color: var(--primary); }
-    .stat-label { font-size: 0.875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-number { display: block; font-size: 1.875rem; font-weight: 700; color: white; }
+    .stat-label { font-size: 0.875rem; color: rgba(255, 255, 255, 0.8); text-transform: uppercase; letter-spacing: 0.05em; }
     .controls { background: var(--bg); border-bottom: 1px solid var(--border); padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; }
     .search-section { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
     .search-input { flex: 1; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 0.5rem; background: var(--bg); color: var(--text); font-size: 1rem; min-width: 300px; }
@@ -39,7 +42,8 @@
     .filter-group { display: flex; align-items: center; gap: 0.5rem; }
     .filter-group label { font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); }
     .filter-group select { padding: 0.5rem; border: 1px solid var(--border); border-radius: 0.375rem; background: var(--bg); color: var(--text); font-size: 0.875rem; }
-    .theme-toggle { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; margin-left: auto; }
+    .theme-toggle { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.5rem; padding: 0.5rem 1rem; cursor: pointer; font-size: 1rem; margin-left: auto; color: white; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.5rem; }
+    .theme-toggle:hover { background: rgba(255, 255, 255, 0.2); }
     .results-info { margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary); }
     .main { padding: 2rem 0; }
     .state { text-align: center; padding: 4rem 2rem; }
@@ -109,29 +113,28 @@
   <div id="app">
     <header class="header">
       <div class="container">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
-          <img src="/static/ggailabs.png" alt="GG.AI Labs" style="height: 50px; width: auto;">
-          <h1 class="title">GG.AI Labs - Documentação de Workflows N8N</h1>
-        </div>
-        <p class="subtitle">
-          Navegador ultra-rápido de workflows com busca instantânea
-        </p>
-        <div class="stats">
-          <div class="stat">
-            <span class="stat-number" id="totalCount">0</span>
-            <span class="stat-label">Total</span>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 1.25rem; margin-bottom: 0.75rem;">
+            <img src="/static/ggailabs.png" alt="GG.AI Labs" style="height: 70px; width: auto; border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.15); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <div>
+              <h1 class="title">GG.AI Workflows</h1>
+              <p class="subtitle">Coleção de workflows N8N para automação de processos</p>
+            </div>
           </div>
-          <div class="stat">
-            <span class="stat-number" id="activeCount">0</span>
-            <span class="stat-label">Ativos</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number" id="nodeCount">0</span>
-            <span class="stat-label">Total de Nós</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number" id="integrationCount">0</span>
-            <span class="stat-label">Integrações</span>
+          
+          <div class="stats" style="background: rgba(0, 0, 0, 0.15); padding: 1rem 2rem; border-radius: 1rem; margin-top: 0.5rem; display: flex; gap: 3rem;">
+            <div class="stat">
+              <span class="stat-number" id="totalWorkflows">0</span>
+              <span class="stat-label">Workflows</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number" id="totalIntegrations">0</span>
+              <span class="stat-label">Integrações</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number" id="activeWorkflows">0</span>
+              <span class="stat-label">Ativos</span>
+            </div>
           </div>
         </div>
       </div>
@@ -176,8 +179,10 @@
               Somente ativos
             </label>
           </div>
-          <button id="themeToggle" class="theme-toggle">🌙</button>
-        </div>
+          <button id="themeToggle" class="theme-toggle">
+            <i class="fas fa-moon" id="themeIcon"></i>
+            <span>Alternar tema</span>
+          </button>
         <div class="results-info">
           <span id="resultsCount">Carregando...</span>
         </div>
@@ -288,7 +293,6 @@
             </button>
           </div>
         </div>
-        <p style="font-size: 0.9rem; color: var(--text-muted);">Obrigado por apoiar nosso trabalho! 💙</p>
       </div>
     </div>
   </div>

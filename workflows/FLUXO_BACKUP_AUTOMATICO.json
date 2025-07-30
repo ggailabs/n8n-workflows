@@ -1,0 +1,447 @@
+{
+  "name": "BackupN8N",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 5,
+              "triggerAtHour": 3
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "80caf425-a9e6-4f6c-a940-d23513eef7cb",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $json['pasta-do-dia'] }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1x8uwa68biElJijCE-vIWbofTj5EsrqGe",
+          "mode": "list",
+          "cachedResultName": "Backups",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1x8uwa68biElJijCE-vIWbofTj5EsrqGe"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        440,
+        0
+      ],
+      "id": "ce0ea6c5-8fda-4342-85e7-b35309b5fab4",
+      "name": "CriaPastaDia",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vk8nE6Hzaab9zjjR",
+          "name": "Google Drive NineLabs"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Fluxos",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        740,
+        -120
+      ],
+      "id": "07adad27-798f-4dae-bbc8-51e8087f7642",
+      "name": "CriaPastaFluxos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vk8nE6Hzaab9zjjR",
+          "name": "Google Drive NineLabs"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "67a8e81a-6d1f-4980-9cfd-035a6cc58007",
+              "name": "pasta-do-dia",
+              "value": "={{ $now.format('yyyy-MM-dd') }}",
+              "type": "string"
+            },
+            {
+              "id": "a596c389-8691-428c-86d4-e5da948b98b5",
+              "name": "pasta-da-vps",
+              "value": "/home/node/n8n/backups/credentials/",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "id": "a69344a0-163b-47bb-a181-991b891c5f42",
+      "name": "OrganizaDados"
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        980,
+        -120
+      ],
+      "id": "3460802c-1be1-4b89-9d72-24fea6747e45",
+      "name": "ColetaFluxos",
+      "credentials": {
+        "n8nApi": {
+          "id": "TwKQTB9S7wRHpkVr",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {
+          "fileName": "={{ $json.name }}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        -120
+      ],
+      "id": "17834e01-abfb-4661-b758-a168eaf3421b",
+      "name": "ConverteFluxos"
+    },
+    {
+      "parameters": {
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('CriaPastaFluxos').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1420,
+        -120
+      ],
+      "id": "97ebcbe6-3a5d-46b6-9d40-096415ace18c",
+      "name": "SalvaFluxos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vk8nE6Hzaab9zjjR",
+          "name": "Google Drive NineLabs"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "Credenciais",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        740,
+        160
+      ],
+      "id": "81874747-f319-45c3-8894-1d3c0c84b407",
+      "name": "CriaPastaCredenciais",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vk8nE6Hzaab9zjjR",
+          "name": "Google Drive NineLabs"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=npx n8n export:credentials --backup --decrypted --output={{ $('OrganizaDados').item.json['pasta-da-vps'] }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        960,
+        160
+      ],
+      "id": "75b4f4b3-fe69-43f6-a30e-19b148228619",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $('OrganizaDados').item.json['pasta-da-vps'] }}/**/*.json",
+        "options": {
+          "fileName": ""
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        160
+      ],
+      "id": "b52dc65c-a76e-4cc6-9b9f-2177f19c5a84",
+      "name": "OrganizaArquivosCredenciais"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1620,
+        160
+      ],
+      "id": "a7fb72db-c33a-4ab1-b065-8e7935385e2d",
+      "name": "Wait",
+      "webhookId": "94ef1bb0-d7b1-4d75-8837-53f86c3fdcc7"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {
+          "keepSource": "binary"
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        160
+      ],
+      "id": "38131241-3bcf-4356-97a2-7e0fa7069968",
+      "name": "BinarioParaJson"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('BinarioParaJson').item.json.data.name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('CriaPastaCredenciais').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1840,
+        160
+      ],
+      "id": "c971ae72-29ad-4a0d-82a7-b1da779c5d07",
+      "name": "SalvaCredenciais",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vk8nE6Hzaab9zjjR",
+          "name": "Google Drive NineLabs"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "OrganizaDados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CriaPastaDia": {
+      "main": [
+        [
+          {
+            "node": "CriaPastaFluxos",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CriaPastaCredenciais",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CriaPastaFluxos": {
+      "main": [
+        [
+          {
+            "node": "ColetaFluxos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OrganizaDados": {
+      "main": [
+        [
+          {
+            "node": "CriaPastaDia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ColetaFluxos": {
+      "main": [
+        [
+          {
+            "node": "ConverteFluxos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ConverteFluxos": {
+      "main": [
+        [
+          {
+            "node": "SalvaFluxos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SalvaFluxos": {
+      "main": [
+        []
+      ]
+    },
+    "CriaPastaCredenciais": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "OrganizaArquivosCredenciais",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OrganizaArquivosCredenciais": {
+      "main": [
+        [
+          {
+            "node": "BinarioParaJson",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "SalvaCredenciais",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BinarioParaJson": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "af943718-c180-47c1-a842-f2a14803c43f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d446541a58ef362ee85448f8fa0f9535d2790e4520794dbdd049d119b54fbe57"
+  },
+  "id": "198KznE9PRhPQQpi",
+  "tags": []
+}

@@ -1,0 +1,131 @@
+{
+  "name": "MCP Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "petshop"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        -100
+      ],
+      "id": "cdbaff9a-05d5-468f-8873-cda99dfb2f0e",
+      "name": "MCP Server Trigger",
+      "webhookId": "faf071eb-2727-43f4-9c8b-10b2c8b9d65b"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1NoWYcyXfa4-CN-WXSnaJRJlW1yccrALbzy8XAl5PgQI",
+          "mode": "list",
+          "cachedResultName": "atendimento-petshop",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NoWYcyXfa4-CN-WXSnaJRJlW1yccrALbzy8XAl5PgQI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NoWYcyXfa4-CN-WXSnaJRJlW1yccrALbzy8XAl5PgQI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id__using_to_match_', ``, 'string') }}",
+            "cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('cliente', ``, 'string') }}",
+            "nome animal": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nome_animal', ``, 'string') }}",
+            "status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('status', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "cliente",
+              "displayName": "cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nome animal",
+              "displayName": "nome animal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        -300,
+        140
+      ],
+      "id": "8bed0ae8-db4b-4b55-a923-fcdc96d7fbd2",
+      "name": "atendimento",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "z7lXBGTo4IzsfxqV",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "atendimento": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "81bbf794-0cc6-43cd-a94c-76adfe74217e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d446541a58ef362ee85448f8fa0f9535d2790e4520794dbdd049d119b54fbe57"
+  },
+  "id": "FF2VjQO6HNXJMgfX",
+  "tags": []
+}

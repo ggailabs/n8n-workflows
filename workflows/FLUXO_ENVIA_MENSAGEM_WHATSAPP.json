@@ -1,0 +1,232 @@
+{
+  "name": "Envia Whatsapp",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1760,
+        -220
+      ],
+      "id": "9dc77a91-40d3-4f14-b6bf-1d37b6938637",
+      "name": "Loop Mensagens"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "message",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        -220
+      ],
+      "id": "f6513658-af85-47a2-9407-fc220b0a9ba5",
+      "name": "Divide mensagens"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "017471fd-bac4-4abb-b729-55b81b01afb2",
+              "name": "message",
+              "value": "={{ $json.message.split('\\n\\n') }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1320,
+        -220
+      ],
+      "id": "27fd2889-9ce4-46c7-8dd8-e64ad4855e75",
+      "name": "Prepara mensagens",
+      "notesInFlow": false,
+      "notes": "Monta um array a partir da mensagem gerada pela IA. Divide a mensagem através dos paragrafós"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "message"
+            },
+            {
+              "name": "phone"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        -220
+      ],
+      "id": "0db786af-a9ea-4595-a6fa-54bf3e9c01bf",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "tidi",
+        "remoteJid": "={{ $('When Executed by Another Workflow').item.json.phone }}",
+        "messageText": "={{ $('Loop Mensagens').item.json.message }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        -200
+      ],
+      "id": "bd9eeb1f-1c41-4c99-9e6a-2100fa3a5d1e",
+      "name": "Envia Mensagem",
+      "credentials": {
+        "evolutionApi": {
+          "id": "5X7A82p6sTHLRQRC",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "chat-api",
+        "operation": "send-presence",
+        "instanceName": "tidi",
+        "remoteJid": "={{ $('When Executed by Another Workflow').item.json.phone }}",
+        "delay": "={{ $json.waitTime }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        -200
+      ],
+      "id": "8c43617d-e177-4f91-b281-c501655404de",
+      "name": "Digitando",
+      "credentials": {
+        "evolutionApi": {
+          "id": "5X7A82p6sTHLRQRC",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      waitTime: (Math.floor(Math.random() * (4 - 1 + 1)) + 2) * 1000 // Tempo aleatório entre 2 e 8 segundos\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2020,
+        -200
+      ],
+      "id": "fac21fda-65e4-4587-b346-abe564f61d38",
+      "name": "Tempo randomico"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Loop Mensagens": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Tempo randomico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Divide mensagens": {
+      "main": [
+        [
+          {
+            "node": "Loop Mensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepara mensagens": {
+      "main": [
+        [
+          {
+            "node": "Divide mensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Prepara mensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envia Mensagem": {
+      "main": [
+        [
+          {
+            "node": "Loop Mensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Digitando": {
+      "main": [
+        [
+          {
+            "node": "Envia Mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tempo randomico": {
+      "main": [
+        [
+          {
+            "node": "Digitando",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0c80c1e9-20ff-4b22-8076-2d2285790cdf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d446541a58ef362ee85448f8fa0f9535d2790e4520794dbdd049d119b54fbe57"
+  },
+  "id": "JdtCDexJPDR5siq0",
+  "tags": []
+}

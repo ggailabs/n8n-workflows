@@ -1,0 +1,360 @@
+{
+  "name": "GeraQRCode",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "atualizar-qr-code",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        160
+      ],
+      "id": "43c7017e-d6e4-4b29-8258-d5e321220ba5",
+      "name": "Atualiza qr code",
+      "webhookId": "f3988766-f52b-4be0-b0bd-254e485671a3"
+    },
+    {
+      "parameters": {
+        "content": "Subistitua o Endpoint dentro do \"Campos Dinâmicos\" para os seus !",
+        "height": 460,
+        "width": 860,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "dcefcf87-810e-4509-b3dc-db2f88084217",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n  <title>Gerador de QR Code WhatsApp</title>\n  <script src=\"https://cdn.tailwindcss.com\"></script>\n  <style>\n    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');\n    \n    * {\n      font-family: 'Inter', system-ui, sans-serif;\n    }\n    \n    .fade-in {\n      animation: fadeIn 0.4s ease-out;\n    }\n    \n    @keyframes fadeIn {\n      from { opacity: 0; transform: translateY(16px); }\n      to { opacity: 1; transform: translateY(0); }\n    }\n    \n    .spinner {\n      width: 20px;\n      height: 20px;\n      border: 2px solid #e5e7eb;\n      border-radius: 50%;\n      border-top-color: #3b82f6;\n      animation: spin 1s linear infinite;\n    }\n    \n    @keyframes spin {\n      to { transform: rotate(360deg); }\n    }\n    \n    .progress-circle {\n      transform: rotate(-90deg);\n    }\n    \n    .progress-path {\n      stroke-dasharray: 157;\n      stroke-dashoffset: 157;\n      transition: stroke-dashoffset 1s linear;\n    }\n    \n    .feature-card {\n      transition: all 0.2s ease;\n    }\n    \n    .feature-card:hover {\n      transform: translateY(-2px);\n    }\n    \n    .input-focus {\n      transition: all 0.2s ease;\n    }\n    \n    .input-focus:focus {\n      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);\n    }\n    \n    .btn-primary {\n      transition: all 0.2s ease;\n    }\n    \n    .btn-primary:hover:not(:disabled) {\n      transform: translateY(-1px);\n      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);\n    }\n    \n    .btn-secondary {\n      transition: all 0.2s ease;\n    }\n    \n    .btn-secondary:hover {\n      background-color: #f9fafb;\n      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);\n    }\n  </style>\n</head>\n<body class=\"min-h-screen bg-gray-50\">\n  <!-- Main Content -->\n  <div class=\"min-h-screen flex items-center justify-center p-4\">\n    <div class=\"w-full max-w-md\">\n      <!-- Header -->\n      <div class=\"text-center mb-8 fade-in\">\n        <div class=\"inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-6 shadow-sm\">\n          <svg class=\"w-8 h-8 text-white\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n            <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z\"/>\n          </svg>\n        </div>\n        <h1 class=\"text-2xl font-semibold text-gray-900 mb-2\">Gerador de QR Code</h1>\n        <p class=\"text-gray-600\">Conecte sua instância WhatsApp rapidamente</p>\n      </div>\n\n      <!-- Main Card -->\n      <div class=\"bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden fade-in\">\n        <div class=\"p-6\">\n          <!-- Features Grid -->\n          <div class=\"grid grid-cols-3 gap-4 mb-8\">\n            <div class=\"feature-card text-center p-4 bg-gray-50 rounded-xl\">\n              <div class=\"w-10 h-10 bg-blue-100 text-blue-600 rounded-lg mx-auto mb-3 flex items-center justify-center\">\n                <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n                  <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M13 10V3L4 14h7v7l9-11h-7z\"/>\n                </svg>\n              </div>\n              <p class=\"text-sm font-medium text-gray-700\">Rápido</p>\n            </div>\n            <div class=\"feature-card text-center p-4 bg-gray-50 rounded-xl\">\n              <div class=\"w-10 h-10 bg-green-100 text-green-600 rounded-lg mx-auto mb-3 flex items-center justify-center\">\n                <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n                  <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z\"/>\n                </svg>\n              </div>\n              <p class=\"text-sm font-medium text-gray-700\">Seguro</p>\n            </div>\n            <div class=\"feature-card text-center p-4 bg-gray-50 rounded-xl\">\n              <div class=\"w-10 h-10 bg-purple-100 text-purple-600 rounded-lg mx-auto mb-3 flex items-center justify-center\">\n                <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n                  <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z\"/>\n                </svg>\n              </div>\n              <p class=\"text-sm font-medium text-gray-700\">Simples</p>\n            </div>\n          </div>\n\n          <!-- Input Section -->\n          <div class=\"space-y-6\">\n            <div>\n              <label for=\"instanceName\" class=\"block text-sm font-medium text-gray-900 mb-3\">\n                Nome da Instância\n              </label>\n              <div class=\"relative\">\n                <input\n                  id=\"instanceName\"\n                  type=\"text\"\n                  placeholder=\"Digite o nome da sua instância\"\n                  class=\"input-focus w-full px-4 py-4 rounded-xl border border-gray-300 focus:border-blue-500 focus:ring-0 outline-none text-gray-900 placeholder-gray-500 bg-white\"\n                />\n                <div class=\"absolute inset-y-0 right-4 flex items-center text-gray-400\">\n                  <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z\"/>\n                  </svg>\n                </div>\n              </div>\n              <p class=\"text-sm text-gray-500 mt-2\">Escolha um nome único para identificar sua conexão</p>\n            </div>\n\n            <!-- Generate Button -->\n            <button\n              id=\"generateButton\"\n              onclick=\"generateQRCode()\"\n              class=\"btn-primary w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl disabled:opacity-50 disabled:pointer-events-none disabled:transform-none relative overflow-hidden\"\n            >\n              <div class=\"flex items-center justify-center space-x-2\">\n                <div id=\"buttonIcon\">\n                  <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5\"/>\n                  </svg>\n                </div>\n                <span id=\"buttonText\">Gerar QR Code</span>\n              </div>\n            </button>\n          </div>\n\n          <!-- Loading State -->\n          <div id=\"loader\" class=\"hidden text-center py-12\">\n            <div class=\"inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-xl mb-4\">\n              <div class=\"spinner\"></div>\n            </div>\n            <p class=\"text-gray-900 font-medium mb-1\">Gerando QR Code</p>\n            <p class=\"text-sm text-gray-500\">Aguarde um momento...</p>\n          </div>\n\n          <!-- QR Code Display -->\n          <div id=\"qrcode\" class=\"hidden text-center py-6\">\n            <div class=\"bg-gray-50 rounded-xl p-6 border border-gray-200\">\n              <div id=\"qrImage\" class=\"mb-6\"></div>\n              \n              <!-- Instructions -->\n              <div class=\"space-y-4\">\n                <h3 class=\"text-sm font-medium text-gray-900 mb-4\">Como conectar:</h3>\n                <div class=\"space-y-3 text-left max-w-xs mx-auto\">\n                  <div class=\"flex items-start space-x-3\">\n                    <div class=\"flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-medium\">1</div>\n                    <p class=\"text-sm text-gray-600\">Abra o WhatsApp no celular</p>\n                  </div>\n                  <div class=\"flex items-start space-x-3\">\n                    <div class=\"flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-medium\">2</div>\n                    <p class=\"text-sm text-gray-600\">Acesse \"Aparelhos conectados\"</p>\n                  </div>\n                  <div class=\"flex items-start space-x-3\">\n                    <div class=\"flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-medium\">3</div>\n                    <p class=\"text-sm text-gray-600\">Escaneie este código</p>\n                  </div>\n                </div>\n              </div>\n            </div>\n          </div>\n\n          <!-- Timer -->\n          <div id=\"timer\" class=\"hidden\">\n            <div class=\"bg-amber-50 border border-amber-200 rounded-xl p-4 mt-6\">\n              <div class=\"flex items-center justify-center space-x-3\">\n                <div class=\"relative w-8 h-8\">\n                  <svg class=\"progress-circle w-8 h-8\" viewBox=\"0 0 50 50\">\n                    <circle\n                      class=\"progress-path\"\n                      stroke=\"#f59e0b\"\n                      stroke-width=\"2\"\n                      fill=\"transparent\"\n                      r=\"25\"\n                      cx=\"25\"\n                      cy=\"25\"\n                    />\n                  </svg>\n                  <div class=\"absolute inset-0 flex items-center justify-center\">\n                    <svg class=\"w-3 h-3 text-amber-600\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n                      <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z\"/>\n                    </svg>\n                  </div>\n                </div>\n                <div class=\"text-center\">\n                  <p id=\"timerText\" class=\"text-sm font-medium text-amber-800\"></p>\n                  <p class=\"text-xs text-amber-600\">Tempo restante</p>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <!-- Help Button -->\n      <div class=\"mt-6 fade-in\">\n        <button\n          id=\"helpButton\"\n          onclick=\"window.open('{{ $json.ajuda }}', '_blank')\"\n          class=\"btn-secondary w-full py-4 px-6 bg-white text-gray-700 font-medium rounded-xl border border-gray-300 hover:bg-gray-50\"\n        >\n          <div class=\"flex items-center justify-center space-x-3\">\n            <svg class=\"w-5 h-5 text-gray-500\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n              <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z\"/>\n            </svg>\n            <span>Precisa de ajuda?</span>\n          </div>\n        </button>\n      </div>\n\n      <!-- Footer -->\n      <div class=\"text-center mt-8 fade-in\">\n        <div class=\"flex items-center justify-center space-x-2 text-sm text-gray-500\">\n          <svg class=\"w-4 h-4 text-green-500\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n            <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z\"/>\n          </svg>\n          <span>Conexão segura</span>\n          <span>•</span>\n          <span class=\"font-medium text-gray-600\">WhatsApp Business API</span>\n        </div>\n      </div>\n    </div>\n  </div>\n\n  <script>\n    let timerInterval;\n    let timeLeft = 30;\n\n    async function generateQRCode() {\n      const input = document.getElementById('instanceName');\n      const name = input.value.trim();\n      \n      if (!name) {\n        input.focus();\n        input.classList.add('border-red-400', 'ring-4', 'ring-red-100');\n        setTimeout(() => {\n          input.classList.remove('border-red-400', 'ring-4', 'ring-red-100');\n        }, 2500);\n        return;\n      }\n\n      await fetchQRCode(name);\n    }\n\n    async function fetchQRCode(name) {\n      const loader = document.getElementById('loader');\n      const button = document.getElementById('generateButton');\n      const buttonText = document.getElementById('buttonText');\n      const buttonIcon = document.getElementById('buttonIcon');\n      const qrSection = document.getElementById('qrcode');\n      const qrImageContainer = document.getElementById('qrImage');\n      const timerSection = document.getElementById('timer');\n\n      // Show loading state\n      qrSection.classList.add('hidden');\n      timerSection.classList.add('hidden');\n      loader.classList.remove('hidden');\n      button.disabled = true;\n      buttonText.textContent = 'Gerando...';\n      buttonIcon.innerHTML = '<div class=\"spinner\"></div>';\n\n      try {\n        const endpoint = '{{ $json.endpoint }}'; \n\n        const res = await fetch(endpoint, {\n          method: 'POST',\n          headers: { 'Content-Type': 'application/json' },\n          body: JSON.stringify({ instance: name })\n        });\n\n        if (!res.ok) {\n          let errorMsg = `Erro HTTP: ${res.status}`;\n          try {\n            const errorData = await res.json();\n            if (errorData && errorData.message) {\n              errorMsg = errorData.message;\n            }\n          } catch (e) {\n            errorMsg = res.statusText || errorMsg;\n          }\n          throw new Error(errorMsg);\n        }\n        \n        const blob = await res.blob();\n        if (blob.type.startsWith('image/')) {\n          const url = URL.createObjectURL(blob);\n          qrImageContainer.innerHTML = `<img src=\"${url}\" alt=\"QR Code WhatsApp\" class=\"rounded-xl max-w-64 mx-auto\" />`;\n        } else {\n          const textResponse = await blob.text();\n          console.error(\"Resposta inesperada:\", textResponse);\n          throw new Error('Resposta inesperada do servidor. Verifique o console.');\n        }\n\n        // Show QR code\n        loader.classList.add('hidden');\n        qrSection.classList.remove('hidden');\n        timerSection.classList.remove('hidden');\n        resetTimer();\n\n      } catch (error) {\n        console.error('Erro ao gerar QR Code:', error);\n        loader.classList.add('hidden');\n        qrSection.classList.add('hidden');\n        timerSection.classList.add('hidden');\n        showError(error.message || 'Erro ao gerar QR Code. Tente novamente.');\n      } finally {\n        button.disabled = false;\n        buttonText.textContent = 'Gerar QR Code';\n        buttonIcon.innerHTML = `\n          <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n            <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5\"/>\n          </svg>\n        `;\n      }\n    }\n\n    function resetTimer() {\n      clearInterval(timerInterval);\n      timeLeft = 30;\n      updateTimerDisplay();\n      timerInterval = setInterval(updateTimerDisplay, 1000);\n    }\n\n    function updateTimerDisplay() {\n      const timerTextEl = document.getElementById('timerText');\n      const progressPath = document.querySelector('.progress-path');\n      const timerSection = document.getElementById('timer');\n      const qrSection = document.getElementById('qrcode');\n      \n      if (timeLeft <= 0) {\n        clearInterval(timerInterval);\n        timerTextEl.textContent = 'Código expirado!';\n        progressPath.style.strokeDashoffset = 157;\n        setTimeout(() => {\n          timerSection.classList.add('hidden');\n          qrSection.classList.add('hidden');\n          showError('QR Code expirado. Gere um novo código.');\n        }, 1000);\n        return;\n      }\n      \n      timerTextEl.textContent = `${timeLeft}s`;\n      \n      const circumference = 2 * Math.PI * 25;\n      const offset = circumference - (timeLeft / 30) * circumference;\n      progressPath.style.strokeDashoffset = offset;\n      \n      timeLeft--;\n    }\n\n    function showError(message) {\n      const errorDiv = document.createElement('div');\n      errorDiv.className = 'fixed top-6 right-6 bg-red-500 text-white px-6 py-4 rounded-xl shadow-lg z-50 text-sm font-medium max-w-sm';\n      errorDiv.textContent = message;\n      document.body.appendChild(errorDiv);\n      \n      setTimeout(() => {\n        errorDiv.style.animation = 'fadeIn 0.3s ease-out reverse';\n        setTimeout(() => errorDiv.remove(), 300);\n      }, 4000);\n    }\n\n    // Event listeners\n    document.getElementById('instanceName').addEventListener('keypress', function(e) {\n      if (e.key === 'Enter') {\n        e.preventDefault();\n        generateQRCode();\n      }\n    });\n\n    window.addEventListener('load', () => {\n      document.getElementById('instanceName').focus();\n    });\n  </script>\n</body>\n</html>"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        420,
+        160
+      ],
+      "id": "574c911e-f86a-4079-94dd-0df06971ee1f",
+      "name": "somente buscar a instancia já criada"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a2a68ca7-0e4c-458f-ae04-b263cc19b14d",
+              "name": "ajuda",
+              "value": "https://za9.com.br",
+              "type": "string"
+            },
+            {
+              "id": "6ec85942-3ffc-41dd-a9a4-60a4011351f9",
+              "name": "endpoint",
+              "value": "https://n8n.tidi.com.br/webhook/atualizar-qr-code",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        160
+      ],
+      "id": "792951a0-1f65-45a6-8b94-8ce790212921",
+      "name": "Campos Dinâmicos"
+    },
+    {
+      "parameters": {
+        "content": "Gerador de QrCode",
+        "height": 460,
+        "width": 1440,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        900,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "43a153ba-af08-47c9-a201-80320722d161",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7997d699-2380-48aa-8dc3-b1eac974e16e",
+              "name": "base64",
+              "value": "={{ $json.data.base64.split(',').last() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1660,
+        40
+      ],
+      "id": "607af31b-46d5-4a1f-baf2-746f6990a3ad",
+      "name": "Limpa o código base64"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1860,
+        40
+      ],
+      "id": "9e63c95b-c93f-4ee2-9b3c-9522255328b2",
+      "name": "Converte para base64"
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1660,
+        260
+      ],
+      "id": "7414a633-85c0-4c08-a3f8-c08f48edca9c",
+      "name": "gera mensagem de conectado!",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "04bcabd0-34f6-4e7d-8329-0852b8593d8e",
+              "leftValue": "={{ $json.data.instance.state }}",
+              "rightValue": "open",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1400,
+        160
+      ],
+      "id": "55b3b5ea-5a63-4035-afa7-28092d69c7c9",
+      "name": "validação se está conectado"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        640,
+        160
+      ],
+      "id": "ebeb63f8-a2f2-472a-9812-4bff09d84405",
+      "name": "Gera Html Dinâmico"
+    },
+    {
+      "parameters": {
+        "path": "ninelabs",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        60,
+        160
+      ],
+      "id": "cd6fa81f-9d66-44bb-9921-2b6c9aef1968",
+      "name": "Inicializa a pagina",
+      "webhookId": "cce5e6b5-f99a-48a3-8b18-cf524f03c4ce"
+    },
+    {
+      "parameters": {
+        "operation": "instance-connect",
+        "instanceName": "={{ $json.body.instance }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        160
+      ],
+      "id": "b99ed51f-9d19-4571-96b5-15c2f6ed4c93",
+      "name": "Conexão EVO",
+      "credentials": {
+        "evolutionApi": {
+          "id": "5X7A82p6sTHLRQRC",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2080,
+        40
+      ],
+      "id": "781eb0c7-9f74-4855-bfa5-26d9e1b1c364",
+      "name": "gerar dinamicamente qrcode",
+      "alwaysOutputData": false
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "somente buscar a instancia já criada": {
+      "main": [
+        [
+          {
+            "node": "Gera Html Dinâmico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Campos Dinâmicos": {
+      "main": [
+        [
+          {
+            "node": "somente buscar a instancia já criada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpa o código base64": {
+      "main": [
+        [
+          {
+            "node": "Converte para base64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Converte para base64": {
+      "main": [
+        [
+          {
+            "node": "gerar dinamicamente qrcode",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validação se está conectado": {
+      "main": [
+        [
+          {
+            "node": "Limpa o código base64",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "gera mensagem de conectado!",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inicializa a pagina": {
+      "main": [
+        [
+          {
+            "node": "Campos Dinâmicos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conexão EVO": {
+      "main": [
+        [
+          {
+            "node": "validação se está conectado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualiza qr code": {
+      "main": [
+        [
+          {
+            "node": "Conexão EVO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "97c8301d-0b5e-45e4-bff4-4bc8114107b9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d446541a58ef362ee85448f8fa0f9535d2790e4520794dbdd049d119b54fbe57"
+  },
+  "id": "lysEjgVlPWW7jZnR",
+  "tags": []
+}

@@ -1,0 +1,231 @@
+{
+  "name": "GerarPDF",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        -20
+      ],
+      "id": "68c4bfbe-afac-4d76-a6e5-4a8fc1f49f29",
+      "name": "Inicia fluxo"
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n  <title>Relatório de Vendas - Supermercado</title>\n  <style>\n    body {\n      font-family: Arial, sans-serif;\n      background-color: #f4f6f8;\n      padding: 40px;\n    }\n\n    h1 {\n      text-align: center;\n      color: #333;\n    }\n\n    table {\n      width: 100%;\n      border-collapse: collapse;\n      background-color: #fff;\n      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);\n      margin-top: 20px;\n    }\n\n    th, td {\n      padding: 12px 16px;\n      border-bottom: 1px solid #ddd;\n      text-align: left;\n    }\n\n    th {\n      background-color: #2c3e50;\n      color: white;\n      text-transform: uppercase;\n    }\n\n    tr:hover {\n      background-color: #f1f1f1;\n    }\n\n    .total {\n      font-weight: bold;\n      background-color: #ecf0f1;\n    }\n  </style>\n</head>\n<body>\n  <h1>Relatório de Vendas - Supermercado</h1>\n\n  <table>\n    <thead>\n      <tr>\n        <th>Produto</th>\n        <th>Quantidade</th>\n        <th>Preço (R$)</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td>Arroz 5kg</td>\n        <td>12</td>\n        <td>96,00</td>\n      </tr>\n      <tr>\n        <td>Feijão 1kg</td>\n        <td>20</td>\n        <td>100,00</td>\n      </tr>\n      <tr>\n        <td>Óleo de Soja 900ml</td>\n        <td>15</td>\n        <td>82,50</td>\n      </tr>\n      <tr>\n        <td>Açúcar 1kg</td>\n        <td>18</td>\n        <td>72,00</td>\n      </tr>\n      <tr class=\"total\">\n        <td>Total</td>\n        <td>65</td>\n        <td>350,50</td>\n      </tr>\n    </tbody>\n  </table>\n</body>\n</html>\n"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        120,
+        -20
+      ],
+      "id": "367b29aa-4db4-4eee-b7c9-ed8d23748168",
+      "name": "GeraHTML"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6081bc06-1b6a-4ad9-b453-5a428fef3910",
+              "name": "html",
+              "value": "={{ $json.html.base64Encode() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        340,
+        -20
+      ],
+      "id": "2f43c66a-6a54-45d5-9665-674f9e04796e",
+      "name": "TransformaHTMLBASE64"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "html",
+        "options": {
+          "fileName": "index.html",
+          "mimeType": "text/html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        -20
+      ],
+      "id": "56bca0b7-fb00-4045-af09-9ee3a25d06f5",
+      "name": "ConverteBinario"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://marketing-gotenberg-5a4d41-190-102-42-64.traefik.me/forms/chromium/convert/html",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "files",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "arquivo.pdf"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        780,
+        -20
+      ],
+      "id": "9612cd1e-dc14-48c2-a2e5-e2b1ebb3a159",
+      "name": "GerarPDF",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "eojeXn4IVbo5FN9l",
+          "name": "Gotenbarg Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "binaryPropertyName": "arquivo.pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        -20
+      ],
+      "id": "f4f8f0c7-3fa6-4347-ba56-72f927030c6e",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "operation": "send-document",
+        "instanceName": "ninelabs",
+        "remoteJid": "5531997153507",
+        "media": "={{ $json.data }}",
+        "caption": "=Segue o PDF",
+        "fileName": "arquivo.pdf",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        -20
+      ],
+      "id": "0b800a3e-233c-4d90-8ce7-bf39e706a4e7",
+      "name": "Evolution API",
+      "credentials": {
+        "evolutionApi": {
+          "id": "5X7A82p6sTHLRQRC",
+          "name": "Evolution account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Inicia fluxo": {
+      "main": [
+        [
+          {
+            "node": "GeraHTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GeraHTML": {
+      "main": [
+        [
+          {
+            "node": "TransformaHTMLBASE64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TransformaHTMLBASE64": {
+      "main": [
+        [
+          {
+            "node": "ConverteBinario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ConverteBinario": {
+      "main": [
+        [
+          {
+            "node": "GerarPDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Evolution API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GerarPDF": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ccf7ed53-3a29-44ee-8392-6c4a3da27cc3",
+  "meta": {
+    "instanceId": "d446541a58ef362ee85448f8fa0f9535d2790e4520794dbdd049d119b54fbe57"
+  },
+  "id": "5ZtC2DwZF6PKOv8A",
+  "tags": []
+}

@@ -1,0 +1,820 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -720,
+        860
+      ],
+      "id": "4885f23f-bde2-46f7-a2bc-ef0330473efe",
+      "name": "When chat message received",
+      "webhookId": "6e6aaa0e-ff2d-40fb-af99-8b09d26c2ca6"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -540,
+        1100
+      ],
+      "id": "9334e224-ee46-4880-8bac-a4a0645facb9",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -380,
+        1100
+      ],
+      "id": "636d6c93-67b1-437f-a791-8351d3f54994",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $input.first().json.output;\n\n// Converte \\n literal para quebras reais\nconst normalizedText = text.replace(/\\\\n/g, '\\n');\n\n// Quebra em partes baseadas em \\n\\n\nconst parts = normalizedText.split(/\\n{2,}/);\n\nconst results = [];\n\nfor (const part of parts) {\n  let cleanedPart = part;\n\n  // Regex atualizado: pega qualquer link markdown vindo de https://s3, com qualquer extensão\n  const markdownRegex = /!?\\[.*?\\]\\((https:\\/\\/s3[^\\)]+)\\)/g;\n  const links = [];\n\n  let match;\n  while ((match = markdownRegex.exec(part)) !== null) {\n    links.push(match[1]); // extrai a URL pura\n  }\n\n  // Remove os markdowns do texto original\n  cleanedPart = cleanedPart.replace(markdownRegex, '').trim();\n\n  // Adiciona o texto limpo como item, se ainda tiver conteúdo\n  if (cleanedPart) {\n    results.push({ json: { output: cleanedPart } });\n  }\n\n  // Adiciona os links como itens separados\n  for (const link of links) {\n    results.push({ json: { output: link } });\n  }\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -60,
+        860
+      ],
+      "id": "9244fd35-90b4-4dd9-a5d7-dd7e901696e6",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        220,
+        860
+      ],
+      "id": "10fd6a3a-ac38-4bc9-ae4a-f55e39370709",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ /^https:\\/\\/s3.*\\.(webp|png|jpg|jpeg)$/.test($json.output) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "282b9093-f74c-4418-8be6-e35d3d261daf"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Imagem"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2db4e960-b26d-4152-891c-6af592fac38f",
+                    "leftValue": "={{ /^https:\\/\\/s3.*\\.(mp4)$/.test($json.output) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Video"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0b55de14-865d-454b-8129-b360e595c9b8",
+                    "leftValue": "={{ /^https:\\/\\/s3.*\\.(pdf)$/.test($json.output) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c44e797f-7957-4fd6-acde-7b093ddd72a8",
+                    "leftValue": "={{ /^https:\\/\\/s3.*\\.(mp3)$/.test($json.output) }}",
+                    "rightValue": "Áudio",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        540,
+        860
+      ],
+      "id": "9e5a242e-b70b-4050-9449-087f4b579ed1",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtém a variável de entrada\nconst inputText = $input.first().json.output;\n\n// Verifica se a entrada é válida\nif (typeof inputText !== 'string') {\n    throw new Error('A entrada $input.first().json.message deve ser uma string.');\n}\n\n// Conta o número de caracteres\nconst charCount = inputText.length;\n\n// Calcula o delay baseado em blocos de 40 caracteres\nconst result = Math.floor(charCount / 30) * 1000;\n\n// Retorna os valores\nreturn {\n    characterCount: charCount,\n    delay: result,\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        1040
+      ],
+      "id": "f5192104-b2f2-4f6d-93d0-59eb531a9665",
+      "name": "Delay1"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1920,
+        1060
+      ],
+      "id": "9b5e9054-1553-4538-bd86-3be67bec4c2a",
+      "name": "Wait",
+      "webhookId": "026afa88-b9fc-4985-bfca-57801c6fc9a4"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=# Identidade\nVocê envia provas socais\n\n## Formatação de Respostas\n\nNunca utilize formatação Markdown em nenhuma mensagem.\nTodos os textos devem ser enviados em formato simples, sem asteriscos, sublinhados, hashtags, emojis especiais, ou qualquer outro caractere de formatação.\nLinks devem ser enviados como texto puro, sem aplicar formatação de link clicável.\nCaso precise enviar links, envie apenas o endereço completo (ex: https://meusite.com/arquivo.pdf), sempre no formato de texto simples.\n\n## Provas socais\nPara enviar as prova soscias você deve enviar, exatamente o texto:\nhttps://s3.plasdigital.com.br/arquivoveterinaria/audio2.mp3\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -500,
+        860
+      ],
+      "id": "2294cfec-b6be-414a-8542-9eb34c564ef9",
+      "name": "Meu agente"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://evo.plasdigital.com.br/message/sendMedia/agente",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "xxxxxxxxxxxxxxxxx"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "=5521998105076"
+            },
+            {
+              "name": "mediatype",
+              "value": "document"
+            },
+            {
+              "name": "mimetype",
+              "value": "document/pdf"
+            },
+            {
+              "name": "media",
+              "value": "={{ $json.output }}"
+            },
+            {
+              "name": "fileName",
+              "value": "document.pdf"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1400,
+        1020
+      ],
+      "id": "c06cef46-1b7d-4d45-9699-221016b21af0",
+      "name": "PDF",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://evo.plasdigital.com.br/message/sendMedia/agente",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "xxxxxxxxxxxxx"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "=5521998105076"
+            },
+            {
+              "name": "mediatype",
+              "value": "video"
+            },
+            {
+              "name": "mimetype",
+              "value": "video/mp4"
+            },
+            {
+              "name": "media",
+              "value": "={{ $json.output }}"
+            },
+            {
+              "name": "fileName",
+              "value": "video.mp4"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1560,
+        940
+      ],
+      "id": "15b05003-e6c6-41c1-9662-a03cd09cb444",
+      "name": "Video"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://evo.plasdigital.com.br/message/sendMedia/agente",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "xxxxxxxxxxxxx"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "=5521998105076"
+            },
+            {
+              "name": "mediatype",
+              "value": "image"
+            },
+            {
+              "name": "mimetype",
+              "value": "image/png"
+            },
+            {
+              "name": "media",
+              "value": "={{ $json.output }}"
+            },
+            {
+              "name": "fileName",
+              "value": "imagem.png"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1740,
+        860
+      ],
+      "id": "811aba12-0cf2-46e7-a7bf-a2c7d1ba6c43",
+      "name": "Image",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "GDlKYS1Y2q58TIOr",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "1. Pega as mensagens gerar pelo agente\n2. Faz uma quebra usando '\\n\\n' como delimitador\n3. Limpa o markdown e separa a URL do texto\n4. Retorna cada parte do split como um item separado",
+        "height": 320,
+        "width": 260,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -140,
+        680
+      ],
+      "typeVersion": 1,
+      "id": "2c10498c-3015-42c0-9cc6-807ab9dba7cd",
+      "name": "Sticky Note22"
+    },
+    {
+      "parameters": {
+        "content": "1. Pega as mensagens e conta o número de caracteres\n2. Divide o número de caracteres por 15, arredonda para o número inteiro mais próximo e multiplica por 1000\n3. Isso gera o delay \"digitando\", que será utilizado no node \"Send Text\"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+        "height": 520,
+        "width": 280,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        720
+      ],
+      "typeVersion": 1,
+      "id": "617175fa-eed0-40f2-9553-c76db0e7e34e",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "content": "Envia a mensagem, com delay \"digitando\", gerado pelo node anterior",
+        "height": 420,
+        "width": 220,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1120,
+        820
+      ],
+      "typeVersion": 1,
+      "id": "5ecc359d-c49d-4b9b-86f2-09b4fead6d21",
+      "name": "Sticky Note24"
+    },
+    {
+      "parameters": {
+        "content": "1. Pega os itens (Mensagens) do node anterior e passa uma menssagem por vez, para enviar as mensagens picadas",
+        "height": 300,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        700
+      ],
+      "typeVersion": 1,
+      "id": "a44df12d-e580-4d01-83fd-c03b04601c71",
+      "name": "Sticky Note25"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://evo.plasdigital.com.br/message/sendText/agente",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "xxxxxxxxxxx"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "=5521998105076"
+            },
+            {
+              "name": "text",
+              "value": "={{ $('Switch').item.json.output }}"
+            },
+            {
+              "name": "delay",
+              "value": "={{ $json.delay }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1160,
+        1040
+      ],
+      "id": "51707ed4-d89e-4276-b428-129e9d8b17b0",
+      "name": "Text"
+    },
+    {
+      "parameters": {
+        "content": "1. Verifica o tipo de mensagem",
+        "height": 360,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        480,
+        700
+      ],
+      "typeVersion": 1,
+      "id": "664a2914-5aed-432d-b0ad-ed01ee436e5c",
+      "name": "Sticky Note26"
+    },
+    {
+      "parameters": {
+        "content": "Envia as mídias",
+        "height": 400,
+        "width": 500,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1360,
+        840
+      ],
+      "typeVersion": 1,
+      "id": "6a9cb9a1-10d9-4ca7-8c6e-d417ad2a215c",
+      "name": "Sticky Note27"
+    },
+    {
+      "parameters": {
+        "content": "# Como fazer seu agente IA enviar Imagens, Vídeos, Áudio, Documentos e Mensagens Fracionadas!\n\nPara que seu agente consiga **enviar mídias como imagens, vídeos, áudios e documentos de forma automática**, você precisa seguir alguns passos essenciais:\n\n## 1. Armazene as mídias em um banco com URL pública\n- Antes de qualquer coisa, **os arquivos precisam estar disponíveis via URL**, ou seja, acessíveis por link.  \nA forma mais prática de fazer isso é usando o **Minio**, que é um servidor de armazenamento compatível com o padrão S3 (igual da Amazon).\n\n**Exemplo de link gerado pelo Minio:**  \n`https://s3.meuservidor.com.br/bucket/arquivo.jpg`\n\n---\n## 2. Entenda que cada tipo de mensagem precisa de um node diferente\n\nO N8N trata **mensagens de texto, imagens, vídeos e documentos** com **nodes diferentes**.  \nSe você tentar enviar um link como se fosse texto, ele não vai entender que é uma imagem ou vídeo — ele apenas **vai mostrar o link como texto comum**.",
+        "height": 500,
+        "width": 840,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -380,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "4a3cffce-a9df-4543-bc9b-79e1a019baa8",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evo.plasdigital.com.br/message/sendWhatsAppAudio/agente",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "5521998105076"
+            },
+            {
+              "name": "audio",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1620,
+        1120
+      ],
+      "id": "06960dad-98f3-40a9-b96f-5e4e727359a3",
+      "name": "Send Audio"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Meu agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Meu agente",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Meu agente",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Video",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PDF",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delay1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delay1": {
+      "main": [
+        [
+          {
+            "node": "Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meu agente": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Audio": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "When chat message received": [
+      {
+        "sessionId": "9a1f20f946a143598c3e2614f5a439c4",
+        "action": "sendMessage",
+        "chatInput": "me envie as provas socias"
+      }
+    ],
+    "Wait": [
+      {
+        "key": {
+          "remoteJid": "5521998105076@s.whatsapp.net",
+          "fromMe": true,
+          "id": "3EB00364BAB9C671CF0FCA92B062812E17BB02AC"
+        },
+        "pushName": "",
+        "status": "PENDING",
+        "message": {
+          "imageMessage": {
+            "url": "https://mmg.whatsapp.net/o1/v/t24/f2/m231/AQNjZ_a6A7MuX2pJUkszYVYdStA9n3zI9RrdvbFVgw52hRe39KAWud-jCYskq_AT7q6eLRPUp8Yx1LbxVR5YqE2ZzWkJ3N1-1cw23x1KGQ?ccb=9-4&oh=01_Q5Aa1wH0KT_RwrznNie-KALJynSWji_W8NjKMBld67xx8Ny5xw&oe=68812C80&_nc_sid=e6ed6c&mms3=true",
+            "mimetype": "image/png",
+            "fileSha256": "KYlGzU1+vkIrCEehDt/EzAIOKr72cmkjFR+WlWZAPHA=",
+            "fileLength": "99953",
+            "height": 470,
+            "width": 542,
+            "mediaKey": "BxRK3QO1sNKxWFE05hAn0ZQegEMHA4oKNBLHlLw1C7g=",
+            "fileEncSha256": "zg3PiIAQZLRQKzlSn76Urzz/z648+w/eIPZV/r0oW/E=",
+            "directPath": "/o1/v/t24/f2/m231/AQNjZ_a6A7MuX2pJUkszYVYdStA9n3zI9RrdvbFVgw52hRe39KAWud-jCYskq_AT7q6eLRPUp8Yx1LbxVR5YqE2ZzWkJ3N1-1cw23x1KGQ?ccb=9-4&oh=01_Q5Aa1wH0KT_RwrznNie-KALJynSWji_W8NjKMBld67xx8Ny5xw&oe=68812C80&_nc_sid=e6ed6c",
+            "mediaKeyTimestamp": "1750714145",
+            "jpegThumbnail": "/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAcACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAECAwb/xAAmEAACAQMCBQUBAAAAAAAAAAABAgADERIhcQQTMWGRQVFSYoGx/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAH/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwDsKHDGhX4ln4qu4rVMwpOiaWsO03Soqm+dRr/IRVQuWrWJ0AxJ/kkKmQJe4H1MDfnp38QDA2IJMlOV0Ck7qZWwA2gZuoLgkftwIKqqdKYN/dhpKNNXNze8eK9MF8QBWHQIF2IjixX0RQewjkV//9k=",
+            "contextInfo": {}
+          }
+        },
+        "contextInfo": {},
+        "messageType": "imageMessage",
+        "messageTimestamp": 1750714146,
+        "instanceId": "bb0bf298-b854-4d70-af3a-46ffe51ebac4",
+        "source": "unknown"
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8b9a6787aadb4f7cbcf18ae94c37a42d27b462966da96e6b01bc26d42530dd80"
+  }
+}
+

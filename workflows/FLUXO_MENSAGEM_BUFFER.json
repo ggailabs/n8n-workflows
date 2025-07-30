@@ -1,0 +1,386 @@
+{
+  "name": "Buffer Mensagem",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "buffer",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "29a4bdeb-a7fc-4c98-b726-d3f234b084a6",
+      "name": "Webhook",
+      "webhookId": "764544d7-04b5-4654-b86e-dec4dbbcc14c"
+    },
+    {
+      "parameters": {
+        "amount": 6
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        0
+      ],
+      "id": "72c436fd-04bd-49c7-a304-ef2f6ba2d9f4",
+      "name": "Wait",
+      "webhookId": "3a561c40-a161-4071-a3b6-4e27c441eedd"
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $json.whatsapp }}",
+        "messageData": "={{ $json.mensagem }}",
+        "tail": true
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        440,
+        0
+      ],
+      "id": "bc46c6ef-3ab2-431e-96ee-a65a21184ba5",
+      "name": "Listar Mensagens",
+      "credentials": {
+        "redis": {
+          "id": "d7jJOBQastucPcZa",
+          "name": "Redis account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "46d99987-12ed-44d3-b97a-d089ca33116f",
+              "name": "whatsapp",
+              "value": "={{ $json.body.data.key.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "eac50d3a-0c38-4656-af84-86dc82d612bb",
+              "name": "mensagem",
+              "value": "={{ $json.body.data.message.conversation }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "id": "48773fa3-01c1-4a3e-b45f-49793cf3bc3e",
+      "name": "Filtrar Dados"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "mensagens",
+        "key": "={{ $json.whatsapp }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ],
+      "id": "c1f89a7d-6346-4e52-b86b-03db8b25d9d2",
+      "name": "Puxar Mensagens",
+      "credentials": {
+        "redis": {
+          "id": "d7jJOBQastucPcZa",
+          "name": "Redis account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3cc229ad-229c-4b69-b868-afe3b2d6827b",
+              "leftValue": "={{ $json.mensagens.last() }}",
+              "rightValue": "={{ $('Filtrar Dados').item.json.mensagem }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        0
+      ],
+      "id": "86903921-320c-4dcd-be4f-c0eedf428603",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        160
+      ],
+      "id": "b5888d37-0f23-4c8b-af55-fe067f7542e3",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "96833a1a-530e-43ac-87c6-ff3fe2635b9a",
+              "name": "mensagens",
+              "value": "={{ $('Puxar Mensagens').item.json.mensagens.join('\\n') }}",
+              "type": "string"
+            },
+            {
+              "id": "2c8e9f69-fa5c-42d1-ab15-cc315e85f82a",
+              "name": "whatsapp",
+              "value": "={{ $('Wait').item.json.whatsapp }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1320,
+        -100
+      ],
+      "id": "7d84c484-5ab0-44e5-9a51-1f2c14bfc72d",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "={{ $json.whatsapp }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        -100
+      ],
+      "id": "184b5574-6686-4abb-a2c4-d1bf09f00513",
+      "name": "Redis",
+      "credentials": {
+        "redis": {
+          "id": "d7jJOBQastucPcZa",
+          "name": "Redis account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.mensagens }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        1760,
+        -100
+      ],
+      "id": "93dad99e-139f-4085-8725-c4738f8fd634",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1680,
+        140
+      ],
+      "id": "3430cc2f-5a59-437c-9c7b-f91746f48a3a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "4r4Fgn9sFRNt2fGS",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.whatsapp }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1860,
+        140
+      ],
+      "id": "7dc0c903-1795-40da-800b-172bc37944a3",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Puxar Mensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Listar Mensagens": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Dados": {
+      "main": [
+        [
+          {
+            "node": "Listar Mensagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Puxar Mensagens": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Redis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "16554bc3-a5fb-41a5-a425-e95bf3a520d8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d446541a58ef362ee85448f8fa0f9535d2790e4520794dbdd049d119b54fbe57"
+  },
+  "id": "eXXc0Lt35CW0W6OR",
+  "tags": []
+}

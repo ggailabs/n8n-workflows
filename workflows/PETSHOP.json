@@ -1,0 +1,340 @@
+{
+  "name": "My workflow 13",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pet",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9d33d654-0455-4057-b754-3fbc727c5952",
+      "name": "Webhook",
+      "webhookId": "2fce534a-5f73-468a-bbb0-6d1a4a044475"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.data.message.conversation }}",
+        "options": {
+          "systemMessage": "{\n  \"name\": \"Bidu\",\n  \"context\": {\n    \"identity\": \"Assistente Virtual\",\n    \"business\": \"Atendente de Pet Shop\",\n    \"language\": \"português brasileiro\",\n    \"date\": \"{{ $now.weekdayLong }}, {{ $now.format('dd/MM/yyyy') }}, {{ $now.hour.toString().padStart(2, '0') }}:{{ $now.minute.toString().padStart(2, '0') }}\",\n    \"pharmacy\": {\n      \"name\": \"Cãolândia\",\n      \"address\": \"Av. dos Cachorros, 1087 - Cascalho, Nova Lima - MG, 34002-342\",\n      \"hours\": \"Seg-Sex 8h-22h | Sáb e Dom 8h-00h\",\n      \"payment\": {\n        \"methods\": [\"PIX\", \"Dinheiro\", \"Cartão de crédito\"],\n        \"pix\": {\n          \"chave\": \"17.880.690/0001-56\",\n          \"banco\": \"Bradesco\",\n          \"tipo\": \"CNPJ\",\n          \"formatado\": \"17.880.690/0001-56\"\n        }\n      },\n      \"data_source\": {\n        \"products\": {\n          \"table\": \"pet\",\n          \"page\": \"estoque\"\n        },\n        \"delivery_fee\": {\n          \"table\": \"pet\",\n          \"page\": \"taxa de entrega\"\n        }\n      },\n      \"behavior\": {\n        \"tone\": \"Prestativo, claro, profissional e empático\",\n        \"rules\": [\n        \"Seguir rigorosamente as 6 etapas definidas\",\n         \"Mostrar valores parciais durante seleção de produtos\",\n          \"Não mostre as unidades em estoque\"\n          \"Coletar bairro primeiro para cálculo de taxa\",\n          \"Solicitar endereço completo somente após confirmação de pagamento\",\n          \"Fornecer chave PIX em mensagem separada para fácil cópia\",\n          \"Aguardar comprovante PIX sem prosseguir\",\n          \"Transferir para atendente humano apenas quando necessário\",\n          \"Nunca pare o atendimento\"\n        ],\n        \"flow\": {\n          \"etapa_1_produtos\": {\n            \"saudacao\": \"Olá! Sou o Bidu do Pet Shop Cãolândia. Como posso te ajudar?\",\n             \"respostas\": {\n              \"produto_unico\": \"Temos [nome]. Quantas unidades você quer?\",\n              \"multiplos_produtos\": \"Temos estas opções disponíveis: [lista]. Qual você prefere?\",\n              \"nao_encontrado\": \"No momento não temos esse produto em estoque. Posso te oferecer outras opções?\"\n            },\n            \"confirmacao_quantidade\": \"Anotado: [quantidade] unidade(s) de [produto].\",\n            \"pergunta_adicionais\": \"Deseja adicionar mais algum produto ao pedido?\",\n            \"resumo_parcial\": \"✔ Resumo parcial do pedido:\\n[lista de produtos com quantidades]\\n\\nPodemos seguir para a entrega?\"\n          },\n          \"etapa_2_entrega\": {\n            \"pergunta_entrega\": \"Você prefere retirar no nosso endereço ou deseja entrega?\",\n            \"retirada\": \"Para retirada:\\n[pharmacy.address]\\nHorário: [pharmacy.hours]\",\n            \"pergunta_bairro\": \"Para cálculo da taxa, por favor informe seu bairro:\",\n            \"taxa_entrega\": \"A taxa de entrega para [bairro] é R$ [valor]\"\n          },\n          \"etapa_3_confirmacao\": {\n            \"resumo_completo\": \"✔ RESUMO COMPLETO DO PEDIDO:\\n[lista de produtos]\\n+ Taxa de entrega: R$ [valor]\\n\\nTOTAL A PAGAR: R$ [total]\",\n            \"pergunta_confirmacao\": \"Deseja confirmar e prosseguir com o pedido?\",\n            \"opcoes\": \"1. Sim, confirmar\\n2. Não, quero fazer alterações\"\n          },\n          \"etapa_4_pagamento\": {\n            \"pergunta\": \"Forma de pagamento preferida:\\n1. PIX (CNPJ)\\n2. Cartão (levamos a maquininha)\\n3. Dinheiro\",\n            \"pix\": {\n              \"instrucao1\": \"Para pagamento via PIX, nossa chave é o CNPJ:\",\n              \"instrucao2\": \"[pharmacy.payment.pix.formatado]\",\n              \"mensagem\": \"Por gentileza, assim que realizar o pagamento, me mande por favor o comprovante.\",\n              \"aguardando\": \"Logo que o comprovante chegar vamos iniciar a separação do seu pedido.\",\n              \"confirmacao\": \"Pagamento confirmado! Obrigado.\"\n            },\n            \"cartao\": \"Perfeito! O entregador levará a maquininha para pagamento no cartão.\",\n            \"dinheiro\": {\n              \"pergunta\": \"Precisa que o entregador leve troco? Se sim, informe para quanto:\",\n              \"confirmacao\": \"Entendido! O entregador levará troco para R$ [valor].\"\n            }\n          },\n          \"etapa_5_endereco\": {\n            \"confirmacao_pedido\": \"Pedido registrado com sucesso!\",\n            \"pergunta_endereco\": \"Agora precisamos do seu endereço completo para entrega:\",\n            \"pergunta_referencia\": \"Por favor, informe também um ponto de referência para facilitar a localização:\",\n            \"lembrete_referencia\": \"Poderia nos informar um ponto de referência para o entregador?\",\n            \"exemplo\": \"Exemplo completo:\\nAv. Principal, 1000 - Apt 302\\nReferência: Prédio verde próximo ao mercado\",\n            \"confirmacao\": \"Endereço registrado:\\n[endereço]\\nReferência: [referencia]\",\n            \"previsao_entrega\": \"Seu pedido será preparado e sairá para entrega em breve!\"\n          },\n          \"etapa_6_despedida\": {\n            \"agradecimento\": \"Agradecemos sua preferência pelo Pet Shop Cãolândia!\",\n            \"disponibilidade\": \"Estamos à disposição para qualquer necessidade.\"\n          },\n          \"fluxo_alternativo\": {\n            \"alteracao\": \"O que deseja alterar no pedido?\",\n            \"cancelamento\": \"Pedido cancelado conforme solicitado. Obrigado pelo contato!\"\n          }\n        }\n      }\n    }\n  }\n} "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "2112f33b-3b8d-4771-89ed-1df6116cc36a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -20,
+        240
+      ],
+      "id": "1850ef81-9359-4af3-be6b-56c6ed9b49e2",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "LLqC6lrVdcq19eNv",
+          "name": "open_ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.body.data.key.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        140,
+        240
+      ],
+      "id": "404f86a1-cbfd-4ae5-9135-bd821e408bba",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "resource": "chat-api",
+        "operation": "read-messages",
+        "instanceName": "youtube",
+        "remoteJid": "={{ $('Webhook').item.json.body.data.key.remoteJid }}",
+        "messageId": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        580,
+        0
+      ],
+      "id": "ded388f1-20be-4592-a8a8-8a02da1138fe",
+      "name": "Evolution API",
+      "credentials": {
+        "evolutionApi": {
+          "id": "pTVyEBcqlMBy8lhe",
+          "name": "youtube"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "youtube",
+        "remoteJid": "={{ $('Webhook').item.json.body.data.key.remoteJid }}",
+        "messageText": "={{ $('AI Agent').item.json.output }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        800,
+        0
+      ],
+      "id": "1b6f096d-7866-489c-a9bc-ea095519a20e",
+      "name": "Evolution API1",
+      "credentials": {
+        "evolutionApi": {
+          "id": "pTVyEBcqlMBy8lhe",
+          "name": "youtube"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "https://webhook.depositointeligente.com.br/mcp/a6d8e19f-4ff5-425e-8fa1-971abbcbef40/sse"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        300,
+        240
+      ],
+      "id": "fdf55e94-194f-48b1-b147-612b151cff98",
+      "name": "MCP Client"
+    },
+    {
+      "parameters": {
+        "path": "a6d8e19f-4ff5-425e-8fa1-971abbcbef40"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        100,
+        440
+      ],
+      "id": "632b4e6e-f63e-44f4-950b-775e6acd0e8b",
+      "name": "MCP Server Trigger",
+      "webhookId": "a6d8e19f-4ff5-425e-8fa1-971abbcbef40"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1y9kWWDPAh0QE0g2D3aeamcmLSNRKM6VHq8vtidkmXOs",
+          "mode": "list",
+          "cachedResultName": "pet_shop",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1y9kWWDPAh0QE0g2D3aeamcmLSNRKM6VHq8vtidkmXOs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "estoque",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1y9kWWDPAh0QE0g2D3aeamcmLSNRKM6VHq8vtidkmXOs/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        140,
+        660
+      ],
+      "id": "57a96e5c-ae92-4f72-b0cc-577c2b3b4514",
+      "name": "estoque",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xVxxW5BRbjAoPcgW",
+          "name": "gilson"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1y9kWWDPAh0QE0g2D3aeamcmLSNRKM6VHq8vtidkmXOs",
+          "mode": "list",
+          "cachedResultName": "pet_shop",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1y9kWWDPAh0QE0g2D3aeamcmLSNRKM6VHq8vtidkmXOs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 384237552,
+          "mode": "list",
+          "cachedResultName": "taxa de entrega",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1y9kWWDPAh0QE0g2D3aeamcmLSNRKM6VHq8vtidkmXOs/edit#gid=384237552"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        300,
+        660
+      ],
+      "id": "353adbce-c41b-4d93-ac09-99aadde6ffe8",
+      "name": "taxa de entrega",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xVxxW5BRbjAoPcgW",
+          "name": "gilson"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        460,
+        240
+      ],
+      "id": "52778fa7-f114-41e7-9e5b-413b03a4015b",
+      "name": "Think"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Evolution API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evolution API": {
+      "main": [
+        [
+          {
+            "node": "Evolution API1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "estoque": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "taxa de entrega": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "44aa8dac-1203-42d8-b8c1-3eb994b1953a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a53cc0d865a3b7eb67b3dcd30cfe0f157c745a7e9aeb5e95d7e95d01c24d5092"
+  },
+  "id": "zv2UL38rurpPQgVP",
+  "tags": []
+}
+

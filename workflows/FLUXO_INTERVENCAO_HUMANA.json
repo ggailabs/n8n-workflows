@@ -1,0 +1,355 @@
+{
+  "name": "Pausa-humana",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pausa-humana",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -340,
+        -20
+      ],
+      "id": "7598d773-a5b9-495f-9796-d5363b06e8b0",
+      "name": "Webhook",
+      "webhookId": "4147f8ec-d7fc-4afb-9a63-ccde73bc2d85"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9d2fe8e3-d1f6-4513-bee0-e06e33349f71",
+              "name": "whatsapp",
+              "value": "={{ $json.body.data.key.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "a80435e1-d748-476b-8647-95d6f6c3e736",
+              "name": "fromMe",
+              "value": "={{ $json.body.data.key.fromMe }}",
+              "type": "boolean"
+            },
+            {
+              "id": "2f70d1d2-12f1-42d9-834a-168231443b27",
+              "name": "mensagem",
+              "value": "={{ $json.body.data.message.conversation }}",
+              "type": "string"
+            },
+            {
+              "id": "44f54dfe-2e5e-4cef-9793-9eaca87e42f1",
+              "name": "botName",
+              "value": "tidi",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -120,
+        -20
+      ],
+      "id": "6a3dea61-090e-48da-9232-d89ebc0d00ab",
+      "name": "FiltraDados"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('FiltraDados').item.json.mensagem }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        760,
+        230
+      ],
+      "id": "74127138-aee1-4b2b-8674-ab2e43503b78",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        740,
+        440
+      ],
+      "id": "8009f214-f8f2-41f3-af0d-3a4d1196189a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "4r4Fgn9sFRNt2fGS",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "tidi",
+        "remoteJid": "={{ $('FiltraDados').item.json.whatsapp }}",
+        "messageText": "={{ $json.output }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        230
+      ],
+      "id": "631e8642-c5a8-4364-b78d-73ce01927b9d",
+      "name": "Evolution API",
+      "credentials": {
+        "evolutionApi": {
+          "id": "5X7A82p6sTHLRQRC",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d19c1c56-ff90-4fb1-b1e7-98dc811238ab",
+              "leftValue": "={{ $json.fromMe }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        100,
+        -20
+      ],
+      "id": "f28c4343-3541-4f54-990d-a62f41a9d27c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "={{ $json.botName }}_{{ $('FiltraDados').item.json.whatsapp }}_bloqueado",
+        "value": "true",
+        "expire": true,
+        "ttl": 300
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -120
+      ],
+      "id": "c6929b67-d951-431f-a6de-5260f5fc5ff3",
+      "name": "Redis",
+      "credentials": {
+        "redis": {
+          "id": "FV4iCmBnaLM8M1Go",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "bloqueado",
+        "key": "={{ $json.botName }}_{{ $('FiltraDados').item.json.whatsapp }}_bloqueado",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        320,
+        80
+      ],
+      "id": "5b04a098-728e-4404-82d6-ea9e166feda5",
+      "name": "Redis1",
+      "credentials": {
+        "redis": {
+          "id": "FV4iCmBnaLM8M1Go",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        838,
+        -70
+      ],
+      "id": "6d1cbcf1-66a2-43a6-b55c-d228b473fdf8",
+      "name": "Não faz nada"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ee709a28-1833-43ff-8cc8-67ab5ad8fabc",
+              "leftValue": "={{ $json.bloqueado }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        540,
+        80
+      ],
+      "id": "f3ea2a99-38c4-4d57-a63b-8c5c00e37bdd",
+      "name": "Verifica se está bloqueado"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "FiltraDados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FiltraDados": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Evolution API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Redis",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Redis1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis1": {
+      "main": [
+        [
+          {
+            "node": "Verifica se está bloqueado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verifica se está bloqueado": {
+      "main": [
+        [
+          {
+            "node": "Não faz nada",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "21ddd62f-6090-43b3-999f-1db84b3ea707",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d446541a58ef362ee85448f8fa0f9535d2790e4520794dbdd049d119b54fbe57"
+  },
+  "id": "WBiWhjMHVLtrUvgw",
+  "tags": []
+}

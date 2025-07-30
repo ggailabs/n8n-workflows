@@ -1,0 +1,1196 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.token }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -840,
+        60
+      ],
+      "id": "a6ef82d6-8368-4efb-aa12-77ae3e979329",
+      "name": "Respond to Webhook",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Fluxo de Setup",
+        "height": 240,
+        "width": 720,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1360,
+        -20
+      ],
+      "typeVersion": 1,
+      "id": "a1e6bf6f-3a53-414b-a578-d6264200e23a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "path": "ig-pedrolucasalmeida",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1320,
+        60
+      ],
+      "id": "be13b20b-0dc7-424a-a999-d89e7eab9ce5",
+      "name": "Webhook Get",
+      "webhookId": "3ba3ec48-885e-4dd9-bd0d-0ffda9e0dc84",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ig-pedrolucasalmeida",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1400,
+        640
+      ],
+      "id": "0f5935bc-094e-4821-b7c4-6eebe1a1f8dc",
+      "name": "Webhook Post",
+      "webhookId": "3ba3ec48-885e-4dd9-bd0d-0ffda9e0dc84"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "838de7f0-036f-48e8-89f7-ee4e0dad9bba",
+              "leftValue": "={{ $('Set').item.json.is_echo }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -700,
+        640
+      ],
+      "id": "4ae9abbc-59c0-4059-9977-dad15b48f930",
+      "name": "Is Echo"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "190865cc-49aa-4afb-8ba2-7977e534d257",
+              "leftValue": "={{ $json.read_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -920,
+        640
+      ],
+      "id": "501f4e0c-33a0-4d0e-9020-df931c557a9f",
+      "name": "Read Filter"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Message }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        700,
+        640
+      ],
+      "id": "b89ddb5e-b39d-4e77-9a08-47cbcd32e73a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Set').item.json.message_text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "id": "0a54fe7d-acdd-4eed-b64e-f5d95345d9fd"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d5bc5c90-b812-4ef4-8997-66bbe2f7d083",
+                    "leftValue": "={{ $('Set').item.json.message_type }}",
+                    "rightValue": "audio",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "466d7d02-571c-4260-bba5-e388a21bba71",
+                    "leftValue": "={{ $('Set').item.json.message_type }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -400,
+        640
+      ],
+      "id": "bdf70908-ce1a-4808-b0de-a2da98fdc715",
+      "name": "Message Type"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set').item.json.media_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -180,
+        640
+      ],
+      "id": "41fd8f1a-6f6f-4dfd-8f38-5ad5a343ddab",
+      "name": "Get Audio"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        40,
+        640
+      ],
+      "id": "ddee03b0-9345-4cf1-88e7-4eb3d6deeeb2",
+      "name": "OpenAI"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v22.0/me/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Set').item.json.token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "recipient.id",
+              "value": "={{ $('Set').item.json.sender_id }}"
+            },
+            {
+              "name": "message.text",
+              "value": "={{ $json.splitPart }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1600,
+        640
+      ],
+      "id": "524ee8af-26c3-41f7-9daa-7d11e1d8d51c",
+      "name": "Send Text"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Recupera o texto da variável\nconst output = $('AI Agent').item.json.output;\n\n// Faz o split usando '\\n\\n' como delimitador\nconst splitOutput = output.split('\\n\\n');\n\n// Retorna cada parte do split como um item separado\nreturn splitOutput.map(part => ({\n  json: {\n    splitPart: part,\n  },\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1160,
+        640
+      ],
+      "id": "abf7d2cc-b9c4-4f43-b530-e151d924f1f5",
+      "name": "Split Messages"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1380,
+        640
+      ],
+      "id": "2b77ddfe-47c0-4f08-9f9b-22c2f5763b65",
+      "name": "Loop Messages"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3d02278a-235c-4dfd-802b-bd44562b37b9",
+              "name": "token",
+              "value": "={{ $json.query['hub.challenge'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1060,
+        60
+      ],
+      "id": "6b73e67b-4f6f-49b1-8a65-6d2762f8cef1",
+      "name": "Edit Fields",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 580,
+        "width": 880,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -440,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "af270832-cd5e-4a4a-92e7-375d51ba65d0",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 440,
+        "width": 900,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1100,
+        420
+      ],
+      "typeVersion": 1,
+      "id": "e4d585cf-781b-4302-a0e4-6caa702ec550",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1820,
+        640
+      ],
+      "id": "52470031-91fa-4981-8407-466e98ee722a",
+      "name": "Wait",
+      "webhookId": "63ecea42-0f60-4c2a-89e3-3bbaa9ee4945"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c4a63540-ef2a-4780-a1a9-081490ade73a",
+              "name": "meu_id",
+              "value": "={{ $json.body.entry[0].id }}",
+              "type": "string"
+            },
+            {
+              "id": "44477d8d-7eae-498d-80da-f5aff494676e",
+              "name": "sender_id",
+              "value": "={{ $json.body.entry[0].messaging[0].sender.id }}",
+              "type": "string"
+            },
+            {
+              "id": "09a65a61-931b-4c3a-ad7c-28350a998844",
+              "name": "recipient_id",
+              "value": "={{ $json.body.entry[0].messaging[0].recipient.id }}",
+              "type": "string"
+            },
+            {
+              "id": "e705ba5a-feca-4129-940a-e65e54971aac",
+              "name": "message_id",
+              "value": "={{ $json.body.entry[0].messaging[0].message.mid }}",
+              "type": "string"
+            },
+            {
+              "id": "21d7f538-7436-4e34-85d6-be849713b9de",
+              "name": "message_text",
+              "value": "={{ $json.body.entry[0].messaging[0].message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "82d7136f-b2db-4ac0-95b5-6f01f32437df",
+              "name": "is_echo",
+              "value": "={{ $json.body.entry[0].messaging[0].message.is_echo }}",
+              "type": "boolean"
+            },
+            {
+              "id": "5bd38dd9-2a71-46e5-bd47-84ca9bef4cc2",
+              "name": "read_id",
+              "value": "={{ $json.body.entry[0].messaging[0].read.mid }}",
+              "type": "string"
+            },
+            {
+              "id": "e7b6f86a-912a-4d72-83e9-e7c53e041338",
+              "name": "message_type",
+              "value": "={{ $json.body.entry[0].messaging[0].message.attachments[0].type }}",
+              "type": "string"
+            },
+            {
+              "id": "faae7b2a-57c7-4d97-b532-b9e521e1a29d",
+              "name": "media_url",
+              "value": "={{ $json.body.entry[0].messaging[0].message.attachments[0].payload.url }}",
+              "type": "string"
+            },
+            {
+              "id": "d155867f-3dc3-469c-af53-537a889d34b2",
+              "name": "token",
+              "value": "IGAAg6sL64r1xBZAE9peGY2NUJWU0VQTkxoWkhOUzNibl9DT09hbFhQTnpERWxQQVgyN1Q3WGw4MlJsdEwzaG81VFhhTHRtRllFUEo0eWtvckVRdVlHc284ekNLckRmRGRKNkxDcnVHVDlTNW14ZA1ZAIN3VmQlViSGlxLTUwSWxfQQZDZD",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1140,
+        640
+      ],
+      "id": "979d6c77-420d-4bfa-987c-dc3e7678f4df",
+      "name": "Set"
+    },
+    {
+      "parameters": {
+        "content": "### Verifica o tipo de mensagem",
+        "height": 240,
+        "width": 160,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -420,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "0bd35793-438f-4ffa-8f5d-a02ec1c4acb6",
+      "name": "Sticky Note41"
+    },
+    {
+      "parameters": {
+        "content": "### Unificação da varálvel",
+        "height": 560,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        240,
+        420
+      ],
+      "typeVersion": 1,
+      "id": "3be5ff62-3aa9-4d7a-a8a1-8e847236430f",
+      "name": "Sticky Note33"
+    },
+    {
+      "parameters": {
+        "content": "### Transcreve o áudio",
+        "height": 220,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        20,
+        580
+      ],
+      "typeVersion": 1,
+      "id": "a6aff8e0-30b3-4ff0-8eda-74e98367f150",
+      "name": "Sticky Note34"
+    },
+    {
+      "parameters": {
+        "content": "### Verifica se a mensagem é minha ou não.",
+        "height": 220,
+        "width": 220,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -740,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "b294a7bd-fe4b-4705-9100-3586ae0e5d27",
+      "name": "Sticky Note45"
+    },
+    {
+      "parameters": {
+        "content": "### Organizo as variáves do webhook",
+        "height": 240,
+        "width": 160,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1160,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "47a9d3b5-ba99-4fef-ad79-deb787dfea87",
+      "name": "Sticky Note47",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "1. Pega as mensagens gerar pelo agente\n2. Faz uma quebra usando '\\n\\n' como delimitador\n3. Retorna cada parte do split como um item separado",
+        "height": 320,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1120,
+        480
+      ],
+      "typeVersion": 1,
+      "id": "e61ba8c8-9467-427d-919b-32330eaa1097",
+      "name": "Sticky Note22"
+    },
+    {
+      "parameters": {
+        "content": "1. Pega os itens (Mensagens) do node anterior e passa uma menssagem por vez, para enviar as mensagens picadas",
+        "height": 320,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1340,
+        480
+      ],
+      "typeVersion": 1,
+      "id": "7582f66f-20a7-4162-8097-c7a92329cccb",
+      "name": "Sticky Note25"
+    },
+    {
+      "parameters": {
+        "content": "1. Envia a mensagem de texto",
+        "height": 300,
+        "width": 180,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1560,
+        520
+      ],
+      "typeVersion": 1,
+      "id": "91f0aa3b-5175-433b-a0f1-88d6141d4f36",
+      "name": "Sticky Note24"
+    },
+    {
+      "parameters": {
+        "content": "### Pega arquivo através da url",
+        "height": 240,
+        "width": 180,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -220,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "13fde5f9-892d-485a-a557-a736374ea843",
+      "name": "Sticky Note29"
+    },
+    {
+      "parameters": {
+        "content": "## Remetente",
+        "height": 360,
+        "width": 480
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -980,
+        460
+      ],
+      "typeVersion": 1,
+      "id": "fa3781c7-86ca-4173-b909-0d723ca2f673",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "### Filtras notificações de leitura da mensagem",
+        "height": 240,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -960,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "0aea2f43-5df7-4da7-a15f-c16b88531e0d",
+      "name": "Sticky Note46"
+    },
+    {
+      "parameters": {
+        "model": "=openrouter/cypher-alpha:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        660,
+        880
+      ],
+      "id": "fffcee91-6105-447f-91bf-3daae81fd4d2",
+      "name": "OpenRouter Chat Model"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1369f55d-0328-4ba7-ba8a-570c3df1da3a",
+              "name": "Message",
+              "value": "={{ $('Set').item.json.message_text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        480
+      ],
+      "id": "96a70c8d-cebe-45f5-9a5b-d3b1f26f5ef9",
+      "name": "Set Text"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1369f55d-0328-4ba7-ba8a-570c3df1da3a",
+              "name": "Message",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        640
+      ],
+      "id": "f8f7355d-826b-4c07-b85e-a22bb9044f55",
+      "name": "Set Audio"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1369f55d-0328-4ba7-ba8a-570c3df1da3a",
+              "name": "Message",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        820
+      ],
+      "id": "7ad6d988-bb44-4b86-9e6f-cc6003e42081",
+      "name": "Set Image"
+    },
+    {
+      "parameters": {
+        "mode": "delete",
+        "deleteMode": "all"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "typeVersion": 1.1,
+      "position": [
+        1620,
+        0
+      ],
+      "id": "8bc7df63-5546-4b69-a87c-bb40c7d6482f",
+      "name": "Chat Memory Manager"
+    },
+    {
+      "parameters": {
+        "content": "Deleta a memória",
+        "height": 320,
+        "width": 480,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1540,
+        -40
+      ],
+      "typeVersion": 1,
+      "id": "44a50b82-f498-493a-9929-48ce1fc54958",
+      "name": "Sticky Note26"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "9329646870438645chat"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.5,
+      "position": [
+        1720,
+        160
+      ],
+      "id": "90464a80-137f-4c8c-9511-dabeb1743acc",
+      "name": "Chat Memory"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set').item.json.media_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -200,
+        820
+      ],
+      "id": "140dddc0-413b-4df1-97d4-0cac956b1284",
+      "name": "Get Audio1"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "text": "O que esta nessa imagem?",
+        "inputType": "base64",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        40,
+        820
+      ],
+      "id": "46811748-72c6-4525-a9d2-ab9b78a60235",
+      "name": "Analyze image"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Set').item.json.sender_id }}chat"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.5,
+      "position": [
+        820,
+        880
+      ],
+      "id": "f41d8d9f-0c0f-4dd9-bee1-7a223be3953e",
+      "name": "Chat Memory1"
+    }
+  ],
+  "connections": {
+    "Webhook Get": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Post": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Echo": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Message Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Filter": {
+      "main": [
+        [
+          {
+            "node": "Is Echo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Split Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message Type": {
+      "main": [
+        [
+          {
+            "node": "Set Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Audio1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Audio": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Set Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Text": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Messages": {
+      "main": [
+        [
+          {
+            "node": "Loop Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Messages": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Send Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Read Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Text": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Audio": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Image": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Chat Memory Manager",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Audio1": {
+      "main": [
+        [
+          {
+            "node": "Analyze image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image": {
+      "main": [
+        [
+          {
+            "node": "Set Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "Webhook Get": [
+      {
+        "headers": {
+          "host": "webhook.plasdigital.com.br",
+          "user-agent": "facebookplatform/1.0 (+http://developers.facebook.com)",
+          "accept": "*/*",
+          "accept-encoding": "deflate, gzip",
+          "x-forwarded-for": "69.171.249.9",
+          "x-forwarded-host": "webhook.plasdigital.com.br",
+          "x-forwarded-port": "443",
+          "x-forwarded-proto": "https",
+          "x-forwarded-server": "3485f1cb337d",
+          "x-real-ip": "69.171.249.9"
+        },
+        "params": {},
+        "query": {
+          "hub.mode": "subscribe",
+          "hub.challenge": "70712234",
+          "hub.verify_token": "123"
+        },
+        "body": {},
+        "webhookUrl": "https://webhook.plasdigital.com.br/webhook/ig-pedrolucasalmeida",
+        "executionMode": "production"
+      }
+    ],
+    "Webhook Post": [
+      {
+        "headers": {
+          "host": "webhook.plasdigital.com.br",
+          "user-agent": "facebookexternalua",
+          "content-length": "419",
+          "accept": "*/*",
+          "accept-encoding": "deflate, gzip",
+          "content-type": "application/json",
+          "instagram-api-version": "v23.0",
+          "x-forwarded-for": "173.252.95.31",
+          "x-forwarded-host": "webhook.plasdigital.com.br",
+          "x-forwarded-port": "443",
+          "x-forwarded-proto": "https",
+          "x-forwarded-server": "3485f1cb337d",
+          "x-hub-signature": "sha1=e9fec9679c4c331ffd1004f580ed7b938e08cf25",
+          "x-hub-signature-256": "sha256=b93f07ae6e0b7a42717c5cf199812fe33f73ceca48569290fe238105f0bb98f2",
+          "x-real-ip": "173.252.95.31"
+        },
+        "params": {},
+        "query": {},
+        "body": {
+          "object": "instagram",
+          "entry": [
+            {
+              "time": 1751551362409,
+              "id": "17841436253003304",
+              "messaging": [
+                {
+                  "sender": {
+                    "id": "9329646870438645"
+                  },
+                  "recipient": {
+                    "id": "17841436253003304"
+                  },
+                  "timestamp": 1751551362010,
+                  "message": {
+                    "mid": "aWdfZAG1faXRlbToxOklHTWVzc2FnZAUlEOjE3ODQxNDM2MjUzMDAzMzA0OjM0MDI4MjM2Njg0MTcxMDMwMTI0NDI1ODY1NjY4ODk0MzY0NjIwMDozMjMxMDQxOTcwNjk2NjY1MjMxMTQzNDMxNjU5NTg1NTM2MAZDZD",
+                    "text": "Me fale os beneficos das ias"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "webhookUrl": "https://webhook.plasdigital.com.br/webhook/ig-pedrolucasalmeida",
+        "executionMode": "production"
+      }
+    ],
+    "OpenAI": [
+      {
+        "text": "Audio teste, testando o áudio 1, 2, 3, 4, 5",
+        "usage": {
+          "type": "duration",
+          "seconds": 5
+        }
+      }
+    ],
+    "Analyze image": [
+      {
+        "content": "A imagem mostra uma captura de tela de um monitor, onde é possível ver a barra de ferramentas de um navegador. Há ícones que indicam específicas funcionalidades, como uma lixeira, um botão de ajuda (com um ponto de interrogação), e opções relacionadas a status e instâncias. O fundo é escuro, e alguns botões são destacados em verde e vermelho. Além disso, uma superfície de algum tipo de tecido ou material está visível ao fundo."
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8b9a6787aadb4f7cbcf18ae94c37a42d27b462966da96e6b01bc26d42530dd80"
+  }
+}
+

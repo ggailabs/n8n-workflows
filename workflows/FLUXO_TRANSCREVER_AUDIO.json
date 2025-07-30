@@ -1,0 +1,454 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "entradazpro",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -820,
+        360
+      ],
+      "id": "a5a2ed86-3bcf-4d06-b68c-54bb7bd0ddac",
+      "name": "Gatilho_ZPRO",
+      "webhookId": "b5f01f34-93a4-4501-b347-9be17ce86a11"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5e5d22b1-d782-4840-82c5-a04082db7da6",
+                    "leftValue": "={{ $json.body.msg.message.audioMessage.mimetype.split('/')[0] }}",
+                    "rightValue": "audio",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.media }}",
+                    "rightValue": "texto",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e5023472-ef3a-437f-80a8-fa30382b21e3"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e205c303-cdca-47a6-ac8c-fb607963d72e",
+                    "leftValue": "={{ $json.body.msg.message.imageMessage.mimetype.split('/')[0] }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Imagem"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -620,
+        360
+      ],
+      "id": "86a27218-0c78-427d-b167-9da52593f99e",
+      "name": "Switch_Base"
+    },
+    {
+      "parameters": {
+        "content": "## Switch_Base\n**Switch** responsável pela triagem das mídias, permitindo que você as trate individualmente.",
+        "height": 280,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -680,
+        220
+      ],
+      "typeVersion": 1,
+      "id": "b8044300-8d09-4e9d-9080-a6a9bb0db43c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "21d40b17-9bbd-405e-a4aa-ac9bb4aef0bc",
+              "name": "final.texto",
+              "value": "={{ $json.body.msg.message.extendedTextMessage.text }}{{ $json.final.texto }}",
+              "type": "string"
+            },
+            {
+              "id": "69828516-fc7f-4a9c-9e7f-2233842a4676",
+              "name": "final.telefone",
+              "value": "={{ $json.body.msg.key.remoteJid }}{{ $json.final.telefone }}",
+              "type": "string"
+            },
+            {
+              "id": "f7f76529-febc-4056-aa39-c5debb92edf6",
+              "name": "final.nome",
+              "value": "={{ $json.body.msg.pushName }}{{ $json.final.nome }}",
+              "type": "string"
+            },
+            {
+              "id": "0a2a9441-721d-4576-a062-5199b382598d",
+              "name": "final.ticketid",
+              "value": "={{ $json.body.ticket.id }}{{ $json.final.ticketid }}",
+              "type": "number"
+            },
+            {
+              "id": "30486187-47c3-4caf-bf58-7e196b5c4c5e",
+              "name": "final.foto",
+              "value": "={{ $json.body.ticket.contact.profilePicUrl }}{{ $json.final.foto }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -220,
+        360
+      ],
+      "id": "b8f9ce5c-d813-461e-8f75-affb68715fb7",
+      "name": "Tratamento_Final"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "dados.base64",
+        "options": {
+          "mimeType": "=audio/mp3"
+        }
+      },
+      "id": "3f523a11-4580-4020-8974-5b18166276f2",
+      "name": "baixa o audio",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -40,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/audio/transcriptions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=bearer {{ $('Tratamento_Audio').item.json.dados.apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "whisper-large-v3-turbo"
+            },
+            {
+              "name": "temperature",
+              "value": "0"
+            },
+            {
+              "name": "response_format",
+              "value": "verbose_json"
+            },
+            {
+              "name": "language",
+              "value": "pt"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        180,
+        60
+      ],
+      "id": "1a5a92f5-6987-4a4b-8b57-48194ac08c87",
+      "name": "trancreve"
+    },
+    {
+      "parameters": {
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n## Finalização dos Dados\n\nArquivos prontos para uso na IA ou para gerar log,dados.\n",
+        "height": 360,
+        "width": 280,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -260,
+        280
+      ],
+      "typeVersion": 1,
+      "id": "d844a5b2-9343-48cd-9cf7-cbddefbf4f5a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Conversão do Áudio\n\nPara realizar o tratamento do áudio, é necessário transcrevê-lo para texto, a fim de enviá-lo para a IA. No caso de armazenamento, você pode trabalhar diretamente com o link gerado pela Zpro.\n\n- Para a criação da transcrição, utilizaremos a Groq, que é gratuita. 😊\n  - Para criar sua conta na Groq, clique [aqui](https://console.groq.com/keys)\n     - Após o cadastro, crie uma API Key — o link acima já leva diretamente para a tela de      geração da chave.\n  - Depois de se cadastrar, você deverá preencher o node **Tratamento_Audio** com suas informações.\n\nVocê pode analisar os nodes para entender melhor, mas já deixei todos configurados para que, ao preencher apenas esse primeiro node, o fluxo funcione corretamente.\n\n//NODES//\n\n- Node 1 \n  - Recebe os dados e normaliza\n\n- Node 2 \n  - Baixa o áudio e converte para mp3.\n\n- Node 3\n  - Transcreve o áudio utilizando a Groq\n\n- Node 4 \n  - Devolve os itens na forma que o node tratamento_final espera.",
+        "height": 800,
+        "width": 880,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -260,
+        -580
+      ],
+      "typeVersion": 1,
+      "id": "ce8cd492-2096-432a-9e48-890e50534884",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "715d625a-cda6-416e-9245-5e6f13d417b9",
+              "name": "dados.base64",
+              "value": "={{ $json.body.media }}",
+              "type": "string"
+            },
+            {
+              "id": "eaac185e-f945-4772-a35d-80965a25194b",
+              "name": "dados.apikey",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -220,
+        60
+      ],
+      "id": "1bd24248-8db7-4b73-af2e-150ab18905b8",
+      "name": "Tratamento_Audio"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "21d40b17-9bbd-405e-a4aa-ac9bb4aef0bc",
+              "name": "final.texto",
+              "value": "={{ $json.segments[0].text }}",
+              "type": "string"
+            },
+            {
+              "id": "69828516-fc7f-4a9c-9e7f-2233842a4676",
+              "name": "final.telefone",
+              "value": "={{ $('Gatilho_ZPRO').item.json.body.msg.key.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "f7f76529-febc-4056-aa39-c5debb92edf6",
+              "name": "final.nome",
+              "value": "={{ $('Gatilho_ZPRO').item.json.body.msg.pushName }}",
+              "type": "string"
+            },
+            {
+              "id": "0a2a9441-721d-4576-a062-5199b382598d",
+              "name": "final.ticketid",
+              "value": "={{ $('Gatilho_ZPRO').item.json.body.ticket.id }}",
+              "type": "number"
+            },
+            {
+              "id": "30486187-47c3-4caf-bf58-7e196b5c4c5e",
+              "name": "final.foto",
+              "value": "={{ $('Gatilho_ZPRO').item.json.body.ticket.contact.profilePicUrl }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        380,
+        60
+      ],
+      "id": "6121c6a3-c9ac-4ef7-9df8-20e2d778d7f0",
+      "name": "Tratamento_Para_finalizar"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        260,
+        360
+      ],
+      "id": "b63ba6c1-f868-49ce-9dcc-680aacc72da9",
+      "name": "AI Agent"
+    }
+  ],
+  "connections": {
+    "Gatilho_ZPRO": {
+      "main": [
+        [
+          {
+            "node": "Switch_Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch_Base": {
+      "main": [
+        [
+          {
+            "node": "Tratamento_Audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tratamento_Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tratamento_Final": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "baixa o audio": {
+      "main": [
+        [
+          {
+            "node": "trancreve",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "trancreve": {
+      "main": [
+        [
+          {
+            "node": "Tratamento_Para_finalizar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tratamento_Audio": {
+      "main": [
+        [
+          {
+            "node": "baixa o audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tratamento_Para_finalizar": {
+      "main": [
+        [
+          {
+            "node": "Tratamento_Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8b9a6787aadb4f7cbcf18ae94c37a42d27b462966da96e6b01bc26d42530dd80"
+  }
+}
+

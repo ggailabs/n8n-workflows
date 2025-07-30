@@ -1,0 +1,353 @@
+{
+  "name": "Follow-Up",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "c9c620d4-969f-4963-8aad-4b9369b26727",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        1000,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5ec6c387-116c-458b-be85-0dc7928f3d57",
+              "name": "BaseDados",
+              "value": "Leads_desafioIA7D",
+              "type": "string"
+            },
+            {
+              "id": "3c902543-ba70-402f-8894-25b8a088d2f5",
+              "name": "1FU_TempoFollowUp_EmMinutos",
+              "value": "={{ 1 }}",
+              "type": "number"
+            },
+            {
+              "id": "c33e9872-524e-4f91-b7fe-25337f86cb50",
+              "name": "2FU_TempoFollowUp_EmMinutos",
+              "value": "={{ 2 }}",
+              "type": "number"
+            },
+            {
+              "id": "4083c3d9-2040-4d35-b7ef-40072f984907",
+              "name": "3FU_TempoFollowUp_EmMinutos",
+              "value": "={{ 3 }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ad4f07a4-435f-4d84-a6de-fb422f1737c6",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1140,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "useDataOfInput": 2
+      },
+      "id": "8488bddb-5b5c-4d31-a905-dce45ba3b7cc",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1280,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "={{ $item(\"0\").$node[\"Edit Fields\"].json[\"BaseDados\"] }}",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Timestamp",
+              "condition": "neq"
+            }
+          ]
+        }
+      },
+      "id": "f83defe2-7d0b-422a-aaf0-76e122de4a41",
+      "name": "Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        340
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "ogUqhkcPM1g0ZRQ2",
+          "name": "Supabase das aulas desafio IA7D"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "397a2c98-d4ad-4d6e-94e2-70d2a4d0b65d",
+              "leftValue": "={{ $('Schedule Trigger').item.json.timestamp.toDateTime() }}",
+              "rightValue": "={{ $json.Timestamp.toDateTime().plus($item(\"0\").$node[\"Edit Fields\"].json[\"1FU_TempoFollowUp_EmMinutos\"], 'minutes') }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              }
+            },
+            {
+              "id": "73fa7273-d24a-4116-a61a-e027a1696fc2",
+              "leftValue": "={{ $('Schedule Trigger').item.json.timestamp.toDateTime() }}",
+              "rightValue": "={{ $json.Timestamp.toDateTime().plus($item(\"0\").$node[\"Edit Fields\"].json[\"1FU_TempoFollowUp_EmMinutos\"]+1, 'minutes') }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "before"
+              }
+            },
+            {
+              "id": "8cc05a06-5e8d-4082-a8ef-a12941133fc1",
+              "leftValue": "={{ $json.AtendimentoFinalizado }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "33d9fbac-046f-4b58-871f-7d6aaf2d0dda",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1640,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "397a2c98-d4ad-4d6e-94e2-70d2a4d0b65d",
+              "leftValue": "={{ $('Schedule Trigger').item.json.timestamp.toDateTime() }}",
+              "rightValue": "={{ $json.Timestamp.toDateTime().plus($item(\"0\").$node[\"Edit Fields\"].json[\"2FU_TempoFollowUp_EmMinutos\"], 'minutes') }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              }
+            },
+            {
+              "id": "73fa7273-d24a-4116-a61a-e027a1696fc2",
+              "leftValue": "={{ $('Schedule Trigger').item.json.timestamp.toDateTime() }}",
+              "rightValue": "={{ $json.Timestamp.toDateTime().plus($item(\"0\").$node[\"Edit Fields\"].json[\"2FU_TempoFollowUp_EmMinutos\"]+1, 'minutes') }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "before"
+              }
+            },
+            {
+              "id": "07ab8fbb-5b00-40f6-895c-14f3445723d1",
+              "leftValue": "={{ $json.AtendimentoFinalizado }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "53f69117-8f1b-48d5-813b-e18abe26e8e5",
+      "name": "Filter1",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1640,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "397a2c98-d4ad-4d6e-94e2-70d2a4d0b65d",
+              "leftValue": "={{ $('Schedule Trigger').item.json.timestamp.toDateTime() }}",
+              "rightValue": "={{ $json.Timestamp.toDateTime().plus($item(\"0\").$node[\"Edit Fields\"].json[\"3FU_TempoFollowUp_EmMinutos\"], 'minutes') }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              }
+            },
+            {
+              "id": "73fa7273-d24a-4116-a61a-e027a1696fc2",
+              "leftValue": "={{ $('Schedule Trigger').item.json.timestamp.toDateTime() }}",
+              "rightValue": "={{ $json.Timestamp.toDateTime().plus($item(\"0\").$node[\"Edit Fields\"].json[\"3FU_TempoFollowUp_EmMinutos\"]+1, 'minutes') }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "before"
+              }
+            },
+            {
+              "id": "7d2acc5d-1014-4f30-b869-68375c24a5bb",
+              "leftValue": "={{ $json.AtendimentoFinalizado }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "887690e7-6f89-4e59-b083-440eeecb759c",
+      "name": "Filter2",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1640,
+        520
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        []
+      ]
+    },
+    "Filter1": {
+      "main": [
+        []
+      ]
+    },
+    "Filter2": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "13a2a918-e74e-4a9d-86ca-c61ac9ad4316",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "227e7574429176d2059d159b729d93924e67758e4e2f09d4e3d5e2b262d54bf2"
+  },
+  "id": "3fFSR6027jN4t3Uf",
+  "tags": []
+}
