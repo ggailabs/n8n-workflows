@@ -1,1 +1,229 @@
-
+{
+    "name": "Analista_de_Erros",
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.errorTrigger",
+        "typeVersion": 1,
+        "position": [
+          -112,
+          432
+        ],
+        "id": "b884ff2c-1a1c-455d-9cee-d7eec53a48c7",
+        "name": "Error Trigger"
+      },
+      {
+        "parameters": {
+          "queue": "fila1",
+          "options": {
+            "acknowledge": "executionFinishesSuccessfully",
+            "durable": true,
+            "jsonParseBody": true,
+            "parallelMessages": 1
+          }
+        },
+        "type": "n8n-nodes-base.rabbitmqTrigger",
+        "typeVersion": 1,
+        "position": [
+          -128,
+          176
+        ],
+        "id": "a5693496-600d-4047-a462-75e94c08ace8",
+        "name": "RabbitMQ Trigger"
+      },
+      {
+        "parameters": {
+          "description": "Analise o erro de forma lógica antes de explicá-lo. Quebre o problema em partes, identifique onde ele ocorreu no fluxo, por que aconteceu e o que precisa ser alterado. Pense como um engenheiro de automações: qual foi a falha lógica ou de dados?\n\nListe mentalmente os seguintes pontos:\n1. Onde o erro ocorreu?\n2. Qual variável, dado ou condição causou isso?\n3. Esse erro tem chance de acontecer novamente?\n4. Como evitar esse erro no futuro?\n\nNão responda ainda. Apenas pense e prepare essas conclusões para compor a resposta final com clareza."
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolThink",
+        "typeVersion": 1,
+        "position": [
+          256,
+          640
+        ],
+        "id": "c62e4119-c90e-442c-9dce-b3f3b54de65f",
+        "name": "Think"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Message: {{ $json.execution.error.message }}\n\nStack: {{ $json.execution.error.stack }}\n\nlastNodeExecuted: {{ $json.execution.lastNodeExecuted }}\n\nworkflow: {{ $json.workflow.name }}",
+          "options": {
+            "systemMessage": "=## CONTEXTO:\n\nVocê é um Analista de Erros com linguagem acessível e explicações didáticas. Seu papel é analisar mensagens de erro vindas de sistemas de automação (como N8N) e transformar isso em um relatório claro, direto e fácil de entender, mesmo por quem **não tem conhecimento técnico**.\n\nVocê recebe mensagens de erro com stacktraces, logs técnicos ou descrições geradas automaticamente. Sua missão é **interpretar**, **diagnosticar a causa**, e sugerir **um passo a passo objetivo de como resolver**.\n\n## OBJETIVO:\n- Explicar o erro de forma leiga\n- Sugerir um passo a passo para corrigir\n\n## FORMATO DA RESPOSTA:\n\n🚨 Erro Detectado:\n[Explique com suas palavras o que aconteceu. Seja direto e evite termos técnicos desnecessários.]\n\n🛠️ Passo a Passo para Resolver:\n\n[Instrução clara 1]\n\n[Instrução clara 2]\n\n[Instrução clara 3]\n\n\n## ESTILO:\n- Use uma linguagem clara, como se estivesse explicando para um estagiário curioso.\n- Seja objetivo. Respostas longas demais cansam.\n- Não copie e cole o erro. Interprete ele.\n- Quando possível, evite jargões como “stacktrace”, “runtime” etc.\n\n## EXEMPLO DE ERRO:\n```json\n{\n  \"message\": \"Cannot read properties of undefined (reading 'name')\",\n  \"node\": \"Send Email\",\n  \"timestamp\": \"2025-06-05T01:23:00Z\"\n}\n\n## EXEMPLO DE RESPOSTA ESPERADA:\n\n🚨 **Erro Detectado:**\nO fluxo tentou acessar uma informação chamada “name”, mas ela não existia naquele momento.\n\n🛠️ **Passo a Passo para Resolver:**\n1. Vá até o nó anterior ao “Send Email”.\n2. Verifique se a variável “name” está sendo enviada corretamente.\n3. Se necessário, adicione uma verificação com “IF” para garantir que o valor exista antes de usar."
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2,
+        "position": [
+          64,
+          432
+        ],
+        "id": "680f3648-5437-4e79-810e-3fe8e93b82e1",
+        "name": "Analista de Erros"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          464,
+          592
+        ],
+        "id": "d613ceea-bdb5-465d-aa33-4d2aa211d3ac",
+        "name": "Wait",
+        "webhookId": "d7939675-0544-46e6-9252-db1a2093a453"
+      },
+      {
+        "parameters": {
+          "resource": "messages-api",
+          "messageText": "=*Workflow:* https://n8n.malvessd.shop/workflow/{{ $('Error Trigger').item.json.workflow.id }}\n\n*ID da Execução:* {{ $('Error Trigger').item.json.execution.id }}\n\n*Mensagem:* {{ $('Analista de Erros').item.json.output }}\n\n*Último nó executado:* {{ $('Error Trigger').item.json.execution.lastNodeExecuted }}",
+          "options_message": {}
+        },
+        "type": "n8n-nodes-evolution-api.evolutionApi",
+        "typeVersion": 1,
+        "position": [
+          704,
+          592
+        ],
+        "id": "eed021d5-1b71-4bc5-9fa2-c718963a0d62",
+        "name": "Envio das Informações",
+        "credentials": {
+          "evolutionApi": {
+            "id": "TVKfW75V5sywmphe",
+            "name": "Evolution Global"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "messages-api",
+          "messageText": "={{ $json.output.replaceAll('**', '*') }}",
+          "options_message": {
+            "mentions": {
+              "mentionsSettings": {
+                "mentionsEveryOne": true
+              }
+            }
+          }
+        },
+        "type": "n8n-nodes-evolution-api.evolutionApi",
+        "typeVersion": 1,
+        "position": [
+          704,
+          432
+        ],
+        "id": "6f9e13ce-8b3b-48ad-a358-f2d475fb9e3d",
+        "name": "Envio da Solução",
+        "credentials": {
+          "evolutionApi": {
+            "id": "TVKfW75V5sywmphe",
+            "name": "Evolution Global"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o",
+            "mode": "list",
+            "cachedResultName": "gpt-4o"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          64,
+          640
+        ],
+        "id": "8dae3e56-d53b-4e36-bf02-b49edc7179d6",
+        "name": "OpenAI Chat Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "AkQ7T577OSVTdDf6",
+            "name": "OpenAi account"
+          }
+        }
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "Error Trigger": {
+        "main": [
+          [
+            {
+              "node": "Analista de Erros",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "RabbitMQ Trigger": {
+        "main": [
+          []
+        ]
+      },
+      "Think": {
+        "ai_tool": [
+          [
+            {
+              "node": "Analista de Erros",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Analista de Erros": {
+        "main": [
+          [
+            {
+              "node": "Envio da Solução",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Wait",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "node": "Envio das Informações",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Analista de Erros",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "e9cb082b-dd07-4100-b28c-a51dc0e72aa5",
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "0c5350487e594f80ab4d87173b9ea37e250a06de79ff015703009df316ea87e9"
+    },
+    "id": "TlkyWkH4pGdYS25e",
+    "tags": []
+  }

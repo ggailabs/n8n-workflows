@@ -1,0 +1,706 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "2dfeafbc-a71c-4ede-aa47-c74677c99b3f",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        100,
+        380
+      ],
+      "id": "846b090b-d5a1-497e-bda7-ca8c0241e5c8",
+      "name": "Webhook",
+      "webhookId": "2dfeafbc-a71c-4ede-aa47-c74677c99b3f"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2c8f826b-6a7b-47c5-b9a6-47b6abef545a",
+              "name": "nome_usuario",
+              "value": "={{ $json.body.sender.name }}",
+              "type": "string"
+            },
+            {
+              "id": "f8a59b72-6a3d-48fd-82ad-6e853648b4e4",
+              "name": "telefone_usuario",
+              "value": "={{ $json.body.sender.phone_number }}",
+              "type": "string"
+            },
+            {
+              "id": "93dd8175-d019-4daa-82de-a76bb916d5e4",
+              "name": "mensagem_texto",
+              "value": "={{ $json.body.content }}",
+              "type": "string"
+            },
+            {
+              "id": "d617fe58-084b-4786-96aa-c8a115d2973a",
+              "name": "tipo_anexo",
+              "value": "={{ $json.body.attachments[0].file_type }}",
+              "type": "string"
+            },
+            {
+              "id": "85ae7af9-dc74-4f71-9db0-d13e89b6347f",
+              "name": "url_anexo",
+              "value": "={{ $json.body.attachments[0].data_url }}",
+              "type": "string"
+            },
+            {
+              "id": "b15aa0df-9245-43ef-903c-278b0ede6e12",
+              "name": "id_conta",
+              "value": "={{ $json.body.account.id }}",
+              "type": "string"
+            },
+            {
+              "id": "79b8d19f-5439-4dd6-bfa6-bbd08e3b7f6e",
+              "name": "id_conversa",
+              "value": "={{ $json.body.conversation.id }}",
+              "type": "string"
+            },
+            {
+              "id": "69c104c3-c797-437e-a950-c6ba3fd49c42",
+              "name": "url_chatwoot",
+              "value": "<url do seu Chatwoot>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        360,
+        380
+      ],
+      "id": "f78cdcf6-62a2-4a93-b762-8d6ee2c62be2",
+      "name": "Variáveis"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.mensagem_texto }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "id": "da50279f-f1ad-4ed6-9540-13eb0b240f33"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "aa8e2f09-4af1-4734-a015-8fe4bd08d39e",
+                    "leftValue": "={{ $json.tipo_anexo }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Imagem"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Outro"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        600,
+        380
+      ],
+      "id": "d2303f22-65e5-4057-8a6b-1e190137ec02",
+      "name": "Tipo de mensagem"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Variáveis').item.json.url_chatwoot }}/api/v1/accounts/{{ $('Variáveis').item.json.id_conta }}/conversations/{{ $('Variáveis').item.json.id_conversa }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "=Desculpa {{ $('Variáveis').item.json.nome_usuario }}, eu não suporto esse tipo de mensagem!\n\nTente de novo com texto ou imagem."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        820
+      ],
+      "id": "d694bf32-6389-47d6-a64f-cf6590e9e7ea",
+      "name": "Enviar mensagem não suportada"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-pro-preview-05-06",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        580
+      ],
+      "id": "6e85640a-13d9-48fc-a98a-76bcb0245ab9",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Variáveis').item.json.telefone_usuario }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1980,
+        580
+      ],
+      "id": "0c65cc40-211c-4664-a3f1-9702b7b60d4d",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Use esse ferramenta para buscar informações sobre restaurantes e outros estabelecimentos perto da localização do usuário.\n\nA formatação da localização deve seguir um formato muito específico, **UTILIZE ELE**. Exemplo:\n\nO usuário perguntou sobre a cidade de São Paulo -> \"Sao Paulo, State of Sao Paulo, Brazil\"\n\n**NÃO USE ACENTOS NOS NOMES DAS CIDADES ESTADOS OU PAÍSES**",
+        "url": "https://serpapi.com/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $fromAI('termo_pesquisa', `O termo a ser pesquisado.`, 'string') }}"
+            },
+            {
+              "name": "location",
+              "value": "={{ $fromAI('localizacao', `A localização da pesquisa. ATENÇÃO!! NÃO USE ACENTOS NOS NOMES`, 'string') }}"
+            },
+            {
+              "name": "hl",
+              "value": "pt-br"
+            },
+            {
+              "name": "gl",
+              "value": "br"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        2260,
+        580
+      ],
+      "id": "67195808-8d54-49a9-a890-353258b383a0",
+      "name": "Buscar locais de interesse"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Variáveis').item.json.url_chatwoot }}/api/v1/accounts/{{ $('Variáveis').item.json.id_conta }}/conversations/{{ $('Variáveis').item.json.id_conversa }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{ $('Assistente de viagens').item.json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2360,
+        360
+      ],
+      "id": "86704ff3-1081-445a-a17a-b0c377ec7c08",
+      "name": "Responder usuário."
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{  $('Tipo de mensagem').item.json.mensagem_texto || $('Extrair dados comprovante').item.json.candidates[0].content.parts[0].text }}\n\n{{ $('Upload arquivo').isExecuted ? 'Link do comprovante: ' + $('Upload arquivo').item.json.webViewLink : '' }}",
+        "options": {
+          "systemMessage": "=Agora são {{ $now.format('FFFF') }}.\n\nO nome do usuário falando com você é {{ $('Variáveis').item.json.nome_usuario }}.\n\n## Papel\n\nVocê é uma assistente de viagens, responsável por ajudar o usuário com o que ele precisar durante a viagem.\n\n## Tarefas\n\n### Buscar locais de interesse\n\nO usuário poderá te pedir sugestões de locais para ele poder ir, como restaurantes ou churrascarias. Veja abaixo as preferências do usuário, busque locais com a ferramenta \"Buscar locais de interesse\", e filtre a saída conforme as preferências.\n\nInclua na resposta pelo menos o nome e o endereço do local.\n\n#### Gostos do usuário\n\n- Macarrão: carbonara\n- Pizza: calabresa\n- Carnes: costela, churrasco, cupim\n\n#### Como pesquisar\n\nDependendo do que o usuário quiser comer, a pesquisa deverá ser para o tipo de estabelecimento que serve esse prato, na cidade que ele está. Por exemplo:\n\n- \"Quero comer X\"\n- Termo de pesquisa: \"X em <cidade da pesquisa>\"\n\n### Salvar despesa\n\nA entrada do usuário pode conter informações extraídas de um comprovante de alguma despesa durante a viagem. Extraia as informações relevantes para salvar essa despesa em uma planilha, utilizando a ferramenta \"Salvar despesa\". Note que o usuário pode incluir ou não um link para o arquivo do comprovante.\n\n- Use vírgulas para a casa decimal dos valores: \"200,00\". *NÃO USE PONTO PARA CASA DECIMAL*\n- Use o formato \"DD/MM/YYYY HH:MM:SS\" para a data das despesas.\n- Caso não seja informado a data da despesa, use a data e hora atual, informando o usuário que você fez isso.\n- Ao salvar a despesa, **SEMPRE INFORME AO USUÁRIO OS DADOS QUE FORAM SALVOS**\n- Ao informar para o usuário, formate o valor como \"R$ 100,00\"\n\n### Listar despesas\n\nUse a ferramenta \"Listar despesas\" para buscar informações de despesas solicitadas pelo usuário.\n\n## Notas\n\nA sua saída será usada numa mensagem de WhatsApp, portanto se atente a formatação.\n\n- Para texto em negrito, use apenas um asterisco (*), não dois (**).\n- Não inclua links dos comprovantes na saída."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        1960,
+        360
+      ],
+      "id": "0680fe81-5298-4ac8-bd74-6c460dd0a60d",
+      "name": "Assistente de viagens"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use essa ferramenta para salvar uma despesa na planilha.\n\nO link de anexo para o comprovante é opcional.",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        2400,
+        580
+      ],
+      "id": "325609e6-2174-46de-a098-befd3a0dfd0c",
+      "name": "Salvar despesa"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        2540,
+        580
+      ],
+      "id": "8a4d5a0f-2e7c-4fc5-8099-d207e5465381",
+      "name": "Listar despesas"
+    },
+    {
+      "parameters": {
+        "description": "Use a ferramenta para refletir sobre algo. Ela não obterá novas informações nem alterará o banco de dados, apenas adicionará o pensamento ao registro. Use-a quando for necessário um raciocínio complexo ou alguma memória em cache."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        580
+      ],
+      "id": "0a635993-8c08-4598-b5e2-1d53276c7d31",
+      "name": "Refletir"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url_anexo }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        560
+      ],
+      "id": "6a678b5c-f196-4c8f-a661-cf83265ca0f6",
+      "name": "Download imagem"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googlePalmApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [{\n    \"parts\":[\n      {\"text\": \"Extraia as informações dessa imagem. Não inclua nenhum comentário adicional, além do conteúdo extraído da imagem.\"},\n      {\n        \"inline_data\": {\n          \"mime_type\": \"image/jpeg\",\n          \"data\": \"{{ $json.data }}\"\n        }\n      }\n    ]\n  }]\n}\n",
+        "options": {}
+      },
+      "id": "c4257c4d-2f93-42a4-b8e0-847d2b264c23",
+      "name": "Extrair dados comprovante",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1600,
+        580
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        660
+      ],
+      "id": "64ee73d3-0691-4647-8fff-062839fee120",
+      "name": "Converter base64"
+    },
+    {
+      "parameters": {
+        "name": "={{ $binary.data.fileName }}",
+        "driveId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1140,
+        480
+      ],
+      "id": "d6804082-7296-4ec9-be57-9fe307307fa7",
+      "name": "Upload arquivo"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        1380,
+        580
+      ],
+      "id": "c45554b1-29ed-466d-9ff9-3625f9a16b6e",
+      "name": "Merge",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "content": "[![fazer.ai](https://framerusercontent.com/images/HqY9djLTzyutSKnuLLqBr92KbM.png?scale-down-to=256)](https://fazer.ai?utm_source=n8n&utm_campaign=sec-ep2&utm_medium=cw-1)\n\n## Esse é um template faça você mesmo do canal\n## Lucas Moreira\n\n### Inscreva-se no nosso canal no YouTube\n[![YouTube Lucas Moreira](https://img.shields.io/youtube/channel/subscribers/UCtmp6SxzLscu0GRTbgM8FTw?style=flat-square&logo=youtube&label=Inscreva-se&color=f00)](https://youtube.com/@eulucassmoreira?si=0lH7hwX9pukjhmPQ)\n\n### Siga nosso GitHub\n[![GitHub fazer.ai](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white&label)](https://github.com/fazer-ai)\n",
+        "height": 440,
+        "width": 550,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        -220
+      ],
+      "id": "8e9a6029-5045-4736-b8c3-e34478467313",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "## Aprenda como fazer a melhor secretária IA\n\n[![IMAGE ALT TEXT HERE](https://i1.ytimg.com/vi_webp/cvTWGNJGAu4/maxresdefault.webp)](https://www.youtube.com/watch?v=cvTWGNJGAu4)",
+        "height": 380,
+        "width": 520,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        980,
+        -160
+      ],
+      "id": "2d9e184b-831e-411f-94c4-2de8ad998a36",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "[![SerpApi](https://serpapi.com/assets/SerpApi-gentle-white-dc708ed0b09596cd08db74108b88af298123eeb384e872716b61d2a0ba1a1e03.png)](https://serpapi.com)\n\n## [Clique aqui para criar sua conta gratuita no SerpApi](https://serpapi.com)",
+        "height": 260,
+        "width": 400,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2100,
+        740
+      ],
+      "id": "af242e88-7c54-45ee-9729-63da976e39cb",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Quer entender como funciona?\n\n\n### Assista o vídeo, deixe um like, e se inscreva no canal para ter acesso a mais workflows como esse!\n\n[![IMAGE ALT TEXT HERE](https://i1.ytimg.com/vi_webp/GrR4y2_MlKk/maxresdefault.webp)](https://www.youtube.com/watch?v=GrR4y2_MlKk)",
+        "height": 440,
+        "width": 500,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        460,
+        -220
+      ],
+      "id": "1f0bfbd6-2d62-408c-aa58-42666909727e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## [Clique aqui e entre agora para tirar suas dúvidas](https://lucasmoreira.fazer.ai)\n[![Banner comunidade](https://framerusercontent.com/images/KIXMxk9eKCoCsNeVm1oaz5HnaQ.png)](https://lucasmoreira.fazer.ai)",
+        "height": 440,
+        "width": 1380,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        -220
+      ],
+      "id": "b2ad3e4f-4aea-4df6-ab07-10b4f0fd66e9",
+      "name": "Sticky Note36"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Variáveis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Variáveis": {
+      "main": [
+        [
+          {
+            "node": "Tipo de mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tipo de mensagem": {
+      "main": [
+        [
+          {
+            "node": "Assistente de viagens",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download imagem",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar mensagem não suportada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Assistente de viagens",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Assistente de viagens",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar locais de interesse": {
+      "ai_tool": [
+        [
+          {
+            "node": "Assistente de viagens",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assistente de viagens": {
+      "main": [
+        [
+          {
+            "node": "Responder usuário.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Salvar despesa": {
+      "ai_tool": [
+        [
+          {
+            "node": "Assistente de viagens",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Listar despesas": {
+      "ai_tool": [
+        [
+          {
+            "node": "Assistente de viagens",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Refletir": {
+      "ai_tool": [
+        [
+          {
+            "node": "Assistente de viagens",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download imagem": {
+      "main": [
+        [
+          {
+            "node": "Upload arquivo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Converter base64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrair dados comprovante": {
+      "main": [
+        [
+          {
+            "node": "Assistente de viagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Converter base64": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Upload arquivo": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Extrair dados comprovante",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
